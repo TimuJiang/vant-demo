@@ -22,6 +22,8 @@
     "babel-plugin-import": "^1.8.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "pug": "^2.0.4",
+    "pug-plain-loader": "^1.0.0",
     "sass": "^1.18.0",
     "sass-loader": "^7.1.0",
     "vue-cli-plugin-vant": "^1.0.1",
