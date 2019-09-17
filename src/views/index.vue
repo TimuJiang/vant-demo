@@ -12,11 +12,8 @@
 				van-col.van-hairline--left(span="8")
 					.number-cell 67
 					.name-cell 潜客数
-		.group-center
-			.group-title 商机中心
-			van-grid
-				van-grid-item( v-for="item in _customer" :key="item.type" :to="`/potential-customer/${item.type}`" :icon="item.icon" :text="item.type")
-		track-part
+		track-part(v-if="user.role=='销售顾问'")
+		follow-part(v-else)
 		.group-center
 			.group-title 应用中心
 			van-grid
@@ -25,12 +22,20 @@
 </template>
 
 <script>
+	import { mapGetters } from 'vuex'
 	import { POTENTIAL_CUSTOMER, APP_CENTER } from 'config/types.config'
 	import TrackPart from './index/track-part'
+	import FollowPart from './index/follow-part'
 	export default {
 		name: 'index',
 		components: {
-			TrackPart
+			TrackPart,
+			FollowPart
+		},
+		computed: {
+			...mapGetters([
+				'user'
+			])
 		},
 		beforeCreate() {
 			this._customer = POTENTIAL_CUSTOMER

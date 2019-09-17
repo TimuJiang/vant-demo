@@ -48,7 +48,9 @@
 			showStatusAction () {
 				this.showStatus = true
 			},
-			onRoleSelect () {
+			onRoleSelect (value) {
+				console.log(value)
+				this.$store.state.user.role = value.name
 				this.show = false
 			},
 			onStatusSelect () {

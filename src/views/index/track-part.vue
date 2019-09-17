@@ -1,6 +1,6 @@
 <template lang='pug'>
 	.track-part
-		.group-title 商机跟进
+		.group-title 商机中心
 		van-grid
 			van-grid-item(v-for="item in _types" :key="item.type" icon="photo-o" :text="item.name")
 </template>
