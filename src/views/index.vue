@@ -16,12 +16,7 @@
 			.group-title 商机中心
 			van-grid
 				van-grid-item( v-for="item in _customer" :key="item.type" :to="`/potential-customer/${item.type}`" :icon="item.icon" :text="item.type")
-		.group-center
-			.group-title 商机跟进
-			van-grid
-				van-grid-item(icon="photo-o" text="H")
-				van-grid-item(icon="photo-o" text="A")
-				van-grid-item(icon="photo-o" text="B")
+		track-part
 		.group-center
 			.group-title 应用中心
 			van-grid
@@ -31,8 +26,12 @@
 
 <script>
 	import { POTENTIAL_CUSTOMER, APP_CENTER } from 'config/types.config'
+	import TrackPart from './index/track-part'
 	export default {
 		name: 'index',
+		components: {
+			TrackPart
+		},
 		beforeCreate() {
 			this._customer = POTENTIAL_CUSTOMER
 			this._apps = APP_CENTER

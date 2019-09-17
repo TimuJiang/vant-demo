@@ -46,3 +46,23 @@ export const APP_CENTER = [
 		name: '订单管理'
 	}
 ]
+
+export const TRACK_TYPE = [
+	{
+		icon: 'other-pay',
+		type: 1,
+		name: '今日'
+	}, {
+		icon: 'other-pay',
+		type: 2,
+		name: '明日'
+	}, {
+		icon: 'other-pay',
+		type: 3,
+		name: '更多'
+	}, {
+		icon: 'other-pay',
+		type: 4,
+		name: '超时'
+	}
+]
