@@ -25,18 +25,17 @@
 		.group-center
 			.group-title 应用中心
 			van-grid
-				van-grid-item(v-for="i in 30" :key="i" icon="photo-o" text="H")
-				van-grid-item(icon="photo-o" text="A")
-				van-grid-item(icon="photo-o" text="B")
+				van-grid-item(v-for="item in _apps" :key="item.name" icon="photo-o" :text="item.name")
 
 </template>
 
 <script>
-	import { POTENTIAL_CUSTOMER } from 'config/types.config'
+	import { POTENTIAL_CUSTOMER, APP_CENTER } from 'config/types.config'
 	export default {
 		name: 'index',
 		beforeCreate() {
 			this._customer = POTENTIAL_CUSTOMER
+			this._apps = APP_CENTER
 		},
 		methods: {
 			onClickLeft() {
