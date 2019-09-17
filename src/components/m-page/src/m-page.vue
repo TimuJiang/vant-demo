@@ -1,10 +1,12 @@
 <template lang='pug'>
 	.m-page
 		van-nav-bar.m-page__nav-bar(
+			:fixed="true"
 			:title="title"
 			:left-arrow = "back"
 			@click-left="onClickLeft")
-		slot
+		.m-page__content
+			slot
 </template>
 
 <script>
@@ -29,8 +31,10 @@
 </script>
 <style lang="scss" scoped>
 	.m-page {
+		&__content {
+			margin-top: 46px;
+		}
 		&__nav-bar {
-			background: #1b63ff;
 		}
 	}
 </style>

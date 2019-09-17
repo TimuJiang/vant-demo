@@ -8,7 +8,9 @@ import {
 	Grid,
 	GridItem,
 	Tabbar,
-	TabbarItem
+	TabbarItem,
+	Tabs,
+	Tab
 } from 'vant'
 
 Vue
@@ -21,3 +23,5 @@ Vue
 	.use(Tabbar)
 	.use(TabbarItem)
 	.use(NavBar)
+	.use(Tabs)
+	.use(Tab)

@@ -15,13 +15,7 @@
 		.group-center
 			.group-title 商机中心
 			van-grid
-				van-grid-item(to="/potential-customer/H" icon="photo-o" text="H")
-				van-grid-item(icon="photo-o" text="A")
-				van-grid-item(icon="photo-o" text="B")
-				van-grid-item(icon="photo-o" text="C")
-				van-grid-item(icon="photo-o" text="N")
-				van-grid-item(icon="photo-o" text="F")
-				van-grid-item(icon="photo-o" text="O")
+				van-grid-item( v-for="item in _customer" :key="item.type" :to="`/potential-customer/${item.type}`" :icon="item.icon" :text="item.type")
 		.group-center
 			.group-title 商机跟进
 			van-grid
@@ -38,8 +32,12 @@
 </template>
 
 <script>
+	import { POTENTIAL_CUSTOMER } from 'config/types.config'
 	export default {
 		name: 'index',
+		beforeCreate() {
+			this._customer = POTENTIAL_CUSTOMER
+		},
 		methods: {
 			onClickLeft() {
 				this.$router.back()
