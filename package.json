@@ -24,6 +24,7 @@
     "babel-plugin-import": "^1.8.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "mockjs": "^1.0.1-beta3",
     "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0",
     "sass": "^1.18.0",
