@@ -31,6 +31,7 @@
 </script>
 <style lang="scss" scoped>
 	.m-page {
+		width: 100vw;
 		&__content {
 			margin-top: 46px;
 		}
