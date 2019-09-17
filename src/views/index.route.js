@@ -1,5 +1,5 @@
 export default {
-	path: '/index',
+	path: '/',
 	component: () => import('./index.vue'),
 	meta: {
 		name: 'index'

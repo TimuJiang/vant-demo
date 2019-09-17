@@ -34,10 +34,7 @@
 				van-grid-item(v-for="i in 30" :key="i" icon="photo-o" text="H")
 				van-grid-item(icon="photo-o" text="A")
 				van-grid-item(icon="photo-o" text="B")
-		van-tabbar(v-model="active")
-			van-tabbar-item(icon="wap-home-o") 首页
-			van-tabbar-item(icon="volume-o") 提醒
-			van-tabbar-item(icon="user-o") 我的
+
 </template>
 
 <script>
