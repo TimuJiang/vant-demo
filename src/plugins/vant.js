@@ -10,7 +10,8 @@ import {
 	Tabbar,
 	TabbarItem,
 	Tabs,
-	Tab
+	Tab,
+	CellGroup
 } from 'vant'
 
 Vue
@@ -25,3 +26,4 @@ Vue
 	.use(NavBar)
 	.use(Tabs)
 	.use(Tab)
+	.use(CellGroup)
