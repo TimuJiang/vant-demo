@@ -1,5 +1,7 @@
 <template lang='pug'>
 	.setting
+		span setting
+		router-view
 </template>
 
 <script>
