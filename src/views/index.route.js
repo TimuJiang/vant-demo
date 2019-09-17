@@ -2,7 +2,8 @@ export default {
 	path: '/',
 	component: () => import('./index.vue'),
 	meta: {
-		name: 'index'
+		name: 'index',
+		showTabbar: true
 	},
 	children: []
 }

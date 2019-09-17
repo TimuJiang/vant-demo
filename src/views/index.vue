@@ -1,5 +1,5 @@
 <template lang='pug'>
-	.index
+	m-page.index(:back="false")
 		.group-top
 			.group-top__title 本日业绩
 			van-row
@@ -8,14 +8,14 @@
 					.name-cell 终端数
 				van-col.van-hairline--left(span="8")
 					.number-cell 67
-					.name-cell 终端数
+					.name-cell 订单数
 				van-col.van-hairline--left(span="8")
 					.number-cell 67
-					.name-cell 终端数
+					.name-cell 潜客数
 		.group-center
 			.group-title 商机中心
 			van-grid
-				van-grid-item(icon="photo-o" text="H")
+				van-grid-item(to="/potential-customer/H" icon="photo-o" text="H")
 				van-grid-item(icon="photo-o" text="A")
 				van-grid-item(icon="photo-o" text="B")
 				van-grid-item(icon="photo-o" text="C")
@@ -39,7 +39,12 @@
 
 <script>
 	export default {
-		name: 'index'
+		name: 'index',
+		methods: {
+			onClickLeft() {
+				this.$router.back()
+			}
+		}
 	}
 </script>
 <style lang="scss" scoped>
