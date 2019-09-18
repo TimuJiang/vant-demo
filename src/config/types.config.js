@@ -25,15 +25,15 @@ export const POTENTIAL_CUSTOMER = [
 
 export const APP_CENTER = [
 	{
-		icon: 'other-pay',
+		icon: 'cluster-o',
 		path: '/clue-assign',
 		name: '线索分配'
 	}, {
-		icon: 'other-pay',
+		icon: 'star-o',
 		path: '/default-verify',
 		name: '战败审核'
 	}, {
-		icon: 'other-pay',
+		icon: 'friends-o',
 		path: '',
 		name: '客户查询'
 	}, {
@@ -47,7 +47,7 @@ export const APP_CENTER = [
 	}
 ]
 
-export const TRACK_TYPE = [
+export const FOLLOW_TYPE = [
 	{
 		icon: 'other-pay',
 		type: 1,

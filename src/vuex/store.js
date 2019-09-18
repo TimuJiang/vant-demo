@@ -8,7 +8,7 @@ export default new Vuex.Store({
 		user: {
 			name: '路人甲',
 			title: '市场运营专员',
-			role: '销售顾问',
+			role: '数字营销经理',
 			status: '空闲'
 		},
 		menu: [],

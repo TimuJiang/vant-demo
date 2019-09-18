@@ -1,16 +1,21 @@
 <template lang='pug'>
 	.follow-part
 		.group-title 商机跟进
-		van-grid
-			van-grid-item( v-for="item in _customer" :key="item.type" :to="`/potential-customer/${item.type}`" :icon="item.icon" :text="item.type")
+		.follow-part__content
+			.cell__type( v-for="item in _customer" :key="item.type"  @click="onClick(item)" :class="`type-${item.type}`") {{item.name}} (99+)
 </template>
 
 <script>
-	import { POTENTIAL_CUSTOMER } from 'config/types.config'
+	import { FOLLOW_TYPE } from 'config/types.config'
 	export default {
 		name: 'follow-part',
 		created() {
-			this._customer = POTENTIAL_CUSTOMER
+			this._customer = FOLLOW_TYPE
+		},
+		methods: {
+			onClick (item) {
+				this.$router.push(`/potential-customer/${item.type}`)
+			}
 		}
 	}
 </script>
@@ -18,6 +23,26 @@
 	.follow-part {
 		.group-title {
 			padding: 10px 20px;
+		}
+		&__content {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.cell__type {
+			width: 76px;
+			height: 26px;
+			text-align: center;
+			border: 1px solid #1B40D6;
+			border-radius: 4px;
+			font-size: 14px;
+			color: #1B40D6;
+			line-height: 26px;
+			margin: 16px 5px;
+		}
+		.type-4 {
+			color: #FF3B30;
+			border: 1px solid #FF3B30;
 		}
 	}
 </style>

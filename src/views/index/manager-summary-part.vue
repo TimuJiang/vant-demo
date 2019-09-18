@@ -21,7 +21,7 @@
 <style lang="scss" scoped>
 	.manager-summary-part {
 		background-image: linear-gradient(130deg, rgb(24, 119, 255) 0%, #195dff 78%);
-		height: 90px;
+		height: 100px;
 		overflow: visible;
 		position: relative;
 		box-sizing: border-box;
@@ -35,7 +35,7 @@
 			height: 76px;
 			left: 16px;
 			right: 16px;
-			top: 50px;
+			top: 60px;
 			text-align: center;
 			position: absolute;
 			background: #FFFFFF;

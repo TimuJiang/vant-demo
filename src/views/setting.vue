@@ -32,7 +32,7 @@
 		},
 		beforeCreate() {
 			this._roleTypes = [
-				{ name: '销售顾问' },
+				{ name: '数字营销经理' },
 				{ name: '电话专员' },
 				{ name: '网销专员', subname: '描述信息' }
 			]
