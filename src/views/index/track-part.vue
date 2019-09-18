@@ -16,6 +16,8 @@
 </script>
 <style lang="scss" scoped>
 	.track-part {
+		padding-top: 40px;
+		background: #FFFFFF;
 		.group-title {
 			padding: 10px 20px;
 		}

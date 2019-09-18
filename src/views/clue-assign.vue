@@ -84,16 +84,16 @@
 				// 异步更新数据
 				setTimeout(() => {
 					for (let i = 0; i < 20; i++) {
-						this.list.push(this.list.length + 1);
+						this.list.push(this.list.length + 1)
 					}
 					// 加载状态结束
-					this.loading = false;
+					this.loading = false
 
 					// 数据全部加载完成
 					if (this.list.length >= 40) {
-						this.finished = true;
+						this.finished = true
 					}
-				}, 500);
+				}, 500)
 			}
 		}
 
