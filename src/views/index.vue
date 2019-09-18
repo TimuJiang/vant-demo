@@ -17,7 +17,7 @@
 		.group-center
 			.group-title 应用中心
 			van-grid
-				van-grid-item(v-for="item in _apps" :key="item.name" icon="photo-o" :text="item.name")
+				van-grid-item(v-for="item in _apps" :key="item.name" icon="photo-o" :to="item.path" :text="item.name")
 
 </template>
 

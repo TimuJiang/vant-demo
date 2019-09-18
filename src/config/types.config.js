@@ -26,11 +26,11 @@ export const POTENTIAL_CUSTOMER = [
 export const APP_CENTER = [
 	{
 		icon: 'other-pay',
-		path: '',
+		path: '/clue-assign',
 		name: '线索分配'
 	}, {
 		icon: 'other-pay',
-		path: '',
+		path: '/default-verify',
 		name: '战败审核'
 	}, {
 		icon: 'other-pay',
