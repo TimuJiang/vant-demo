@@ -1,11 +1,13 @@
+import Detail from './verify-detail/detail.route'
 import VerifyOperation from './verify-detail/verify-operation.route';
 
 export default {
-	path: 'verify-detail',
-	component: () => import('./verify-detail'),
+	path: 'verify-detail/:id/param2/:param2',
+	component: { template: '<router-view></router-view>' },
 	meta: {
-		name: '战败审核',
-		level: 2
 	},
-	children: [VerifyOperation]
+	children: [
+		Detail,
+		VerifyOperation
+	]
 }

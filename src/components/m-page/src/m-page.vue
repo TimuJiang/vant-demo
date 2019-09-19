@@ -46,8 +46,8 @@
 		},
 		computed: {
 			title () {
-				return this.$route.meta.name ? this.$route.meta.name : this.headTitle
-			},
+				return this.$route.meta.name || this.headTitle
+			}
 		}
 	}
 </script>
