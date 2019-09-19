@@ -10,7 +10,14 @@ import {
 	Tabbar,
 	TabbarItem,
 	Tabs,
-	Tab
+	Tab,
+	Field,
+	Checkbox,
+	CheckboxGroup,
+	List,
+	Cell,
+	DropdownMenu,
+	DropdownItem,
 } from 'vant'
 
 Vue
@@ -25,3 +32,10 @@ Vue
 	.use(NavBar)
 	.use(Tabs)
 	.use(Tab)
+	.use(Field)
+	.use(Checkbox)
+	.use(CheckboxGroup)
+	.use(List)
+	.use(Cell)
+	.use(DropdownMenu)
+	.use(DropdownItem)
