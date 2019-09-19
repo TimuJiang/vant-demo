@@ -1,5 +1,5 @@
 <template>
-    <m-page class="clue-assign" :left-text="leftText" :has-click-left="isBatch" :back="noBatch" @click-left="clickLeft">
+    <m-page class="clue-assign" :left-text="leftText" :has-click-left="isBatch" :back="!isBatch" @click-left="clickLeft">
 		<div class="top">
 			<van-dropdown-menu>
 				<van-dropdown-item title="新线索待分配(999+)" ref="item">
@@ -34,7 +34,7 @@
 							<van-checkbox
 								:key="item"
 								:name="item"
-								v-if="isBatch"
+								v-show="isBatch"
 							/>
 						</div>
 						<div class="clue-info">
@@ -55,7 +55,7 @@
 							<div class="last-time">
 								近一个月看车3次，最近一次2019/08/22
 							</div>
-							<div class="assign" v-if="noBatch">
+							<div class="assign" v-show="noBatch">
 								<div class="assign-button" @click="doAssign">分配</div>
 							</div>
 						</div>
@@ -65,7 +65,12 @@
 		</div>
 		<div :class="bottomContainerClass">
 			<div class="bottom-operation">
-				<van-checkbox v-model="checkAll" @change="checkAllFuc" v-if="isBatch">全选</van-checkbox>
+				<van-checkbox v-model="checkAll" @change="checkAllFuc">全选</van-checkbox>
+				<div class="assign-list">
+					<van-dropdown-menu direction="up">
+						<van-dropdown-item v-model="value1" :options="option1" />
+					</van-dropdown-menu>
+				</div>
 			</div>
 			<div class="assign-button" @click="clickAssign">{{buttonText}}</div>
 		</div>
@@ -81,7 +86,7 @@
 				value: '',
 				value1: 0,
 				option1: [
-					{ text: '请选择', value: 0 },
+					{ text: '请选择被分配人', value: 0 },
 					{ text: '销售1', value: 1 },
 					{ text: '销售2', value: 2 }
 				],
@@ -90,7 +95,7 @@
 				loading: false,
 				finished: false,
 				result: [],
-				isBatch: false,
+				isBatch: false
 			}
 		},
 
@@ -166,6 +171,7 @@
 			},
 			checkAllFuc(value) {
         		if (value) {
+					this.isBatch = true;
         			this.result = this.list;
 				} else {
         			this.result = [];
@@ -177,25 +183,27 @@
 </script>
 
 <style lang="scss" scoped>
-
+	$company-blue: #1B40D6;
+	$common-grey: #efeff4;
 	.search-container {
-		background-color: #efeff4;
+		background-color: $common-grey;
 		padding: 10px 30px;
 		.van-cell {
 			border-radius: 5px;
 			padding-top: 5px;
 			padding-bottom: 5px;
 		}
+
 	}
 
 	.list-container {
 		position: absolute;
 		width: 100%;
-		bottom: 50px;
+		bottom: 120px;
 		top: 96px;
 		overflow: scroll;
 		transition: bottom .5s;
-		background-color: #efeff4;
+		background-color: $common-grey;
 		.clue-cell {
 			display: flex;
 			align-items: center;
@@ -224,7 +232,7 @@
 				font-size: 14px;
 				span:last-child {
 					float: right;
-					color: #1B40D6;
+					color: $company-blue;
 				}
 			}
 			.customer {
@@ -259,7 +267,7 @@
 				.assign-button {
 					width: 60px;
 					height: 30px;
-					background-color: #1B40D6;
+					background-color: $company-blue;
 					color: #fff;
 					line-height: 30px;
 					text-align: center;
@@ -278,21 +286,24 @@
 		// border-top: 1px solid #efeff4;
 		position: fixed;
 		bottom: 0;
-		height: 50px;
+		height: 120px;
 		.bottom-operation {
 			position: absolute;
-			border-top: 1px solid #efeff4;
+			border-top: 1px solid $common-grey;
 			top: 0;
 			bottom: 50px;
 			width: 100%;
 			display: flex;
 			align-items: center;
 			padding: 0 20px;
+			.assign-list {
+				margin: 0 auto
+			}
 		}
 		.assign-button {
 			line-height: 50px;
 			text-align: center;
-			background-color: #1B40D6;
+			background-color: $company-blue;
 			color: white;
 			font-weight: bold;
 			position: absolute;
