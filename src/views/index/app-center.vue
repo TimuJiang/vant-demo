@@ -19,7 +19,7 @@
 		.group-title {
 			padding: 10px 20px;
 		}
-		.app-item /deep/ .van-icon {
+		.app-item .van-icon {
 			color: #1B40D6 !important;
 		}
 	}
