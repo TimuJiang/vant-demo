@@ -13,6 +13,7 @@ import {
 	Tab,
 	Field,
 	Checkbox,
+	CellGroup,
 	CheckboxGroup,
 	List,
 	Cell,
@@ -33,6 +34,7 @@ Vue
 	.use(Tabs)
 	.use(Tab)
 	.use(Field)
+	.use(Checkbox)
 	.use(CellGroup)
 	.use(CheckboxGroup)
 	.use(List)

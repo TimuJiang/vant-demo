@@ -30,7 +30,7 @@ export const APP_CENTER = [
 		name: '线索分配'
 	}, {
 		icon: 'star-o',
-		path: '/default-verify',
+		path: '/defeat-verify',
 		name: '战败审核'
 	}, {
 		icon: 'friends-o',
