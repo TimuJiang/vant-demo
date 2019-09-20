@@ -138,9 +138,6 @@
 				background-color: #fff;
 				border-radius: 5px;
 				font-size: 16px;
-				&:first-child {
-					margin-bottom: 30px;
-				}
 				.status {
 					position: absolute;
 					right: 0;
