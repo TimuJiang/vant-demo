@@ -38,7 +38,7 @@ export const APP_CENTER = [
 		name: '客户查询'
 	}, {
 		icon: 'other-pay',
-		path: '',
+		path: '/try-car',
 		name: '试乘试驾'
 	}, {
 		icon: 'other-pay',
