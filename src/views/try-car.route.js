@@ -1,4 +1,5 @@
 import List from './try-car/list.route'
+import Detail from './try-car/detail.route'
 
 export default {
 	path: '/try-car',
@@ -8,6 +9,7 @@ export default {
 		// auth: ['user']
 	},
 	children: [
-		List
+		List,
+		Detail
 	]
 }

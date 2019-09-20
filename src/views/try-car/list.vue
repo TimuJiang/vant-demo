@@ -1,23 +1,26 @@
 <template lang="pug">
-	m-page.list
-			van-tabs(v-model="active" title-active-color="#1B40D6" title-inactive-color="#333")
-				van-tab(title="全部")
-				van-tab(title="待试驾")
-				van-tab(title="试驾中")
-				van-tab(title="已完成")
+	m-page.list.try-car
+			.head
+				van-tabs(v-model="active" title-active-color="#1B40D6" title-inactive-color="#333")
+					van-tab(title="全部")
+					van-tab(title="待试驾")
+					van-tab(title="试驾中")
+					van-tab(title="已完成")
 			.container
 				.time-choose
-					van-dropdown-menu(v-if="false")
+					van-dropdown-menu(v-if="true")
 						van-dropdown-item(
-							title="2019年9月"
-							ref="item"
+							:title="currentDateFormat"
+							ref="timePicker"
 						)
 							van-datetime-picker(
 								v-model="currentDate"
 								type="year-month"
 								:formatter="formatter"
+								@confirm="dateConfirm"
+								@cancel="dateCancel"
 							)
-					| 2019年9月
+					// | 2019年9月
 				.list-container
 					van-list(
 						v-model="loading"
@@ -36,16 +39,16 @@
 								.car 试驾车型：2018款博越运动款运动款...
 							.operation
 								div
-									van-icon(name="phone-o" color="#1B40D6")
+									van-icon(name="phone-o" :color="companyBlue")
 									span 电话
 								div
-									van-icon(name="comment-o" color="#1B40D6")
+									van-icon(name="comment-o" :color="companyBlue")
 									span 短信
 								div(@click="cancel")
 									van-icon(name="close" color="red")
 									span 取消
-								div
-									van-icon(name="logistics" color="#1B40D6")
+								div(@click="goToDetail")
+									van-icon(name="logistics" :color="companyBlue" )
 									span 试驾
 							.status 待
 </template>
@@ -65,10 +68,33 @@
 				list: [
 					100, 101, 102
 				],
-				currentDate: new Date()
+				currentDate: new Date(),
+				confirmDate: new Date(), // 只有点击确认才会改变这个值 取消选择日期的时候返回到该值
+				companyBlue: '#1B40D6'
+			}
+		},
+		computed: {
+        	currentDateFormat() {
+				let year = this.currentDate.getFullYear();
+				let month = this.currentDate.getMonth() + 1;
+				return `${year}年${month}月`;
 			}
 		},
 		methods: {
+        	goToDetail() {
+        		this.$router.push('try-car/detail/show');
+			},
+        	toggleTimePicker() {
+				this.$refs.timePicker.toggle();
+			},
+        	dateConfirm(value) {
+				this.confirmDate = value;
+				this.toggleTimePicker();
+			},
+			dateCancel() {
+        		this.currentDate = this.confirmDate
+				this.toggleTimePicker();
+			},
 			formatter(type, value) {
 				if (type === 'year') {
 					return `${value}年`;
@@ -108,6 +134,7 @@
 <style lang="scss" scoped>
 	$company-blue: #1B40D6;
 	$common-grey: #efeff4;
+	$top-dis: 30px;
 	.container {
 		position: fixed;
 		width: 100%;
@@ -120,16 +147,15 @@
 		}
 		.time-choose {
 			width: 100%;
-			height: 36px;
+			height: $top-dis;
 			display: flex;
 			align-items: center;
-			font-size: 14px;
 			padding-left: 16px;
 		}
 		.list-container {
 			position: absolute;
 			width: 100%;
-			top: 36px;
+			top: $top-dis;
 			bottom: 0;
 			overflow: scroll;
 			.cell {
@@ -150,6 +176,7 @@
 					color: white;
 					border-top-right-radius: 5px;
 					border-bottom-left-radius: 5px;
+					font-size: 13px;
 				}
 				.info {
 					padding: 20px 20px 20px 15px;
@@ -157,19 +184,21 @@
 						font-weight: bold;
 					}
 					.time {
-						font-size: 14px;
+						font-size: 13px;
 						color: #999;
 						float: right;
 						padding-right: 20px;
 					}
 					.car {
 						color: #666;
+						font-size: 14px;
 					}
 				}
 				.operation {
-					padding: 10px 0;
+					padding: 6.5px 0;
 					border-top: 1px solid $common-grey;
 					display: flex;
+					font-size: 14px;
 					>div {
 						box-sizing: border-box;
 						width: 25%;
@@ -188,5 +217,22 @@
 				}
 			}
 		}
+	}
+</style>
+
+<style>
+	.try-car .time-choose .van-dropdown-menu {
+		height: unset;
+		background-color: transparent;
+	}
+	.try-car .time-choose .van-dropdown-menu__title {
+		font-size: 12px;
+		padding-left: 1px;
+	}
+	.try-car .head .van-tabs__line {
+		background-color: #1B40D6;
+	}
+	.try-car .operation .van-icon {
+		font-size: 17px;
 	}
 </style>
