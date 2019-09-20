@@ -16,8 +16,11 @@ import {
 	CheckboxGroup,
 	List,
 	Cell,
+	CellGroup,
 	DropdownMenu,
 	DropdownItem,
+	Popup,
+	DatetimePicker
 } from 'vant'
 
 Vue
@@ -37,5 +40,8 @@ Vue
 	.use(CheckboxGroup)
 	.use(List)
 	.use(Cell)
+	.use(CellGroup)
 	.use(DropdownMenu)
 	.use(DropdownItem)
+	.use(Popup)
+	.use(DatetimePicker)

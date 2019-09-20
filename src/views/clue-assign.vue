@@ -193,7 +193,6 @@
 			padding-top: 5px;
 			padding-bottom: 5px;
 		}
-
 	}
 
 	.list-container {
@@ -229,7 +228,7 @@
 			border-radius: 5px;
 			.time {
 				padding-bottom: 10px;
-				font-size: 14px;
+				font-size: 13px;
 				span:last-child {
 					float: right;
 					color: $company-blue;
@@ -259,7 +258,7 @@
 			}
 			.last-time {
 				margin: 5px 0;
-				font-size: 14px;
+				font-size: 13px;
 				color: #666;
 			}
 			.assign {
@@ -313,5 +312,17 @@
 		&.batch-bottom {
 			height: 120px;
 		}
+	}
+</style>
+
+<style>
+	.clue-assign .top .van-dropdown-menu__title {
+		color: #1B40D6;
+	}
+	.clue-assign .top .van-dropdown-menu__title--active {
+		color: #1989fa;
+	}
+	.clue-assign .bottom-operation .van-hairline--top-bottom::after {
+		border-width: 0;
 	}
 </style>
