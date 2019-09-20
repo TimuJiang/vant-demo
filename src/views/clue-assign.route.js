@@ -1,5 +1,5 @@
 export default {
-	path: '/clue-assign',
+	path: 'clue-assign',
 	component: () => import('./clue-assign'),
 	meta: {
 		name: '线索分配'

@@ -1,40 +1,35 @@
 <template lang="pug">
-	.defeat-verify
-		.basic(v-if="$route.meta.level === 1")
-			m-page
-				.container
-					.head
-						.cell
-							span 顾问姓名
-							span 本月战败数
-							span 待审
-					.body
-						van-list(
-							v-model="loading"
-							:finished="finished"
-							finished-text="没有更多了"
-							@load="onLoad"
-							)
-							.cell(
-								v-for="item in list"
-								:key="item.id"
-								class="small"
-								)
-								span {{item.name}}
-								span {{item.fail}}
-								router-link(to="/defeat-verify/verify-detail")
-									span(class="red") {{item.pending}}
-
-		.detail(v-if="$route.meta.level !== 1")
-			router-view
+	m-page.list
+		.container
+			.head
+				.cell
+					span 顾问姓名
+					span 本月战败数
+					span 待审
+			.body
+				van-list(
+					v-model="loading"
+					:finished="finished"
+					finished-text="没有更多了"
+					@load="onLoad"
+				)
+					.cell(
+						v-for="item in list"
+						:key="item.id"
+						class="small"
+					)
+						span {{item.name}}
+						span {{item.fail}}
+						router-link(:to="`/defeat-verify/verify-detail/${item.id}/param2/testtest`")
+							span(class="red") {{item.pending}}
 
 </template>
 
 <script>
     export default {
-        name: 'defeat-verify',
+        name: 'list',
 		data() {
-        	return {
+			return {
 				loading: false,
 				finished: false,
 				list: [
@@ -83,16 +78,17 @@
 </script>
 
 <style lang="scss" scoped>
+	$common-grey: #efeff4;
 	.container {
 		position: absolute;
 		width: 100%;
 		top: 46px;
 		bottom: 0;
-		background-color: #efeff4;
+		background-color: $common-grey;
 	}
 	.cell {
 		height: 50px;
-		border-bottom: 1px solid #efeff4;
+		border-bottom: 1px solid $common-grey;
 		background-color: #fff;
 		span {
 			display: inline-block;

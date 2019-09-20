@@ -1,9 +1,11 @@
 const routes = []
-const context = require.context('../views', true, /\.(route.js)$/)
+const context = require.context('../views', false, /\.(route.js)$/)
 
 context.keys().forEach(name => {
 	routes.push(context(name).default)
 })
+
+console.log(routes)
 
 export default {
 	path: '/',
