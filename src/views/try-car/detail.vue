@@ -136,7 +136,7 @@
 		},
 		methods: {
 			goToUpload(type) {
-				this.$router.push(`/try-car/upload/${type}/operateType/${this.routeType}/detailId/${this.detailId}`);
+				this.$router.push(`/upload/${type}/operateType/${this.routeType}/detailId/${this.detailId}`);
 			},
 			showPopup(type) { // 显示时间选择框
 				this.currentOperateTimeType = type;

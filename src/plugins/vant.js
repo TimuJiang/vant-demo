@@ -17,7 +17,6 @@ import {
 	CheckboxGroup,
 	List,
 	Cell,
-	CellGroup,
 	DropdownMenu,
 	DropdownItem,
 	Popup,
