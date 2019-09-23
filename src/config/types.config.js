@@ -42,7 +42,7 @@ export const APP_CENTER = [
 		name: '试乘试驾'
 	}, {
 		icon: 'other-pay',
-		path: '',
+		path: '/order',
 		name: '订单管理'
 	}
 ]
