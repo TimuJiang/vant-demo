@@ -1,5 +1,5 @@
 export default {
-	path: 'detail/:routeType',
+	path: 'detail/:routeType/detailId/:detailId',
 	props: true,
 	component: () => import('./detail'),
 	meta: {

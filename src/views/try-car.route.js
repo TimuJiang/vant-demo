@@ -1,5 +1,6 @@
 import List from './try-car/list.route'
 import Detail from './try-car/detail.route'
+import Upload from './try-car/upload.route'
 
 export default {
 	path: '/try-car',
@@ -10,6 +11,7 @@ export default {
 	},
 	children: [
 		List,
-		Detail
+		Detail,
+		Upload
 	]
 }

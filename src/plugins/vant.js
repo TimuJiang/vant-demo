@@ -20,7 +20,8 @@ import {
 	DropdownMenu,
 	DropdownItem,
 	Popup,
-	DatetimePicker
+	DatetimePicker,
+	ActionSheet
 } from 'vant'
 
 Vue
@@ -45,3 +46,4 @@ Vue
 	.use(DropdownItem)
 	.use(Popup)
 	.use(DatetimePicker)
+	.use(ActionSheet)

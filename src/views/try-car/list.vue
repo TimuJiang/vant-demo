@@ -75,14 +75,14 @@
 		},
 		computed: {
         	currentDateFormat() {
-				let year = this.currentDate.getFullYear();
-				let month = this.currentDate.getMonth() + 1;
+				let year = this.confirmDate.getFullYear();
+				let month = this.confirmDate.getMonth() + 1;
 				return `${year}年${month}月`;
 			}
 		},
 		methods: {
         	goToDetail() {
-        		this.$router.push('try-car/detail/show');
+        		this.$router.push('try-car/detail/edit/detailId/-1');
 			},
         	toggleTimePicker() {
 				this.$refs.timePicker.toggle();
