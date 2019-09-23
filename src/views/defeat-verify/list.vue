@@ -20,7 +20,7 @@
 					)
 						span {{item.name}}
 						span {{item.fail}}
-						router-link(:to="`/defeat-verify/verify-detail/${item.id}/param2/testtest`")
+						router-link(:to="`/defeat-verify/verify-detail/${item.id}`")
 							span(class="red") {{item.pending}}
 
 </template>

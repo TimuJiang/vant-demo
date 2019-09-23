@@ -1,8 +1,8 @@
 import Detail from './verify-detail/detail.route'
-import VerifyOperation from './verify-detail/verify-operation.route';
+import VerifyOperation from './verify-detail/verify-operation.route'
 
 export default {
-	path: 'verify-detail/:id/param2/:param2',
+	path: 'verify-detail/:id',
 	component: { template: '<router-view></router-view>' },
 	meta: {
 	},

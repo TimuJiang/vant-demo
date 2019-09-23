@@ -17,9 +17,9 @@
 					.car-info.text {{item.car}}
 					.reseon.text {{item.reason}}
 					.operation
-						van-button(plain round type="info" size="small" to="/defeat-verify/verify-detail/verify-operation/assign") 分配
-						van-button(plain round type="info" size="small" to="/defeat-verify/verify-detail/verify-operation/pass") 通过
-						van-button(plain round type="info" size="small" to="/defeat-verify/verify-detail/verify-operation/reject") 驳回
+						van-button(plain round type="info" size="small" @click="() => { goToOperation('assign') }") 分配
+						van-button(plain round type="info" size="small" @click="() => { goToOperation('pass') }") 通过
+						van-button(plain round type="info" size="small" @click="() => { goToOperation('reject') }") 驳回
 						van-button(plain round type="info" size="small") 电话
 </template>
 
@@ -27,7 +27,7 @@
     export default {
         name: 'detail',
 		created() {
-        	console.log('detail-params', `${this.$route.params.id}:::${this.$route.params.param2}`);
+        	console.log('detail-params', `${this.$route.params.id}`);
 		},
 		data() {
 			return {
@@ -43,6 +43,9 @@
 			}
 		},
 		methods: {
+        	goToOperation(type) {
+        		this.$router.push(`${this.$route.params.id}/verify-operation/${type}`);
+			},
 			onLoad() {
 				// 异步更新数据
 				setTimeout(() => {
