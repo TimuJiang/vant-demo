@@ -5,7 +5,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
-		user: null,
+		user: {
+			name: '路人甲',
+			title: '市场运营专员',
+			role: '数字营销经理',
+			status: '空闲'
+		},
 		menu: [],
 		collapse: false,
 	},

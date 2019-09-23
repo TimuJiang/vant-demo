@@ -5,7 +5,7 @@
 			van-tab(v-for="item in _customer" :key="item.type" :title="item.type")
 		van-index-bar
 			van-index-anchor(index="A")
-			van-cell(title="文本" v-for="i in 8" :key="i+'a'")
+			van-cell(title="文本" v-for="i in 8" :key="i+'a'" :to="`/customer/${i}`")
 			van-index-anchor(index="B")
 			van-cell(title="文本" v-for="i in 8" :key="i+'b'")
 			van-index-anchor(index="C")

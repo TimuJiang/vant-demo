@@ -53,10 +53,16 @@
 </script>
 <style lang="scss" scoped>
 	.m-page {
+		width: 100vw;
 		&__content {
 			margin-top: 46px;
 		}
 		&__nav-bar {
+			background: #195DFF;
+			.van-nav-bar__title {
+				font-size: 18px;
+				color: #FFFFFF;
+			}
 		}
 	}
 </style>
