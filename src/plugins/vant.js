@@ -15,6 +15,7 @@ import {
 	Checkbox,
 	CellGroup,
 	CheckboxGroup,
+	Image,
 	List,
 	Cell,
 	DropdownMenu,
@@ -58,3 +59,4 @@ Vue
 	.use(Dialog)
 	.use(RadioGroup)
 	.use(Radio)
+	.use(Image)
