@@ -20,7 +20,7 @@
 				default: true
 			},
 			leftText: {
-				default: '返回'
+				default: ''
 			},
 			rightText: {
 				default: ''
@@ -58,10 +58,20 @@
 			margin-top: 46px;
 		}
 		&__nav-bar {
-			background: #195DFF;
+			background: transparent;
 			.van-nav-bar__title {
 				font-size: 18px;
-				color: #FFFFFF;
+				color: #333333;
+				font-weight: 600;
+			}
+			.van-nav-bar__left {
+				font-size: 16px;
+			}
+			.van-nav-bar__arrow {
+				color: #1B40D6;
+			}
+			.van-nav-bar__text {
+				color: #1B40D6;
 			}
 		}
 	}
