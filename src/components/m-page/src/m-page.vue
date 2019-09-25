@@ -1,6 +1,7 @@
 <template lang='pug'>
 	.m-page
 		van-nav-bar.m-page__nav-bar(
+			v-if="showNavBar"
 			:fixed="true"
 			:title="title"
 			:left-text="leftText"
@@ -8,7 +9,7 @@
 			:left-arrow = "back"
 			@click-left="onClickLeft"
 			@click-right="onClickRight")
-		.m-page__content
+		.m-page__content(:class="{hasTitle: showNavBar}")
 			slot
 </template>
 
@@ -16,6 +17,9 @@
 	export default {
 		name: 'm-page',
 		props: {
+			showNavBar: {
+				default: true
+			},
 			back: {
 				default: true
 			},
@@ -55,7 +59,9 @@
 	.m-page {
 		width: 100vw;
 		&__content {
-			margin-top: 46px;
+			&.hasTitle {
+				padding-top: 46px;
+			}
 		}
 		&__nav-bar {
 			background: transparent;
