@@ -1,11 +1,29 @@
 <template lang='pug'>
-	m-page.setting
+	m-page.setting(:showNavBar="false")
+		.user-info-row
+			.user-info-row__title 我的
+			.user-info-row__content
+				.left-part
+					van-image(
+						round
+						width="60"
+						height="60"
+						src="https://img.yzcdn.cn/vant/cat.jpeg"
+					)
+					.state
+				.right-part
+					.user-row
+						.user-name {{user.name}}
+						.user-title {{user.title}}
+					.address
+						| 杭州xxxx吉利4s店
 		van-cell(title="姓名" :value="user.name")
 		van-cell(title="岗位" :value="user.title")
 		van-cell(title="角色" :value="user.role" :is-link="true" @click="showRoleAction")
 		van-cell(title="状态" :value="user.status" :is-link="true"  @click="showStatusAction")
 		van-cell(title="关于我们" :is-link="true")
-		van-button.logout-button(type="primary" size="large") 退出登录
+		.logout-button-warp
+			van-button.logout-button(type="primary" size="large") 退出登录
 		van-action-sheet(key="role" v-model="show" :actions="_roleTypes" @select="onRoleSelect")
 		van-action-sheet(key="status" v-model="showStatus" :actions="_roleStatus" @select="onStatusSelect")
 
@@ -61,8 +79,83 @@
 </script>
 <style lang="scss" scoped>
 	.setting {
+		.van-cell {
+			font-size: 16px;
+			color: #333333;
+			&__title {
+				height: 30px;
+				line-height: 30px;
+			}
+			&__value {
+				height: 30px;
+				line-height: 30px;
+				color: #333333;
+			}
+		}
+		.user-info-row {
+			background: url("~assets/setting-top-bg.png") no-repeat;
+			width: 100%;
+			height: 154px;
+			background-size: contain;
+			&__title {
+				font-size: 18px;
+				color: #FFFFFF;
+				text-align: center;
+				height: 44px;
+				line-height: 44px;
+			}
+			&__content {
+				display: flex;
+				padding: 0 16px;
+				align-items: center;
+				.left-part {
+					flex: none;
+					position: relative;
+				}
+				.right-part {
+					margin-left: 30px;
+					color: #FFFFFF;
+					.user-row {
+						font-size: 0;
+						.user-name {
+							display: inline-block;
+							font-size: 18px;
+						}
+						.user-title {
+							display: inline-block;
+							font-size: 12px;
+							color: #FFFFFF;
+							background: #2279EB;
+							border-radius: 10px;
+							margin-left: 5px;
+							padding: 3px 8px;
+						}
+					}
+					.address {
+						font-size: 12px;
+						margin-top: 10px;
+					}
+
+				}
+				.state {
+					position: absolute;
+					bottom: 0px;
+					right: 0px;
+					width: 20px;
+					height: 20px;
+					border-radius: 20px;
+					background-image: linear-gradient(-45deg, #FF3B30 0%, #FF5E55 100%);
+					box-shadow: 0 1px 0 0 rgba(0,0,0,0.20);
+				}
+			}
+		}
+		.logout-button-warp {
+			margin: 50px 15px 0 15px;
+		}
 		.logout-button {
-			margin-top: 40px;
+			background: #1B40D6;
+			border: none;
+			border-radius: 5px;
 		}
 	}
 </style>

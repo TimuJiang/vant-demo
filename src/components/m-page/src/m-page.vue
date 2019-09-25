@@ -1,6 +1,7 @@
 <template lang='pug'>
 	.m-page
 		van-nav-bar.m-page__nav-bar(
+			v-if="showNavBar"
 			:fixed="true"
 			:title="title"
 			:left-text="leftText"
@@ -8,7 +9,7 @@
 			:left-arrow = "back"
 			@click-left="onClickLeft"
 			@click-right="onClickRight")
-		.m-page__content
+		.m-page__content(:class="{hasTitle: showNavBar}")
 			slot
 </template>
 
@@ -16,11 +17,14 @@
 	export default {
 		name: 'm-page',
 		props: {
+			showNavBar: {
+				default: true
+			},
 			back: {
 				default: true
 			},
 			leftText: {
-				default: '返回'
+				default: ''
 			},
 			rightText: {
 				default: ''
@@ -55,13 +59,25 @@
 	.m-page {
 		width: 100vw;
 		&__content {
-			margin-top: 46px;
+			&.hasTitle {
+				padding-top: 46px;
+			}
 		}
 		&__nav-bar {
-			background: #195DFF;
+			background: transparent;
 			.van-nav-bar__title {
 				font-size: 18px;
-				color: #FFFFFF;
+				color: #333333;
+				font-weight: 600;
+			}
+			.van-nav-bar__left {
+				font-size: 16px;
+			}
+			.van-nav-bar__arrow {
+				color: #1B40D6;
+			}
+			.van-nav-bar__text {
+				color: #1B40D6;
 			}
 		}
 	}
