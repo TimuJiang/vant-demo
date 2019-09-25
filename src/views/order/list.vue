@@ -46,7 +46,7 @@
 									.operation
 										span.price 成交价：20万 定金：5万
 										.operation-button(v-if="item.status === 1" @click="commonCancel") 作废
-										.operation-button(v-if="item.status === 1") 修改
+										.operation-button(v-if="item.status === 1" @click="goToEdit") 修改
 										.operation-button(v-if="item.status === 2" @click="goToInvoice") 开票
 										.operation-button(v-if="item.status === 3" @click="goToDelivery") 交车
 </template>
@@ -65,7 +65,7 @@
 			return {
 				active: 0,
 				loading: false,
-				isLoading:false,
+				isLoading: false,
 				finished: false,
 				list: [
 					{
@@ -99,6 +99,9 @@
 			},
 			goToDelivery() {
 				this.$router.push('order/delivery/2')
+			},
+			goToEdit() {
+				this.$router.push('order/order-detail/1/t/edit/someId/1');
 			},
 			toggleTimePicker() {
 				this.$refs.timePicker.toggle();

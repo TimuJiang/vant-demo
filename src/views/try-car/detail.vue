@@ -194,6 +194,9 @@
 		background-color: #efeff4;
 		.cell {
 			margin-bottom: 10px;
+			&:last-child {
+				margin-bottom: 0;
+			}
 		}
 		&.noButton {
 			bottom: 0
