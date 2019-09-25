@@ -58,6 +58,8 @@
 <style lang="scss" scoped>
 	.m-page {
 		width: 100vw;
+		height: 100vh;
+		position: relative;
 		&__content {
 			&.hasTitle {
 				padding-top: 46px;
