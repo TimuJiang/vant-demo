@@ -7,26 +7,29 @@
 				van-tab(title="更多(14)")
 				van-tab(title="超时(12)" class="red")
 		.container
-			van-list(
-				v-model="loading"
-				:finished="finished"
-				finished-text="我是有底线的"
-				@load="onLoad"
-			)
-				.cell(
-					v-for="(item, index) in list"
-					:key="index"
-				)
-					.customer
-						span 张学友
-						span A
-						span 1小时前
-					.car 意向车型：博瑞1.8T+6AT(国五)豪华型（博瑞）
-					.latest-follow 最新跟进：2019/08/29 电话沟通
-					.operation
-						.operation-button(@click="goToCustomer") 记录
-						.operation-button 短信
-						.operation-button 电话
+			div
+				van-pull-refresh(v-model="isLoading" @refresh="onRefresh")
+					van-list(
+						v-model="loading"
+						:finished="finished"
+						finished-text="我是有底线的"
+						:immediate-check="false"
+						@load="onLoad"
+					)
+						.cell(
+							v-for="(item, index) in list"
+							:key="index"
+						)
+							.customer
+								span 张学友
+								span A
+								span 1小时前
+							.car 意向车型：博瑞1.8T+6AT(国五)豪华型（博瑞）
+							.latest-follow 最新跟进：2019/08/29 电话沟通
+							.operation
+								.operation-button(@click="goToCustomer") 记录
+								.operation-button 短信
+								.operation-button 电话
 </template>
 
 <script>
@@ -38,11 +41,15 @@
         		default: ''
 			}
 		},
+		mounted() {
+			this.triggerLoad();
+		},
 		data() {
 			return {
 				active: 0,
-				list: [100, 101, 102, 103],
+				list: [],
 				loading: false,
+				isLoading: false,
 				finished: false
 			}
 		},
@@ -62,10 +69,20 @@
 					}
 				}, 500);
 			},
+			triggerLoad() {
+				this.loading = true;
+				this.onLoad()
+			},
 			goToCustomer() {
 				Dialog.alert({
 					message: '→ To be continued'
 				})
+			},
+			onRefresh() {
+				setTimeout(() => {
+					this.$toast('刷新成功');
+					this.isLoading = false;
+				}, 500);
 			}
 		}
     }

@@ -22,35 +22,38 @@
 							)
 					// | 2019年9月
 				.list-container
-					van-list(
-						v-model="loading"
-						:finished="finished"
-						finished-text="我是有底线的"
-						@load="onLoad"
-					)
-						.cell(
-							v-for="(item, index) in list"
-							:key="index"
-						)
-							.info
-								div
-									span.name 霍元甲
-									span.time 2019-09-12 12:05
-								.car 试驾车型：2018款博越运动款运动款...
-							.operation
-								div
-									van-icon(name="phone-o" :color="companyBlue")
-									span 电话
-								div
-									van-icon(name="comment-o" :color="companyBlue")
-									span 短信
-								div(@click="cancel")
-									van-icon(name="close" color="red")
-									span 取消
-								div(@click="goToDetail")
-									van-icon(name="logistics" :color="companyBlue" )
-									span 试驾
-							.status 待
+					div
+						van-pull-refresh(v-model="isLoading" @refresh="onRefresh")
+							van-list(
+								v-model="loading"
+								:finished="finished"
+								finished-text="我是有底线的"
+								:immediate-check="false"
+								@load="onLoad"
+							)
+								.cell(
+									v-for="(item, index) in list"
+									:key="index"
+								)
+									.info
+										div
+											span.name 霍元甲
+											span.time 2019-09-12 12:05
+										.car 试驾车型：2018款博越运动款运动款...
+									.operation
+										div
+											van-icon(name="phone-o" :color="companyBlue")
+											span 电话
+										div
+											van-icon(name="comment-o" :color="companyBlue")
+											span 短信
+										div(@click="cancel")
+											van-icon(name="close" color="red")
+											span 取消
+										div(@click="goToDetail")
+											van-icon(name="logistics" :color="companyBlue" )
+											span 试驾
+									.status 待
 </template>
 
 <script>
@@ -60,14 +63,16 @@
 
     export default {
         name: 'list',
+		mounted() {
+			this.triggerLoad();
+		},
 		data() {
 			return {
 				active: 0,
 				loading: false,
 				finished: false,
-				list: [
-					100, 101, 102
-				],
+				list: [],
+				isLoading: false,
 				currentDate: new Date(),
 				confirmDate: new Date(), // 只有点击确认才会改变这个值 取消选择日期的时候返回到该值
 				companyBlue: '#1B40D6'
@@ -103,6 +108,10 @@
 				}
 				return value;
 			},
+			triggerLoad() {
+				this.loading = true;
+				this.onLoad()
+			},
 			onLoad() {
 				// 异步更新数据
 				setTimeout(() => {
@@ -116,6 +125,12 @@
 					if (this.list.length >= 20) {
 						this.finished = true;
 					}
+				}, 500);
+			},
+			onRefresh() {
+				setTimeout(() => {
+					this.$toast('刷新成功');
+					this.isLoading = false;
 				}, 500);
 			},
 			cancel() {

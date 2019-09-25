@@ -5,23 +5,26 @@
 				.cell
 					span 顾问姓名
 					span 本月战败数
-					span 待审
+					span 待审核数
 			.body
-				van-list(
-					v-model="loading"
-					:finished="finished"
-					finished-text="没有更多了"
-					@load="onLoad"
-				)
-					.cell(
-						v-for="item in list"
-						:key="item.id"
-						class="small"
-					)
-						span {{item.name}}
-						span {{item.fail}}
-						router-link(:to="`/defeat-verify/verify-detail/${item.id}`")
-							span(class="red") {{item.pending}}
+				div
+					van-pull-refresh(v-model="isLoading" @refresh="onRefresh")
+						van-list(
+							v-model="loading"
+							:finished="finished"
+							finished-text="没有更多了"
+							:immediate-check="false"
+							@load="onLoad"
+						)
+							.cell(
+								v-for="(item, index) in list"
+								:key="index"
+								class="small"
+							)
+								span {{item.name}}
+								span {{item.fail}}
+								router-link(:to="`/defeat-verify/verify-detail/${item.id}`")
+									span(class="red") {{item.pending}}
 
 </template>
 
@@ -32,27 +35,18 @@
 			return {
 				loading: false,
 				finished: false,
-				list: [
-					{
-						id: 1,
-						name: '李相赫',
-						fail: 12,
-						pending: 4
-					},
-					{
-						id: 2,
-						name: '简自豪',
-						fail: 22,
-						pending: 5
-					},
-					{
-						id: 3,
-						name: '喻文波',
-						fail: 34,
-						pending: 6
-					}
-				]
+				tempData: {
+					id: 1,
+					name: '李相赫',
+					fail: 12,
+					pending: 4
+				},
+				list: [],
+				isLoading: false
 			}
+		},
+		mounted() {
+        	this.triggerLoad();
 		},
 		computed: {
 		},
@@ -60,17 +54,26 @@
 			onLoad() {
 				// 异步更新数据
 				setTimeout(() => {
-					this.list.push({
-						id: 4,
-						name: '卢姥爷',
-						fail: 2,
-						pending: 1
-					})
+					for (let i = 0; i < 5; i++) {
+						this.list.push(this.tempData);
+					}
 					// 加载状态结束
 					this.loading = false;
 
 					// 数据全部加载完成
-					this.finished = true;
+					if (this.list.length >= 20) {
+						this.finished = true;
+					}
+				}, 500);
+			},
+			triggerLoad() {
+				this.loading = true;
+				this.onLoad()
+			},
+			onRefresh() {
+				setTimeout(() => {
+					this.$toast('刷新成功');
+					this.isLoading = false;
 				}, 500);
 			}
 		}
@@ -119,7 +122,7 @@
 	.body {
 		position: absolute;
 		width: 100%;
-		top: 51px;
+		top: 61px;
 		bottom: 0;
 		overflow: scroll;
 	}

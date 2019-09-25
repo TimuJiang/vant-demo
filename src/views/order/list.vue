@@ -22,29 +22,33 @@
 							@cancel="dateCancel"
 						)
 			.list-container
-				van-list(
-					v-model="loading"
-					:finished="finished"
-					finished-text="我是有底线的"
-					@load="onLoad"
-				)
-					.cell(
-						v-for="(item, index) in list"
-						:key="index"
-					)
-						.order-info
-							span.order-id 销售单号：1234567
-							span(:style="{color: getStatusColor(item.status)}").order-status {{getStatusText(item.status)}}
-						.info
+				div
+					van-pull-refresh(v-model="isLoading" @refresh="onRefresh")
+						van-list(
+							v-model="loading"
+							:finished="finished"
+							finished-text="我是有底线的"
+							:immediate-check="false"
+							@load="onLoad"
+						)
 							div
-								span.name 霍元甲
-							.car 试驾车型：2018款博越运动款运动款...
-						.operation
-							span.price 成交价：20万 定金：5万
-							.operation-button(v-if="item.status === 1") 作废
-							.operation-button(v-if="item.status === 1") 修改
-							.operation-button(v-if="item.status === 2") 开票
-							.operation-button(v-if="item.status === 3") 交车
+								.cell(
+									v-for="(item, index) in list"
+									:key="index"
+								)
+									.order-info
+										span.order-id 销售单号：1234567
+										span(:style="{color: getStatusColor(item.status)}").order-status {{getStatusText(item.status)}}
+									.info
+										div
+											span.name 霍元甲
+										.car 试驾车型：2018款博越运动款运动款...
+									.operation
+										span.price 成交价：20万 定金：5万
+										.operation-button(v-if="item.status === 1" @click="commonCancel") 作废
+										.operation-button(v-if="item.status === 1") 修改
+										.operation-button(v-if="item.status === 2" @click="goToInvoice") 开票
+										.operation-button(v-if="item.status === 3" @click="goToDelivery") 交车
 </template>
 
 <script>
@@ -54,10 +58,14 @@
 
 	export default {
 		name: 'list',
+		mounted() {
+			this.triggerLoad();
+		},
 		data() {
 			return {
 				active: 0,
 				loading: false,
+				isLoading:false,
 				finished: false,
 				list: [
 					{
@@ -86,8 +94,11 @@
 			}
 		},
 		methods: {
-			goToDetail() {
-				this.$router.push('try-car/detail/edit/detailId/-1');
+			goToInvoice() {
+				this.$router.push('order/invoice/2')
+			},
+			goToDelivery() {
+				this.$router.push('order/delivery/2')
 			},
 			toggleTimePicker() {
 				this.$refs.timePicker.toggle();
@@ -108,6 +119,10 @@
 				}
 				return value;
 			},
+			triggerLoad() {
+				this.loading = true;
+				this.onLoad()
+			},
 			onLoad() {
 				// 异步更新数据
 				setTimeout(() => {
@@ -118,14 +133,11 @@
 					this.finished = true;
 				}, 500);
 			},
-			cancel() {
-				Dialog.confirm({
-					message: '确定作废该订单吗？'
-				}).then(() => {
-					// on confirm
-				}).catch(() => {
-					// on cancel
-				});
+			onRefresh() {
+				setTimeout(() => {
+					this.$toast('刷新成功');
+					this.isLoading = false;
+				}, 500);
 			},
 			getStatusText(status) {
 				switch (status) {
@@ -154,6 +166,16 @@
 					default:
 						return ''
 				}
+			},
+			commonCancel() {
+				// 1.销售经理取消审核 2.销售顾问作废
+				Dialog.confirm({
+					message: '确认要作废销售订单DS1909000020吗?'
+				}).then(() => {
+					// on confirm
+				}).catch(() => {
+					// on cancel
+				})
 			}
 		}
 	}
@@ -241,6 +263,9 @@
 						border-radius: 5px;
 						margin-left: 10px;
 					}
+				}
+				&:last-child {
+					margin-bottom: 0!important;
 				}
 			}
 		}

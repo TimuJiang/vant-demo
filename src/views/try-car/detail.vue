@@ -65,7 +65,7 @@
 				endTimeHistory: new Date(),
 				show: false,
 				selectShow: false,
-				currentSelectType: '',
+				currentSelectType: ''
 			}
 		},
 		props: {
@@ -183,25 +183,29 @@
 				if (routeType === 'show') { // 判断是编辑页还是详情页
 					return value;
 				} else {
-					let str = '';
-					let dateObj = {
-						year: date.getFullYear(),
-						month: date.getMonth() + 1,
-						day: date.getDate(),
-						hour: date.getHours(),
-						minute: date.getMinutes()
-					};
-					const { year, month, day, hour, minute } = dateObj;
-					const monthFormat = this.numberFormat(month);
-					const dayFormat = this.numberFormat(day);
-					const hourFormat = this.numberFormat(hour);
-					const minuteFormat = this.numberFormat(minute);
-					if (type === 'date') {
-						str = `${year}-${monthFormat}-${dayFormat}`;
+					if (date !== null) {
+						let str = '';
+						let dateObj = {
+							year: date.getFullYear(),
+							month: date.getMonth() + 1,
+							day: date.getDate(),
+							hour: date.getHours(),
+							minute: date.getMinutes()
+						};
+						const { year, month, day, hour, minute } = dateObj;
+						const monthFormat = this.numberFormat(month);
+						const dayFormat = this.numberFormat(day);
+						const hourFormat = this.numberFormat(hour);
+						const minuteFormat = this.numberFormat(minute);
+						if (type === 'date') {
+							str = `${year}-${monthFormat}-${dayFormat}`;
+						} else {
+							str = `${year}-${monthFormat}-${dayFormat} ${hourFormat}:${minuteFormat}`
+						}
+						return str
 					} else {
-						str = `${year}-${monthFormat}-${dayFormat} ${hourFormat}:${minuteFormat}`
+						return '';
 					}
-					return str
 				}
 			},
 			numberFormat(number) {

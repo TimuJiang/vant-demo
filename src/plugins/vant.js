@@ -21,7 +21,12 @@ import {
 	DropdownItem,
 	Popup,
 	DatetimePicker,
-	ActionSheet
+	ActionSheet,
+	PullRefresh,
+	Toast,
+	Dialog,
+	RadioGroup,
+	Radio
 } from 'vant'
 
 Vue
@@ -48,3 +53,8 @@ Vue
 	.use(Popup)
 	.use(DatetimePicker)
 	.use(ActionSheet)
+	.use(PullRefresh)
+	.use(Toast)
+	.use(Dialog)
+	.use(RadioGroup)
+	.use(Radio)
