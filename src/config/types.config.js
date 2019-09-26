@@ -34,7 +34,8 @@ export const APP_CENTER = [
 		name: '战败审核'
 	}, {
 		icon: 'friends-o',
-		path: '',
+		path: '/customer-search/-1/type/all',
+		path2: '/salesman-list',
 		name: '客户查询'
 	}, {
 		icon: 'other-pay',
