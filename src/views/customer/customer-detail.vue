@@ -15,13 +15,14 @@
 			van-cell(title="车辆颜色" value="红色")
 			van-cell(title="网络定金" value="是")
 			van-cell(title="网络定单" value="是")
-		van-cell-group
+		van-cell-group.sub
 			van-cell(title="客户来源" value="XXXX媒体")
 			van-cell(title="是否试驾" value="是")
 			van-cell(title="是否按揭" value="是")
 			van-cell(title="地区" value="什么事业部/大区/城市")
 			van-cell(title="地区" value="什么事业部/大区/城市")
-		van-button(color="#1B40D6" type="primary" size="large") 编辑
+		.button__warp
+			van-button(color="#1B40D6" type="primary" size="large") 编辑
 </template>
 
 <script>
@@ -57,15 +58,20 @@
 </script>
 <style lang="scss" scoped>
 	.customer-detail {
+		background: #f0f0f0;
+		.button__warp {
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+		}
 		&__warp {
 			padding: 15px;
-
+			background: #FFFFFF;
 			.base--card {
 				color: #FFFFFF;
 				background-image: linear-gradient(135deg, #1B40D6 0%, #2273EF 100%);
 				border-radius: 6px;
 				box-shadow: 0 3px 4px 0 rgba(0, 110, 255, 0.2);
-
 				&__title {
 					padding: 0 15px;
 					font-size: 18px;
@@ -73,7 +79,6 @@
 					height: 45px;
 					border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 				}
-
 				&__sub {
 					padding: 10px 15px;
 					font-size: 14px;
@@ -81,6 +86,8 @@
 				}
 			}
 		}
-
+		.sub {
+			margin-top: 10px;
+		}
 	}
 </style>
