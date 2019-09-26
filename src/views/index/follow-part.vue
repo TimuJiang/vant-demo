@@ -4,7 +4,7 @@
 			van-icon(name="arrow" style="float: right" color="#c4c4cc")
 			| 商机跟进
 		.follow-part__content
-			.cell__type( v-for="item in _customer" :key="item.type"  @click="onClick(item)" :class="`type-${item.type}`") {{item.name}} (99+)
+			.cell__type( v-for="item in _customer" :key="item.type"  @click="goToNicheFollow(item)" :class="`type-${item.type}`") {{item.name}} (99+)
 </template>
 
 <script>
@@ -20,9 +20,9 @@
 			},
 			goToNicheFollow(item) {
 				if (item) {
-
+					this.$router.push(`/niche-follow/${item.type}`)
 				} else {
-					this.$router.push('/niche-follow/2')
+					this.$router.push('/niche-follow/1')
 				}
 
 			}
