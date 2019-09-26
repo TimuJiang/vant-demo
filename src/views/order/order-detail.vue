@@ -66,7 +66,7 @@
 	import moment from 'moment'
 	import Vue from 'vue';
 	import { Area } from 'vant';
-	import areaList from '../../config/area.js';
+	import areaList from '../../components/m-area-select/area.js';
 	Vue.use(Area)
     export default {
         name: 'order-detail',
