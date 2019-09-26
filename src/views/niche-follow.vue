@@ -42,6 +42,7 @@
 			}
 		},
 		mounted() {
+        	this.active = parseInt(this.type) - 1;
 			this.triggerLoad();
 		},
 		data() {
