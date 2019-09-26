@@ -1,8 +1,15 @@
 <template lang='pug'>
 	.customer-detail
+		.customer-detail__warp
+			.base--card
+				.base--card__title
+					span 客户甲
+					span A
+					span 男
+				.base--card__title
+					.mobile 1361361336（浙江）
+					.create-time 创建:2019/08/22  |  来源：网络
 		van-cell-group
-			van-field(v-model="name" label="客户姓名" placeholder="请输入用户名")
-			van-switch-cell(v-model="checked" title="标题" )
 			van-cell(title="意向车系" value="博瑞")
 			van-cell(title="意向车型" value="博瑞1.8T+6AT（国五）豪华型（博瑞）")
 			van-cell(title="车辆颜色" value="红色")

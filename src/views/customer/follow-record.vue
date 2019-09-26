@@ -9,10 +9,10 @@
 				p.dateTime 2019-07-12 12:40  跟进人
 				p.content 跟进记录：跟进内容跟进内容
 		.bottom-row
-			.button-item
+			a.button-item(href="tel:18626855792")
 				van-icon(name="phone-o" color="#1B40D6" size="22px")
 				.label 电话
-			.button-item
+			a.button-item(href="sms:18626855792")
 				van-icon(name="chat-o" color="#1B40D6"  size="22px")
 				.label 短信
 			.button-item
@@ -45,6 +45,7 @@
 		top: 100px;
 		bottom: 0;
 		overflow: auto;
+		padding-bottom: 50px;
 		.record-item {
 			i.van-step__circle {
 				width: 8px;
@@ -74,12 +75,14 @@
 			height: 49px;
 			border-top: 1px solid #1B40D6;
 			.button-item {
+				display: block;
 				height: 100%;
 				flex: 1;
 				text-align: center;
 				padding-top: 5px;
 				line-height: 14px;
 				.label {
+					display: block;
 					font-size: 12px;
 					color: #666666;
 				}
