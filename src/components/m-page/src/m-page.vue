@@ -7,6 +7,7 @@
 			:left-text="leftText"
 			:right-text="rightText"
 			:left-arrow = "back"
+			:z-index="9999"
 			@click-left="onClickLeft"
 			@click-right="onClickRight")
 		.m-page__content(:class="{hasTitle: showNavBar}")
@@ -66,7 +67,7 @@
 			}
 		}
 		&__nav-bar {
-			background: transparent;
+			background: #ffffff;
 			.van-nav-bar__title {
 				font-size: 18px;
 				color: #333333;
