@@ -1,6 +1,8 @@
 <template lang='pug'>
 	.m-area-select
-		van-field(v-model="value" label="所在地区" disabled placeholder="选择省/市/区" @click="showArea")
+		van-field(v-model="value" label="所在地区" readonly placeholder="选择省/市/区" @click="showArea"
+			label-width="110"
+			:border="false")
 		van-popup(
 			v-model="show"
 			position="bottom"
@@ -42,5 +44,17 @@
 	}
 </script>
 <style lang="scss" scoped>
-
+	.m-area-select {
+		box-sizing: border-box;
+		border-bottom: 1px solid rgba(0,0,0,0.1);
+		.van-field {
+			line-height: 30px;
+			font-size: 16px;
+			font-weight: 600;
+			color: #333333;
+			.van-field__label, van-cell__title {
+				line-height: 30px;
+			}
+		}
+	}
 </style>

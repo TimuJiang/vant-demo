@@ -1,6 +1,14 @@
 <template lang='pug'>
 	.m-general-select
-		van-field(v-model="value" required :label="label" readonly placeholder="选择省/市/区" @click="onclick" right-icon="arrow")
+		van-field(v-model="value"
+			required
+			:label="label"
+			readonly
+			placeholder="选择省/市/区"
+			@click="onclick"
+			:border="false"
+			label-width="110"
+			right-icon="arrow" label-class="m-general-select__label")
 		van-action-sheet(
 			v-model="show"
 			:actions="actions"
@@ -45,8 +53,22 @@
 		}
 	}
 </script>
+<style>
+	.m-general-select__label {
+	}
+</style>
 <style lang="scss" scoped>
 	.m-general-select {
-
+		box-sizing: border-box;
+		border-bottom: 1px solid rgba(0,0,0,0.1);
+		.van-field {
+			line-height: 30px;
+			font-size: 16px;
+			font-weight: 600;
+			color: #333333;
+			.van-field__label, van-cell__title {
+				line-height: 30px;
+			}
+		}
 	}
 </style>
