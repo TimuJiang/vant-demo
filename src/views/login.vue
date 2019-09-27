@@ -24,9 +24,7 @@
         name: 'login',
 		methods: {
         	login() {
-        		this.$dialog.alert({
-					message: '→ To be continued'
-				})
+        		this.$router.push('/')
 			}
 		}
     }
