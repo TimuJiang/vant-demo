@@ -31,13 +31,18 @@
 </script>
 <style lang="scss" scoped>
 	.follow-part {
+		padding-top: 10px;
+		background-color: #efeff4;
 		.group-title {
 			padding: 10px 20px;
+			background-color: #fff;
+			font-weight: bold;
 		}
 		&__content {
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			background-color: #fff;
 		}
 		.cell__type {
 			width: 76px;

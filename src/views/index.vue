@@ -1,9 +1,9 @@
 <template lang='pug'>
 	.index
-		manager-summary-part
-		track-part
+		manager-summary-part(:is-manager="isManager")
+		track-part(:is-manager="isManager")
 		follow-part(v-if="user.role !== '数字营销经理'")
-		app-center
+		app-center(:is-manager="isManager")
 </template>
 
 <script>
@@ -23,7 +23,10 @@
 		computed: {
 			...mapGetters([
 				'user'
-			])
+			]),
+			isManager() {
+				return this.user.role === '数字营销经理';
+			}
 		},
 		methods: {
 			onClickLeft() {

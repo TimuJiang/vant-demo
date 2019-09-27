@@ -1,21 +1,25 @@
 <template lang='pug'>
 	.manager-summary-part
 		.manager-summary-part__title 商机管理系统
-		van-row.manager-summary-part__content
+		van-row(:class="{ 'is-manager': isManager }").manager-summary-part__content
+			.content-title(v-if="isManager") 今日业绩
 			van-col(span="8")
 				.number-cell 67
-				.name-cell 终端数
+				.name-cell {{isManager ? '终端数' : '未跟进'}}
 			van-col.van-hairline--left(span="8")
 				.number-cell 23
-				.name-cell 订单数
+				.name-cell {{isManager ? '订单数' : '过期未跟进'}}
 			van-col.van-hairline--left(span="8")
-				.number-cell 99
-				.name-cell 潜客数
+				.number-cell(:class="{ 'red': isManager }") 99
+				.name-cell {{isManager ? '商机数' : '未分配'}}
 </template>
 
 <script>
 	export default {
-		name: 'manager-summary-part'
+		name: 'manager-summary-part',
+		props: {
+			isManager: Boolean
+		}
 	}
 </script>
 <style lang="scss" scoped>
@@ -42,13 +46,33 @@
 			border-radius: 6px;
 			font-size: 12px;
 			color: #333333;
-			box-shadow: 0 3px 4px 0 rgba(25, 92, 195, 0.3) ;
+			box-shadow: 0 3px 4px 0 rgba(25, 92, 195, 0.3);
+			&.is-manager {
+				height: 106px;
+			}
+			.content-title {
+				height: 30px;
+				line-height: 30px;
+				text-align: center;
+				font-size: 16px;
+				box-sizing: border-box;
+				border-bottom: 1px solid #efeff4
+			}
 			.number-cell {
 				font-size: 30px;
 				color: #333333;
 				font-weight: 500;
 				margin-top: 12px;
+				&.red {
+					color: red;
+				}
 			}
 		}
+	}
+</style>
+<style>
+	.manager-summary-part .van-hairline--left::after {
+		top: -15%;
+		bottom: -15%;
 	}
 </style>

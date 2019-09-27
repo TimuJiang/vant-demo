@@ -29,7 +29,9 @@
         		default: '请选择'
 			},
 			label: String,
-			rightIcon: String,
+			rightIcon: {
+        		default: 'arrow'
+			},
 			valueFromParent: String,
 			isCurrentDate: { // 是否默认展示当前日期
         		default: false
@@ -67,16 +69,19 @@
 				}
 				this.value = initDateValue;
 			},
+			updateModel(value) {
+				this.$emit('changeParentValue', value)
+			},
 			showPopUp() {
         		this.popupTimeSelect = this.timeFormat(this.value, this.rule);
         		this.show = true;
 			},
 			dateConfirm(value) { // 确认时间选择
 				this.value = this.timeFormat(value, this.timeFormatRule[this.dateType]);
-				this.$emit('changeParentValue', this.value); // 每次确认选择时间之后就同步更新父组件v-model绑定的值
+				this.updateModel(this.value) // 每次确认选择时间之后就同步更新父组件v-model绑定的值
 				this.show = false;
 
-				// 父组件可以绑定date-confirm时间，默认传入当前选择的时间字符串
+				// 父组件可以绑定date-confirm事件，默认传入当前选择的时间字符串
 				this.$emit('date-confirm', this.value);
 			},
 			dateCancel() { // 取消时间选择
@@ -96,7 +101,7 @@
 			},
 			getCurrentDateStr(rule) { // 获取当前日期字符串，同时更新父组件v-model绑定的值
 				let value = moment(new Date()).format(rule)
-				this.$emit('change', value);
+				this.updateModel(value);
 				return value;
 			},
 		}
