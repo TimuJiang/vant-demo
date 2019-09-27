@@ -1,8 +1,9 @@
 <template lang='pug'>
 	.app-center
 		.group-title 应用中心
-		van-grid(:column-num="3")
-			van-grid-item.app-item(v-for="item in _apps" :key="item.name" :to="(item.name === '客户查询' && isManager) ? item.path2 : item.path" :icon="item.icon" :text="item.name")
+		.app-container
+			van-grid(:column-num="3")
+				van-grid-item.app-item(v-for="item in _apps" :key="item.name" :to="(item.name === '客户查询' && isManager) ? item.path2 : item.path" :icon="item.icon" :text="item.name")
 </template>
 
 <script>
@@ -25,6 +26,9 @@
 			background-color: #fff;
 			font-weight: bold;
 			padding: 10px 20px;
+		}
+		.app-container {
+			overflow: scroll;
 		}
 	}
 </style>

@@ -12,23 +12,12 @@
 					van-field(label="发票号码" placeholder="请输入")
 					van-field(v-model="invoiceName" label="开票金额(元)" readonly)
 					van-field(v-model="invoicePrice" label="开票人员" readonly)
-					van-field(v-model="invoiceTime" label="开票日期" readonly placeholder="请选择" right-icon="arrow" @click-right-icon="() => { this.selectTimeShow = true }")
+					m-time-select(v-model="invoiceTime" label="开票日期" placeholder="请选择")
 		van-action-sheet(
 			v-model="actionSheetShow"
 			:actions="items"
 			@select="selectItem"
 		)
-		van-popup(
-			v-model="selectTimeShow"
-			position="bottom"
-		)
-			van-datetime-picker(
-				v-model="timeSelect"
-				type="date"
-				@confirm="dateConfirm"
-				@cancel="() => { this.selectTimeShow = false }"
-			)
-
 
 </template>
 <script>
@@ -42,46 +31,21 @@
 				invoiceName: '张三',
 				invoicePrice: '200000',
 				invoiceType: '',
-				invoiceTimeConfirm: new Date(), // 开发票时间日期对象，格式化后的字符串值在计算属性中
-
+				invoiceTime: '',
 				actionSheetShow: false,
 				items: [
 					{ name: '机动车发票' },
 					{ name: '增值税专用发票' },
 					{ name: '增值税普通发票' }
-				],
-				selectTimeShow: false,
-				timeSelect: new Date()
+				]
         	}
 		},
 		computed: {
-			invoiceTime() {
-				let date = this.invoiceTimeConfirm;
-				let str = '';
-				let dateObj = {
-					year: date.getFullYear(),
-					month: date.getMonth() + 1,
-					day: date.getDate(),
-				};
-				const { year, month, day } = dateObj;
-				const monthFormat = this.numberFormat(month);
-				const dayFormat = this.numberFormat(day);
-
-				str = `${year}-${monthFormat}-${dayFormat}`;
-				return str
-			}
 		},
 		methods: {
         	selectItem(item) {
         		this.invoiceType = item.name;
         		this.actionSheetShow = false;
-			},
-			numberFormat(number) {
-				return number < 10 ? `0${number}` : number;
-			},
-			dateConfirm(value) { // 确认时间选择
-				this.invoiceTimeConfirm = value;
-				this.selectTimeShow = false;
 			},
 			submit() {
         		this.$dialog.alert({
@@ -108,9 +72,12 @@
 
 <style>
 	.order-invoice .van-cell {
-		font-size: 14px;
+		font-size: 16px;
+		font-weight: 600;
+		color: #333;
+		line-height: 30px;
 	}
 	.order-invoice .container .cell .van-cell__title {
-		width: 100px;
+		width: 110px;
 	}
 </style>

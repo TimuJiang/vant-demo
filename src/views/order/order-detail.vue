@@ -216,13 +216,16 @@
 
 <style>
 	.order-detail .van-cell {
-		font-size: 14px;
+		font-size: 16px;
+		font-weight: 600;
+		color: #333;
+		line-height: 30px;
 	}
 	.order-detail .container .cell .van-cell__title {
-		width: 100px;
+		width: 110px;
 	}
 	.order-detail .coupon-container .van-cell__title {
-		width: 100px;
+		width: 110px;
 	}
 	.order-detail.trans-back .van-action-sheet {
 		background-color: transparent;

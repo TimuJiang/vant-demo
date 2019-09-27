@@ -1,6 +1,6 @@
 <template lang="pug">
 	.m-time-select
-		van-field(v-model="value" readonly :placeholder="placeholder" :label="label" :right-icon="rightIcon" :required="required" @click-right-icon="showPopUp")
+		van-field(v-model="value" label-width="110" readonly :placeholder="placeholder" :label="label" :right-icon="rightIcon" :required="required" @click="showPopUp")
 		van-popup(
 			v-model="show"
 			position="bottom"
@@ -108,6 +108,11 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+	.m-time-select .van-cell {
+		font-size: 16px;
+		font-weight: 600;
+		color: #333;
+		line-height: 30px;
+	}
 </style>
