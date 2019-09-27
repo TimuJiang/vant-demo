@@ -7,7 +7,7 @@
 				van-tab(title="更多(14)")
 				van-tab(title="超时(12)" class="red")
 		.container
-			div
+			div(style="height: 100%")
 				van-pull-refresh(v-model="isLoading" @refresh="onRefresh")
 					van-list(
 						v-model="loading"
@@ -156,5 +156,8 @@
 	}
 	.niche-follow .head .van-tabs .van-tab:nth-child(4):not(.van-tab--active) {
 		color: red!important;
+	}
+	.niche-follow .van-pull-refresh {
+		min-height: 100%;
 	}
 </style>

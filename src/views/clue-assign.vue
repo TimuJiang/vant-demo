@@ -18,7 +18,7 @@
 		</div>
 		<!---->
 		<div :class="listContainerClass">
-			<div>
+			<div style="height: 100%">
 				<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
 					<van-list
 						v-model="loading"
@@ -414,5 +414,8 @@
 	/* 操作失败时显示红色的提示语 */
 	.clue-assign-fail {
 		color: #FF3B30!important;
+	}
+	.clue-assign .van-pull-refresh {
+		min-height: 100%;
 	}
 </style>

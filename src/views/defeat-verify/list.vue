@@ -1,5 +1,5 @@
 <template lang="pug">
-	m-page.list
+	m-page.defeat-verify-list
 		.container
 			.head
 				.cell
@@ -7,7 +7,7 @@
 					span 本月战败数
 					span 待审核数
 			.body
-				div
+				div(style="height: 100%")
 					van-pull-refresh(v-model="isLoading" @refresh="onRefresh")
 						van-list(
 							v-model="loading"
@@ -125,5 +125,11 @@
 		top: 61px;
 		bottom: 0;
 		overflow: scroll;
+	}
+</style>
+
+<style>
+	.defeat-verify-list .van-pull-refresh {
+		min-height: 100%;
 	}
 </style>

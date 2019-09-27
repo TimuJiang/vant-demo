@@ -22,7 +22,7 @@
 							)
 					// | 2019年9月
 				.list-container
-					div
+					div(style="height: 100%")
 						van-pull-refresh(v-model="isLoading" @refresh="onRefresh")
 							van-list(
 								v-model="loading"
@@ -249,5 +249,8 @@
 	}
 	.try-car .operation .van-icon {
 		font-size: 17px;
+	}
+	.try-car .van-pull-refresh {
+		min-height: 100%;
 	}
 </style>

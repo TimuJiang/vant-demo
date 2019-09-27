@@ -22,7 +22,7 @@
 							@cancel="dateCancel"
 						)
 			.list-container
-				div
+				div(style="height: 100%")
 					van-pull-refresh(v-model="isLoading" @refresh="onRefresh")
 						van-list(
 							v-model="loading"
@@ -289,5 +289,8 @@
 	}
 	.order-list .operation .van-icon {
 		font-size: 17px;
+	}
+	.order-list .van-pull-refresh {
+		min-height: 100%;
 	}
 </style>
