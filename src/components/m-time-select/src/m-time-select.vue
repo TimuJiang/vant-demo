@@ -114,5 +114,16 @@
 		font-weight: 600;
 		color: #333;
 		line-height: 30px;
+		&::after {
+			position: absolute;
+			box-sizing: border-box;
+			content: ' ';
+			pointer-events: none;
+			right: 0;
+			bottom: 0;
+			left: 16px;
+			border-bottom: 1px solid #ebedf0;
+			transform: scaleY(.5);
+		}
 	}
 </style>
