@@ -22,7 +22,7 @@
 			van-cell(title="地区" value="什么事业部/大区/城市")
 			van-cell(title="地区" value="什么事业部/大区/城市")
 		.button__warp
-			van-button(color="#1B40D6" type="primary" size="large") 编辑
+			van-button(color="#1B40D6" type="primary" size="large" @click="onclick") 编辑
 </template>
 
 <script>
@@ -52,6 +52,9 @@
 		methods: {
 			showArea() {
 				this.show = true
+			},
+			onclick () {
+				this.$router.push('/customer/11/edit')
 			}
 		}
 	}

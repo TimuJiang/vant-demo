@@ -5,6 +5,7 @@
 			v-model="show"
 			position="bottom"
 			:style="{ height: '40%' }"
+			@sure="onOk"
 		)
 			van-area(:area-list="_areaList"  title="所在地区")
 </template>
@@ -18,6 +19,9 @@
 		.use(Popup)
 	export default {
 		name: 'm-area-select',
+		props: {
+
+		},
 		data() {
 			return {
 				show: false,
@@ -30,6 +34,9 @@
 		methods: {
 			showArea() {
 				this.show = true
+			},
+			onOk () {
+				this.$emit('ok', this.value)
 			}
 		}
 	}

@@ -26,7 +26,7 @@
 
 <script>
 	import Vue from 'vue'
-	import VolumeItem from './follow-record/volume-item'
+	import VolumeItem from '../follow-record/volume-item'
 	import { Step, Steps } from 'vant'
 
 	Vue.use(Step).use(Steps)
