@@ -3,12 +3,12 @@
 		.edit-warp
 			van-cell-group
 				van-field(required label="客户姓名"  v-model="username")
-				m-general-select()
-				van-field(required label="意向等级"  v-model="username")
-				van-field(required label="意向车系"  v-model="username")
-				van-field(required label="意向车型"  v-model="username")
-				van-field(required label="车辆颜色"  v-model="username")
-				van-field(required label="跟进方式"  v-model="username")
+				m-general-select(label="性别")
+				m-general-select(label="意向等级")
+				m-general-select(label="意向车系")
+				m-general-select(label="意向车型")
+				m-general-select(label="车辆颜色")
+				m-general-select(label="跟进方式")
 </template>
 
 <script>

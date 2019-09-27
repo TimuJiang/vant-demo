@@ -1,6 +1,6 @@
 <template lang='pug'>
 	.m-general-select
-		van-field(v-model="value" required :label="label" readonly placeholder="选择省/市/区" @click="onclick")
+		van-field(v-model="value" required :label="label" readonly placeholder="选择省/市/区" @click="onclick" right-icon="arrow")
 		van-action-sheet(
 			v-model="show"
 			:actions="actions"
