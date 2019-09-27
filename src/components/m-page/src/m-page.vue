@@ -7,7 +7,7 @@
 			:left-text="leftText"
 			:right-text="rightText"
 			:left-arrow = "back"
-			:z-index="9999"
+			:z-index="999"
 			@click-left="onClickLeft"
 			@click-right="onClickRight")
 		.m-page__content(:class="{hasTitle: showNavBar}")
