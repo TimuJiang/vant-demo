@@ -20,20 +20,22 @@
 <script>
 	export default {
 		name: 'm-general-select',
+		model: {
+			prop: 'value',
+			event: 'change'
+		},
 		props: {
 			label: {
-				default: '单元格'
+				default: '标题'
 			},
 			value: {
-				default: '单元格'
+				default: '内容'
 			},
 			actions: {
 				type: Array,
 				default: function () {
 					return [
-						{name: '选项'},
-						{name: '选项'},
-						{name: '选项', subname: '描述信息'}
+						{name: '选项'}
 					]
 				}
 			}
@@ -49,6 +51,8 @@
 			},
 			onSelect(item) {
 				this.show = false
+				this.$emit('change', item.value)
+				this.$emit('select', item)
 			}
 		}
 	}

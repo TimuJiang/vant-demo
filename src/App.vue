@@ -11,6 +11,12 @@
 			return {
 				active: ''
 			}
+		},
+		mounted() {
+			this.$api.general.queryEnums()
+				.then(data => {
+					this.$store.commit('enums', data)
+				})
 		}
 	}
 </script>

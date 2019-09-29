@@ -3,7 +3,7 @@
 		.edit-warp
 		van-cell-group
 			van-field(required label="客户姓名"  v-model="username" label-width="110")
-			m-general-select(label="性别")
+			m-general-select(label="性别" :actions="Gender" v-model="gender")
 			m-general-select(label="意向等级")
 			m-general-select(label="意向车系")
 			m-general-select(label="意向车型")
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+	import { mapGetters } from 'vuex'
 	import Vue from 'vue'
 	import {Cell, Field} from 'vant'
 
@@ -39,9 +40,15 @@
 		data() {
 			return {
 				username: '路人甲',
+				gender: 'vb',
 				address: '',
 				record: ''
 			}
+		},
+		computed: {
+			...mapGetters([
+				'Gender'
+			])
 		}
 	}
 </script>

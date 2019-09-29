@@ -5,9 +5,9 @@ export function post(url, data, params) {
 		axios
 			.post(url, data)
 			.then(res => {
-				if (res.data.code === 0) {
+				if (res.data.status === 200) {
 					resolve(res.data.data || {})
-				} else if (res.data.code === 6) {
+				} else if (res.data.code === 405) {
 					window.location.href = '/'
 				} else {
 					reject(res.data)
