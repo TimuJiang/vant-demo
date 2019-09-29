@@ -93,10 +93,10 @@
 			}
 		}
 		.user-info-row {
-			background: url("~assets/setting-top-bg.png") no-repeat;
+			background: url("~assets/setting-top-bg.png") no-repeat center;
 			width: 100%;
 			height: 154px;
-			background-size: contain;
+			background-size: cover;
 			&__title {
 				font-size: 18px;
 				color: #FFFFFF;

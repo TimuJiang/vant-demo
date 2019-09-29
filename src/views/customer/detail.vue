@@ -1,7 +1,8 @@
 <template lang='pug'>
 	m-page.detail
-		van-tabs(
+		van-tabs.detail-tabs(
 			v-model="active"
+			line-width="50%"
 			color="#1B40D6"
 			title-active-color="#1B40D6"
 		)
@@ -24,12 +25,14 @@
 		}
 	}
 </script>
+<style lang="scss">
+	.detail .van-tab {
+		font-size: 16px;
+		color: #333333;
+	}
+</style>
 <style lang="scss" scoped>
 	.detail {
 		height: 100vh;
-		.van-ellipsis {
-			font-size: 16px;
-			color: #333333;
-		}
 	}
 </style>
