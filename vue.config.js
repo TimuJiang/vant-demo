@@ -1,4 +1,12 @@
 module.exports = {
+	devServer: {
+		proxy: {
+			'/bomt-admin': {
+				target: 'http://10.190.66.170:8899',
+				changeOrigin: true
+			}
+		}
+	},
     configureWebpack: {
 		resolve: {
 			alias: {
