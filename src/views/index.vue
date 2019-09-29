@@ -1,9 +1,10 @@
 <template lang='pug'>
 	.index
 		manager-summary-part(:is-manager="isManager")
-		track-part(:is-manager="isManager")
-		follow-part(v-if="user.role !== '数字营销经理'")
-		app-center(:is-manager="isManager")
+		.scroll
+			track-part(:is-manager="isManager")
+			follow-part(v-if="user.role !== '数字营销经理'")
+			app-center(:is-manager="isManager")
 </template>
 
 <script>
@@ -37,6 +38,12 @@
 </script>
 <style lang="scss" scoped>
 	.index {
-
+		.scroll {
+			width: 100%;
+			position: absolute;
+			top: 100px;
+			bottom: 50px;
+			overflow: scroll;
+		}
 	}
 </style>

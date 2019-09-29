@@ -36,6 +36,7 @@
 			padding-top: 10px;
 		}
 		&__content {
+			z-index: 1;
 			height: 76px;
 			left: 16px;
 			right: 16px;
