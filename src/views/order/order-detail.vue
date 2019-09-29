@@ -3,32 +3,32 @@
 		.container
 			.cell
 				van-cell-group
-					van-field(v-model="page.name" readonly label="客户名称" )
-					van-field(v-model="page.phone" readonly label="客户电话" required)
-					van-field(v-model="page.willing" readonly label="意向类型" required :right-icon="rightIcon" @click-right-icon="() => { openSelect('willing') }")
-					van-field(v-model="page.credentialType" readonly placeholder="请选择"  label="证件类型" required :right-icon="rightIcon" @click-right-icon="() => { openSelect('credentialType') }")
-					van-field(placeholder="请输入" label="证件号码" required)
-					van-field(placeholder="请输入" label="证件签发机关" required)
-					m-time-select(v-model="page.availableTime" placeholder="请选择" label="证件有效期" date-type="date" required :is-current-date="false" :right-icon="rightIcon" @date-confirm="")
+					van-field(v-model="page.pcustomerName" readonly label="客户名称" )
+					van-field(v-model="page.mobileNo" readonly label="客户电话" required)
+					van-field(v-model="page.purposeType" readonly label="意向类型" required :right-icon="rightIcon" @click="() => { openSelect('purposeType') }")
+					van-field(v-model="page.certificatesType" readonly placeholder="请选择"  label="证件类型" required :right-icon="rightIcon" @click="() => { openSelect('certificatesType') }")
+					van-field(v-model="page.certificateNo" placeholder="请输入" label="证件号码" required)
+					van-field(v-model="page.issuingOrg" placeholder="请输入" label="证件签发机关" required)
+					m-time-select(v-model="page.effective" placeholder="请选择" label="证件有效期" date-type="date" required :is-current-date="false" :right-icon="rightIcon" @date-confirm="")
 
 			.cell
 				van-cell-group
-					van-field(placeholder="请输入" label="联系人" required)
-					van-field(placeholder="请输入" label="联系电话" required)
-					van-field(v-model="page.area" readonly placeholder="请选择" label="所在地区" required :right-icon="rightIcon" @click-right-icon="() => { openSelect('area') }")
-					van-field(placeholder="请输入" label="详细地址" required)
+					van-field(v-model="page.linkmanName" placeholder="请输入" label="联系人" required)
+					van-field(v-model="page.linkmanMobile" placeholder="请输入" label="联系电话" required)
+					van-field(v-model="page.area" readonly placeholder="请选择" label="所在地区" required :right-icon="rightIcon" @click="() => { openSelect('area') }")
+					van-field(v-model="page.address" placeholder="请输入" label="详细地址" required)
 			.cell
 				van-cell-group
-					m-time-select(v-model="page.signTime" placeholder="请选择" label="签约日期" :right-icon="rightIcon" required :is-current-date="orderId === '-1'")
-					m-time-select(v-model="page.deliveryTime" placeholder="请选择" label="承诺交车日期" :right-icon="rightIcon" required)
-					van-field(v-model="page.isOnlineSale" readonly placeholder="请选择" label="是否分网销" required :right-icon="rightIcon" @click-right-icon="() => { openSelect('isOnlineSale') }")
+					m-time-select(v-model="page.contractDate" placeholder="请选择" label="签约日期" :right-icon="rightIcon" required :is-current-date="orderId === '-1'")
+					m-time-select(v-model="page.commitmentDate" placeholder="请选择" label="承诺交车日期" :right-icon="rightIcon" required)
+					van-field(v-model="page.distribution" readonly placeholder="请选择" label="是否分网销" required :right-icon="rightIcon" @click="() => { openSelect('distribution') }")
 			.cell
 				van-cell-group
-					van-field(v-model="page.buyType" readonly placeholder="请选择" label="购车类型" required :right-icon="rightIcon" @click-right-icon="() => { openSelect('buyType') }")
-					van-field(placeholder="请输入" label="底盘号" required)
-					van-field(v-model="page.payType" readonly placeholder="请选择" label="付款方式" required :right-icon="rightIcon" @click-right-icon="() => { openSelect('payType') }")
-					van-field(placeholder="请输入" label="车款(元)" required)
-					van-field(v-model="page.coupon" readonly placeholder="请添加" label="电子优惠券" right-icon="arrow" @click-right-icon="() => { openSelect('coupon') }")
+					van-field(v-model="page.buyType" readonly placeholder="请选择" label="购车类型" required :right-icon="rightIcon" @click="() => { openSelect('buyType') }")
+					van-field(v-model="page.chassisNumber" placeholder="请输入" label="底盘号" required)
+					van-field(v-model="page.paymentMethod" readonly placeholder="请选择" label="付款方式" required :right-icon="rightIcon" @click="() => { openSelect('paymentMethod') }")
+					van-field(v-model="page.payment" placeholder="请输入" label="车款(元)" required)
+					van-field(v-model="page.coupon" readonly placeholder="请添加" label="电子优惠券" right-icon="arrow" @click="() => { openSelect('coupon') }")
 		van-action-sheet(
 			v-model="select.selectShow"
 			:actions="actionItems"
@@ -73,34 +73,41 @@
 		data() {
         	return {
 				page: {
-					name: '吴彦祖',
-					phone: '18888888888',
-					willing: '个人',
-					isOnlineSale: '否', // 是否分网销
-					credentialType: '',
+					pcustomerName: '胡歌',
+					mobileNo: '123456',
+					linkmanName: '',
+					linkmanMobile: '',
+					purposeType: '个人',
+					distribution: '否', // 是否分网销
+					certificatesType: '',
+					certificateNo: '',// 证件号码
+					issuingOrg: '', // 证件签发机关
+					address: '', // 详细地址
 					buyType: '', // 购车类型
-					payType: '', // 付款方式
+					paymentMethod: '', // 付款方式
 					area: '', // 省市区名称
 					areaId: '', // 省市区code
-					availableTime: '',
+					effective: '', // 证件有效期
 					coupon: '', // 优惠券
-					signTime: '',
-					deliveryTime: ''
+					contractDate: '',
+					commitmentDate: '',
+					chassisNumber: '', // 底盘号
+					payment: '' // 车款
 				},
 				select: {
 					selectShow: false, // 控制上弹选项的显示隐藏
 					currentSelectType: '', // 当前选择的是哪种上弹类型
 					items: {
-						credentialType: [
+						certificatesType: [
 							{ name: '居民身份证' },
 							{ name: '护照' },
 							{ name: '军官证' }
 						],
-						willing: [
+						purposeType: [
 							{ name: '个人' },
 							{ name: '单位' }
 						],
-						isOnlineSale: [
+						distribution: [
 							{ name: '是' },
 							{ name: '否' }
 						],
@@ -108,7 +115,7 @@
 							{ name: '现车' },
 							{ name: '订车' }
 						],
-						payType: [
+						paymentMethod: [
 							{ name: '全款' },
 							{ name: '按揭' }
 						],
