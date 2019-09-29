@@ -38,7 +38,12 @@
 										:key="item"
 										:name="item"
 										v-show="isBatch"
-									/>
+									>
+										<m-icon slot="icon"
+												slot-scope="props"
+												:icon-class="!props.checked ? 'icon-RoundedCheckbox-unselected' : 'icon-RoundedCheckbox'"
+										/>
+									</van-checkbox>
 								</div>
 								<div class="clue-info">
 									<div class="time">
@@ -70,7 +75,13 @@
 		</div>
 		<div class="bottom-container">
 			<div :class="bottomOperationClass" v-show="isBatch">
-				<van-checkbox v-model="checkAll" @change="checkAllFuc" >全选</van-checkbox>
+				<van-checkbox v-model="checkAll" @change="checkAllFuc">
+					全选
+					<m-icon slot="icon"
+							slot-scope="props"
+							:icon-class="!props.checked ? 'icon-RoundedCheckbox-unselected' : 'icon-RoundedCheckbox'"
+					/>
+				</van-checkbox>
 			</div>
 			<div class="assign-button" @click="clickAssign">{{buttonText}}</div>
 		</div>
@@ -86,11 +97,13 @@
 			<div class="choose-salesman">
 				<div class="salesman-list">
 					<van-radio-group v-model="salesmanSelectValue">
-						<van-radio name="1">小A</van-radio>
-						<van-radio name="2">小B</van-radio>
-						<van-radio name="3">小C</van-radio>
-						<van-radio name="4">小D</van-radio>
-						<van-radio name="5">小E</van-radio>
+						<van-radio :name="item.value" :key="item.value" v-for="item in salesmanList">
+							{{item.name}}
+							<m-icon slot="icon"
+									slot-scope="props"
+									:icon-class="!props.checked ? 'icon-RoundedCheckbox-unselected' : 'icon-RoundedCheckbox'"
+							/>
+						</van-radio>
 					</van-radio-group>
 				</div>
 				<div class="choose-buttons">
@@ -123,7 +136,14 @@
 				isBatch: false,
 				isLoading: false,
 				salesmanSelectShow: false,
-				salesmanSelectValue: ''
+				salesmanSelectValue: '',
+				salesmanList: [
+					{ name: '小A', value: 1 },
+					{ name: '小B', value: 2 },
+					{ name: '小C', value: 3 },
+					{ name: '小D', value: 4 },
+					{ name: '小E', value: 5 }
+				]
 			}
 		},
 		mounted() {
@@ -397,6 +417,9 @@
 	.clue-assign .top .van-dropdown-menu__title--active {
 		color: #1989fa;
 	}
+	.clue-assign .top .van-dropdown-item__content {
+		background-color: transparent;
+	}
 	.clue-assign .bottom-operation .van-hairline--top-bottom::after {
 		border-width: 0;
 	}
@@ -417,5 +440,8 @@
 	}
 	.clue-assign .van-pull-refresh {
 		min-height: 100%;
+	}
+	.clue-assign .salesman-list .van-radio__label {
+		margin-left: 12px;
 	}
 </style>

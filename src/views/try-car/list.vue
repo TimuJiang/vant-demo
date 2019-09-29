@@ -6,6 +6,7 @@
 					van-tab(title="待试驾")
 					van-tab(title="试驾中")
 					van-tab(title="已完成")
+					van-tab(title="已取消")
 			.container
 				.time-choose
 					van-dropdown-menu(v-if="true")
@@ -31,29 +32,34 @@
 								:immediate-check="false"
 								@load="onLoad"
 							)
-								.cell(
-									v-for="(item, index) in list"
-									:key="index"
-								)
-									.info
-										div
-											span.name 霍元甲
-											span.time 2019-09-12 12:05
-										.car 试驾车型：2018款博越运动款运动款...
-									.operation
-										div
-											van-icon(name="phone-o" :color="companyBlue")
-											span 电话
-										div
-											van-icon(name="comment-o" :color="companyBlue")
-											span 短信
-										div(@click="cancel")
-											van-icon(name="close" color="red")
-											span 取消
-										div(@click="goToDetail")
-											van-icon(name="logistics" :color="companyBlue" )
-											span 试驾
-									.status 待
+								div
+									.cell(
+										v-for="(item, index) in list"
+										:key="index"
+									)
+										.info
+											div
+												span.name 霍元甲
+												span.time 2019-09-12 12:05
+											.car 试驾车型：2018款博越运动款运动款...
+										.operation
+											div
+												// van-icon(name="phone-o" :color="companyBlue")
+												m-icon(icon-class="icon-telephone")
+												span 电话
+											div
+												// van-icon(name="comment-o" :color="companyBlue")
+												m-icon(icon-class="icon-message")
+												span 短信
+											div(@click="cancel")
+												// van-icon(name="close" color="red")
+												m-icon(icon-class="icon-cancel2")
+												span 取消
+											div(@click="goToDetail")
+												// van-icon(name="logistics" :color="companyBlue" )
+												m-icon(icon-class="icon-testdrive")
+												span 试驾
+										.status 待
 </template>
 
 <script>
@@ -173,12 +179,18 @@
 			top: $top-dis;
 			bottom: 0;
 			overflow: scroll;
+			svg.m-icon {
+				font-size: 18px;
+			}
 			.cell {
 				margin-bottom: 10px;
 				position: relative;
 				background-color: #fff;
 				border-radius: 5px;
 				font-size: 16px;
+				&:last-child {
+					margin-bottom: 0!important;
+				}
 				.status {
 					position: absolute;
 					right: 0;
@@ -223,7 +235,7 @@
 						align-items: center;
 						justify-content: center;
 						> span {
-							padding-left: 2px;
+							padding-left: 5px;
 						}
 						&:last-child {
 							border-right-width: 0;
