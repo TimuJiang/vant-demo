@@ -114,16 +114,10 @@
 		font-weight: 600;
 		color: #333;
 		line-height: 30px;
-		&::after {
-			position: absolute;
-			box-sizing: border-box;
-			content: ' ';
-			pointer-events: none;
-			right: 0;
-			bottom: 0;
-			left: 16px;
-			border-bottom: 1px solid #ebedf0;
-			transform: scaleY(.5);
-		}
+		border-bottom: 1px solid rgba(0,0,0,0.1);
 	}
+	.m-time-select:last-child .van-cell {
+		border-bottom-width: 0;
+	}
+
 </style>

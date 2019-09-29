@@ -221,6 +221,15 @@
 		color: #333;
 		line-height: 30px;
 	}
+	.order-detail .van-cell:not(:last-child) {
+		border-bottom: 1px solid rgba(0,0,0,0.1);
+	}
+	.order-detail .van-hairline--top-bottom::after {
+		display: none;
+	}
+	.order-detail .van-cell::after {
+		display: none;
+	}
 	.order-detail .container .cell .van-cell__title {
 		width: 110px;
 	}
