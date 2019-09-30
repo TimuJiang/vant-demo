@@ -31,7 +31,9 @@
 		methods: {
 			login() {
 				this.$api.sso.login(this.loginName, this.password)
-				this.$router.push('/')
+					.then(response => {
+						this.$router.push('/')
+					})
 			}
 		}
 	}

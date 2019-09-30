@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '../router'
 
 function getTicket() {
 	return localStorage.getItem('bomt-ticket')
@@ -11,7 +12,7 @@ axios.interceptors.request.use(config => {
 		config.headers.ticket = ticket
 	} else {
 		if (config.url !== '/sso/user/login') {
-			window.location.href = '/login'
+			router.push('/login')
 		}
 	}
 	return config
@@ -25,10 +26,9 @@ axios.interceptors.response.use(response => {
 		localStorage.setItem('bomt-ticket', response.data.data.ticket)
 	}
 	let status = response.data.status
-	if (status === 405) {
-
+	if (status === 401) {
+		router.push('/login')
 	} else {
-
 
 	}
 	return response

@@ -18,6 +18,7 @@ async function auth (to, from, next) {
 	let match
 	for (let i = 0; i < to.matched.length; i++) {
 		match = to.matched[i]
+		console.log(/match/, match)
 		if (match.meta.auth) {
 			if (match.meta.auth.some(needUser)) {
 				await isUser()
@@ -42,6 +43,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+	// next()
 	auth(to, from, next)
 })
 

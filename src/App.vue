@@ -13,10 +13,10 @@
 			}
 		},
 		mounted() {
-			this.$api.general.queryEnums()
-				.then(data => {
-					this.$store.commit('enums', data)
-				})
+			// this.$api.general.queryEnums()
+			// 	.then(data => {
+			// 		this.$store.commit('enums', data)
+			// 	})
 		}
 	}
 </script>
