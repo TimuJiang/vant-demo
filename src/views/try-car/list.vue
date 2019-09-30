@@ -116,7 +116,7 @@
 				return `${year}年${month}月`;
 			},
 			api() {
-        		return this.$api.testDrive;
+        		return this.$api.testDrive; 
 			}
 		},
 		methods: {
