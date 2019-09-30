@@ -10,24 +10,31 @@
 			.input-container
 				span 账号
 				.input
-					input
+					input(v-model="loginName")
 			.input-container
 				span 密码
 				.input
-					input
+					input(v-model="password")
 			.button(@click="login") 登录
 
 </template>
 
 <script>
-    export default {
-        name: 'login',
+	export default {
+		name: 'login',
+		data() {
+			return {
+				loginName: '',
+				password: ''
+			}
+		},
 		methods: {
-        	login() {
-        		this.$router.push('/')
+			login() {
+				this.$api.sso.login(this.loginName, this.password)
+				this.$router.push('/')
 			}
 		}
-    }
+	}
 </script>
 
 <style lang="scss" scoped>
@@ -36,11 +43,13 @@
 		width: 100%;
 		top: 0;
 		bottom: 0;
+
 		.picContainer {
 			position: relative;
 			padding-bottom: 100%;
 			background: url("~assets/login_bg.png") no-repeat;
 			background-size: 100%;
+
 			.title {
 				position: absolute;
 				width: 100%;
@@ -53,21 +62,26 @@
 				text-align: center;
 			}
 		}
+
 		.login {
 			width: 65%;
 			margin: 0 auto;
 			padding-top: 15px;
+
 			.input-container {
 				display: flex;
 				justify-content: center;
 				border-bottom: 1px solid #efeff4;
 				margin-bottom: 12px;
+
 				span {
 					line-height: 34px;
 				}
+
 				.input {
 					flex: 1;
 					padding-left: 15px;
+
 					input {
 						height: 34px;
 						line-height: 34px;
@@ -78,6 +92,7 @@
 					}
 				}
 			}
+
 			.button {
 				margin-top: 30px;
 				height: 45px;

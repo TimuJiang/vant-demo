@@ -4,6 +4,10 @@ module.exports = {
 			'/bomt-admin': {
 				target: 'http://10.190.66.170:8899',
 				changeOrigin: true
+			},
+			'/sso': {
+				target: 'http://10.190.66.170:10100',
+				changeOrigin: true
 			}
 		}
 	},

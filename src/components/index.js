@@ -3,7 +3,6 @@ import MIcon from './m-icon'
 import MPage from './m-page'
 import IndexBarList from './index-bar-list'
 
-
 import MTimeSelect from './m-time-select'
 Vue.component(MPage.name, MPage)
 Vue.component(IndexBarList.name, IndexBarList)
