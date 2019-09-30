@@ -38,11 +38,15 @@
 </script>
 <style lang="scss" scoped>
 	.index {
+		position: absolute;
+		width: 100%;
+		top: 0;
+		bottom: 50px;
 		.scroll {
 			width: 100%;
 			position: absolute;
 			top: 100px;
-			bottom: 50px;
+			bottom: 0;
 			overflow: scroll;
 		}
 	}

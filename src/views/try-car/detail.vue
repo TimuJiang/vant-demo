@@ -1,30 +1,30 @@
 <template lang="pug">
 	m-page(:head-title="title").try-car-detail
-		.container(:class="{ noButton: routeType === 'show' }")
+		.container(:class="{ noButton: routeType === noEdit }")
 			.cell
 				van-cell-group
-					van-field(v-model="page.pcustomerName" readonly label="客户名称" required)
+					van-field(v-model="page.pcustomerName" label="客户名称" required)
 					van-field(v-model="page.mobileNo" label="客户电话" required)
 					van-field(v-model="page.realSeries" readonly label="试驾车系" placeholder="请选择" required :right-icon="rightIcon" @click="() => { openSelect('realSeries') }")
 					van-field(v-model="page.realModel" readonly label="试驾车型" placeholder="请选择" required :right-icon="rightIcon" @click="() => { openSelect('realModel') }")
 					m-time-select(v-model="page.driveDate" label="试驾时间" date-type="datetime" required :right-icon="rightIcon")
 			.cell
 				van-cell-group
-					van-field(v-model="hasUploaded" readonly label="身份证照片" placeholder="请上传" required right-icon="arrow"  @click="() => { goToUpload('id') }")
+					van-field(readonly label="身份证照片" placeholder="请上传" required right-icon="arrow"  @click="() => { goToUpload('id') }")
 					van-field(v-model="page.driverCertificateNo" label="身份证号" placeholder="请输入" required)
 					van-field(v-model="page.sex" readonly label="性别")
 					van-field(v-model="page.driverBirthday" readonly label="出生日期")
 					van-field(v-model="page.driverAddr" label="住址" placeholder="请输入" required)
 			.cell
 				van-cell-group
-					van-field(v-model="hasUploaded" readonly label="驾照照片" placeholder="请上传" required right-icon="arrow"  @click="() => { goToUpload('dl') }")
+					van-field(readonly label="驾照照片" placeholder="请上传" required right-icon="arrow"  @click="() => { goToUpload('dl') }")
 					m-time-select(v-model="page.driverLicenseEffective" label="生效日期" placeholder="请选择" required :right-icon="rightIcon")
 					m-time-select(v-model="page.driverLicenseInvalid" label="截止日期" placeholder="请选择" required :right-icon="rightIcon")
 			.cell
 				van-cell-group
 					van-field(v-model="page.protocol" readonly label="试驾协议" placeholder="请上传" required right-icon="arrow"  @click="toBeContinued")
 					van-field(v-model="page.driverName" readonly label="试驾人员" placeholder="请选择" required :right-icon="rightIcon"  @click="() => { openSelect('driverName') }")
-		.bottom-button(v-if="routeType !== 'show'" @click="doTryCar") 立即试驾
+		.bottom-button(v-if="routeType !== noEdit" @click="doTryCar") {{routeType === 'TEST_DRIVE' ? '立即试驾' : '结束试驾'}}
 		van-action-sheet(
 			v-model="select.selectShow"
 			:actions="actionItems"
@@ -41,6 +41,7 @@
 		},
 		data() {
 			return {
+				noEdit: 'FINISH',
 				page: {
 					pcustomerName: '胡歌',
 					mobileNo: '123456',
@@ -60,11 +61,11 @@
 					selectShow: false,
 					currentSelectType: '',
 					items: {
-						carSeries: [
+						realSeries: [
 							{ name: 'g' },
 							{ name: 'l' }
 						],
-						carModel: [
+						realModel: [
 							{ name: '博越' },
 							{ name: '星越' },
 							{ name: '缤越' }
@@ -89,13 +90,10 @@
 		computed: {
 			title() {
 				// console.log(this.detailId)
-				return this.routeType === 'show' ? '试乘试驾详情' : '确认试乘试驾';
+				return this.routeType === this.noEdit ? '试乘试驾详情' : '确认试乘试驾';
 			},
 			rightIcon() {
-				return this.routeType !== 'show' ? 'arrow' : ''
-			},
-			hasUploaded() {
-				return this.routeType === 'show' ? '已上传' : ''
+				return this.routeType !== this.noEdit ? 'arrow' : ''
 			},
 			actionItems() {
 				return this.select.items[this.select.currentSelectType];

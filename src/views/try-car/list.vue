@@ -1,12 +1,11 @@
 <template lang="pug">
 	m-page.list.try-car
 			.head
-				van-tabs(v-model="active" title-active-color="#1B40D6" title-inactive-color="#333")
-					van-tab(title="全部")
-					van-tab(title="待试驾")
-					van-tab(title="试驾中")
-					van-tab(title="已完成")
-					van-tab(title="已取消")
+				van-tabs(v-model="active" title-active-color="#1B40D6" title-inactive-color="#333" @click="clickTab")
+					van-tab(title="全部" name="")
+					van-tab(title="待试驾" name="TEST_DRIVER")
+					van-tab(title="试驾中" name="DRIVERING")
+					van-tab(title="已完成" name="FINISH")
 			.container
 				.time-choose
 					van-dropdown-menu(v-if="true")
@@ -28,9 +27,9 @@
 							van-list(
 								v-model="loading"
 								:finished="finished"
-								finished-text="我是有底线的"
+								:finished-text="list.length === 0 ? '-暂无数据-' : '我是有底线的'"
 								:immediate-check="false"
-								@load="onLoad"
+								@load="loadData"
 							)
 								div
 									.cell(
@@ -39,9 +38,9 @@
 									)
 										.info
 											div
-												span.name 霍元甲
-												span.time 2019-09-12 12:05
-											.car 试驾车型：2018款博越运动款运动款...
+												span.name {{item.pcustomerName}}
+												span.time {{item[mapInfo.driveStatusTime[item.driveStatus.name]]}}
+											.car 试驾车型：{{`${item.purposeSeriesName}-${item.purposeModelName}`}}
 										.operation
 											div
 												// van-icon(name="phone-o" :color="companyBlue")
@@ -51,60 +50,94 @@
 												// van-icon(name="comment-o" :color="companyBlue")
 												m-icon(icon-class="icon-message")
 												span 短信
-											div(@click="cancel")
+											div(@click="() => { cancel(item.id) }" v-if="item.driveStatus.name === 'TEST_DRIVER'")
 												// van-icon(name="close" color="red")
 												m-icon(icon-class="icon-cancel2")
 												span 取消
-											div(@click="goToDetail")
+											div(@click="() => { goToDetail(item.id, item.driveStatus.name) }" v-if="(item.driveStatus.name === 'TEST_DRIVER') || (item.driveStatus.name === 'DRIVERING')")
 												// van-icon(name="logistics" :color="companyBlue" )
 												m-icon(icon-class="icon-testdrive")
-												span 试驾
-										.status 待
+												span {{item.driveStatus.name === 'TEST_DRIVER' ? '试驾' : '结束'}}
+										.status(:class="{'finished': item.driveStatus.name === 'FINISH'}") {{mapInfo.driveStatusIconText[item.driveStatus.name]}}
 </template>
 
 <script>
 	import Vue from 'vue'
+	import moment from 'moment'
+	import { mapGetters } from 'vuex'
 	import { Tab, Tabs, Dialog, DatetimePicker } from 'vant'
 	Vue.use(Tab).use(Tabs).use(DatetimePicker)
 
     export default {
         name: 'list',
 		mounted() {
-			this.triggerLoad();
+			this.triggerLoad()
 		},
 		data() {
 			return {
-				active: 0,
+				active: '',
 				loading: false,
 				finished: false,
 				list: [],
+				param: {
+					pageNum: 1,
+					pageSize: 10,
+					driveStatus: '',
+					time: ''
+				},
 				isLoading: false,
+				mapInfo: {
+					driveStatusIconText: {
+						'TEST_DRIVER': '待',
+						'DRIVERING': '中',
+						'FINISH': '完'
+					},
+					driveStatusTime: {
+						'TEST_DRIVER': 'createTime',
+						'DRIVERING': 'driveDate',
+						'FINISH': 'endDriveDate'
+					}
+				},
 				currentDate: new Date(),
 				confirmDate: new Date(), // 只有点击确认才会改变这个值 取消选择日期的时候返回到该值
 				companyBlue: '#1B40D6'
 			}
 		},
 		computed: {
+			...mapGetters([
+				'user'
+			]),
+			isManager() {
+				return this.user.role === '数字营销经理';
+			},
         	currentDateFormat() {
 				let year = this.confirmDate.getFullYear();
 				let month = this.confirmDate.getMonth() + 1;
 				return `${year}年${month}月`;
+			},
+			api() {
+        		return this.$api.testDrive;
 			}
 		},
 		methods: {
-        	goToDetail() {
-        		this.$router.push('try-car/detail/edit/detailId/-1');
+        	goToDetail(id, driveStatus) {
+        		this.$router.push(`try-car/detail/${driveStatus}/detailId/${id}`)
 			},
         	toggleTimePicker() {
-				this.$refs.timePicker.toggle();
+				this.$refs.timePicker.toggle()
 			},
         	dateConfirm(value) {
-				this.confirmDate = value;
-				this.toggleTimePicker();
+				this.confirmDate = value
+				this.changeData('time', moment(value).format('YYYY-MM'))
+				console.log('param', this.param);
+				this.toggleTimePicker()
 			},
 			dateCancel() {
         		this.currentDate = this.confirmDate
-				this.toggleTimePicker();
+				this.toggleTimePicker()
+			},
+			clickTab(name, title) {
+				this.changeData('driveStatus', name)
 			},
 			formatter(type, value) {
 				if (type === 'year') {
@@ -116,9 +149,37 @@
 			},
 			triggerLoad() {
 				this.loading = true;
-				this.onLoad()
+				this.loadData()
 			},
-			onLoad() {
+			changeData(type, value) {
+				this.loading = true;
+        		this.param.pageNum = 1
+        		this.param[type] = value == 0 ? '' : value;
+        		this.loadData('do-clear')
+			},
+			loadData(doClear) {
+				this.api.query(this.param).then((data) => {
+					if (doClear === 'do-clear') {
+						this.list = []// 切换时间或者类型时清空列表
+					}
+					if (data.length > 0) {
+						// console.log('data', data)
+						for (let item of data) {
+							this.list.push(item)
+						}
+						this.param.pageNum++
+					} else {
+						this.finished = true;
+					}
+				}).catch((error) => {
+					this.$dialog.alert({
+						message: error.message
+					})
+				}).finally(() => {
+					this.loading = false;
+				})
+			},
+			onLoad() { // 模拟数据
 				// 异步更新数据
 				setTimeout(() => {
 					for (let i = 0; i < 10; i++) {
@@ -139,7 +200,7 @@
 					this.isLoading = false;
 				}, 500);
 			},
-			cancel() {
+			cancel(id) {
 				Dialog.confirm({
 					message: '确定取消试驾单吗？'
 				}).then(() => {
@@ -204,6 +265,9 @@
 					border-top-right-radius: 5px;
 					border-bottom-left-radius: 5px;
 					font-size: 13px;
+					&.finished {
+						background-color: #07B836;
+					}
 				}
 				.info {
 					padding: 20px 20px 20px 15px;
@@ -237,7 +301,7 @@
 						> span {
 							padding-left: 5px;
 						}
-						&:last-child {
+						&:nth-child(4) {
 							border-right-width: 0;
 						}
 					}

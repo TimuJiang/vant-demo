@@ -1,9 +1,9 @@
 import axios from 'axios'
-
+import Qs from 'qs'
 export function post(url, data, params) {
 	return new Promise((resolve, reject) => {
 		axios
-			.post(url, data)
+			.post(url, Qs.stringify(data))
 			.then(res => {
 				if (res.data.status === 200) {
 					resolve(res.data.data || {})
