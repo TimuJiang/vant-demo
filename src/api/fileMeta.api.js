@@ -3,8 +3,8 @@ import { post } from './base'
 import { basePath } from './basePath'
 
 // 上传文件
-export function upload(id) {
-	return post(`${basePath}/fileMeta/upload`, { id })
+export function upload(param) {
+	return post(`${basePath}/fileMeta/upload`, param)
 }
 
 // 获取图片流

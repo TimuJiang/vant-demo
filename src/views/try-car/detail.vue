@@ -10,19 +10,19 @@
 					m-time-select(v-model="page.driveDate" label="试驾时间" date-type="datetime" required :right-icon="rightIcon")
 			.cell
 				van-cell-group
-					van-field(readonly label="身份证照片" placeholder="请上传" required right-icon="arrow"  @click="() => { goToUpload('id') }")
+					m-img-upload(type="id" :operation="uploadOperation" ids="" title="身份证" label="身份证照片" @do-upload="(data) => { afterUpload('id', data) }")
 					van-field(v-model="page.driverCertificateNo" label="身份证号" placeholder="请输入" required)
 					van-field(v-model="page.sex" readonly label="性别")
 					van-field(v-model="page.driverBirthday" readonly label="出生日期")
 					van-field(v-model="page.driverAddr" label="住址" placeholder="请输入" required)
 			.cell
 				van-cell-group
-					van-field(readonly label="驾照照片" placeholder="请上传" required right-icon="arrow"  @click="() => { goToUpload('dl') }")
+					m-img-upload(type="dl" :operation="uploadOperation" ids="" title="驾照" label="驾照照片" @do-upload="(data) => { afterUpload('dl', data) }")
 					m-time-select(v-model="page.driverLicenseEffective" label="生效日期" placeholder="请选择" required :right-icon="rightIcon")
 					m-time-select(v-model="page.driverLicenseInvalid" label="截止日期" placeholder="请选择" required :right-icon="rightIcon")
 			.cell
 				van-cell-group
-					van-field(v-model="page.protocol" readonly label="试驾协议" placeholder="请上传" required right-icon="arrow"  @click="toBeContinued")
+					m-img-upload(type="dp" :is-multiple="true" :operation="uploadOperation" ids="" title="驾驶协议" label="驾驶协议" @do-upload="(data) => { afterUpload('dp', data) }")
 					van-field(v-model="page.driverName" readonly label="试驾人员" placeholder="请选择" required :right-icon="rightIcon"  @click="() => { openSelect('driverName') }")
 		.bottom-button(v-if="routeType !== noEdit" @click="doTryCar") {{routeType === 'TEST_DRIVE' ? '立即试驾' : '结束试驾'}}
 		van-action-sheet(
@@ -30,11 +30,10 @@
 			:actions="actionItems"
 			@select="selectItem"
 		)
-
 </template>
 
 <script>
-	import { Dialog } from 'vant';
+	import { Dialog } from 'vant'
 	export default {
 		name: 'detail',
 		created() {
@@ -70,13 +69,13 @@
 							{ name: '星越' },
 							{ name: '缤越' }
 						],
-						people: [
+						driverName: [
 							{ name: '胡彦祖' },
 							{ name: '吴彦兵' },
 							{ name: '胡京' }
 						]
 					}
-				}
+				},
 			}
 		},
 		props: {
@@ -88,6 +87,9 @@
 			}
 		},
 		computed: {
+			uploadOperation() {
+				return this.routeType === this.noEdit ? 'show' : 'edit'
+			},
 			title() {
 				// console.log(this.detailId)
 				return this.routeType === this.noEdit ? '试乘试驾详情' : '确认试乘试驾';
@@ -100,8 +102,17 @@
 			}
 		},
 		methods: {
+			afterUpload(type, data) {
+				console.log(type, data)
+			},
+			renderUploadParam(type) {
+				return {
+					uploadType: type,
+					operationType: this.routeType === this.noEdit ? 'show' : 'edit'
+				}
+			},
 			goToUpload(type) {
-				this.$router.push(`/upload/${type}/operateType/${this.routeType}/detailId/${this.detailId}`);
+				this.$router.push(`/upload/${type}/operateType/${this.routeType === this.noEdit ? 'show' : 'edit'}/fromRoute/tryCar`);
 			},
 			toBeContinued() {
 				Dialog.alert({
@@ -132,6 +143,7 @@
 </script>
 
 <style lang="scss" scoped>
+
 	.container {
 		position: absolute;
 		top: 46px;

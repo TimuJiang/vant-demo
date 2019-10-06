@@ -3,10 +3,10 @@ import Qs from 'qs'
 export function post(url, data, params) {
 	return new Promise((resolve, reject) => {
 		axios
-			.post(url, Qs.stringify(data))
+			.post(url,data instanceof FormData ? data : Qs.stringify(data))
 			.then(res => {
 				if (res.data.status === 200) {
-					resolve(res.data.data || {})
+					resolve(res.data.data || res.data)
 				} else if (res.data.code === 405) {
 					window.location.href = '/'
 				} else {
