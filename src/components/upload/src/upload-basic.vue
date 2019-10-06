@@ -246,9 +246,9 @@
 					width: 100%;
 					bottom: 0;
 					top: 0;
-					background-color: #fff;
+					background-color: #d8d8d8;
 					font-size: 18px;
-					color: #333;
+					color: #fff;
 					align-items: center;
 					justify-content: center;
 					overflow: hidden;
