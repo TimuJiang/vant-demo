@@ -99,9 +99,7 @@
 		methods: {
         	jump(type) {
         		if (type === 'bo') {
-        			this.$dialog.alert({
-						message: '跳转到商机客户'
-					})
+					this.$router.push(`/potential-customer/A`)
 				} else {
         			this.$router.push(`/customer-search/${this.id}/type/${type}`)
 				}
@@ -113,8 +111,6 @@
 					search: this.searchValue
 				};
 				this.fakeData(this.customerTypesMap[type] || '默认客户');
-
-
         		console.log('param', searchParam);
 			},
 			fakeData(name) {

@@ -37,11 +37,12 @@
 				finished: false,
 				tempData: {
 					id: 1,
-					name: '李相赫',
+					name: '顾问1',
 					fail: 12,
 					pending: 4
 				},
-				list: [],
+				list: [
+				],
 				isLoading: false
 			}
 		},
@@ -55,13 +56,19 @@
 				// 异步更新数据
 				setTimeout(() => {
 					for (let i = 0; i < 5; i++) {
-						this.list.push(this.tempData);
+						let obj = {
+							id: 1,
+							name: `顾问${parseInt(Math.random() * 100)}`,
+							fail: parseInt(Math.random() * 10),
+							pending: parseInt(Math.random() * 15)
+						}
+						this.list.push(obj);
 					}
 					// 加载状态结束
 					this.loading = false;
 
 					// 数据全部加载完成
-					if (this.list.length >= 20) {
+					if (this.list.length >= 6) {
 						this.finished = true;
 					}
 				}, 500);

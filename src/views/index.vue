@@ -3,7 +3,7 @@
 		manager-summary-part(:is-manager="isManager")
 		.scroll
 			track-part(:is-manager="isManager")
-			follow-part(v-if="user.role !== '数字营销经理'")
+			follow-part(v-if="!isManager")
 			app-center(:is-manager="isManager")
 </template>
 
@@ -26,7 +26,7 @@
 				'user'
 			]),
 			isManager() {
-				return this.user.role === '数字营销经理';
+				return this.user.roles[0].name === '数字营销经理'
 			}
 		},
 		methods: {

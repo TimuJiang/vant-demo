@@ -13,14 +13,14 @@
 					.state
 				.right-part
 					.user-row
-						.user-name {{user.name}}
-						.user-title {{user.title}}
+						.user-name {{user.loginName}}
+						.user-title {{user.name}}
 					.address
 						| 杭州xxxx吉利4s店
-		van-cell(title="姓名" :value="user.name")
-		van-cell(title="岗位" :value="user.title")
-		van-cell(title="角色" :value="user.role" :is-link="true" @click="showRoleAction")
-		van-cell(title="状态" :value="user.status" :is-link="true"  @click="showStatusAction")
+		van-cell(title="姓名" :value="user.loginName")
+		van-cell(title="岗位" :value="user.name")
+		van-cell(title="角色" :value="user.roles[0].name" :is-link="true" @click="showRoleAction")
+		van-cell(title="状态" :value="user.status.disName" :is-link="true"  @click="showStatusAction")
 		van-cell(title="关于我们" :is-link="true")
 		.logout-button-warp
 			van-button.logout-button(type="primary" size="large") 退出登录
@@ -68,7 +68,7 @@
 			},
 			onRoleSelect (value) {
 				console.log(value)
-				this.$store.state.user.role = value.name
+				this.$store.state.user.roles[0].name = value.name
 				this.show = false
 			},
 			onStatusSelect () {

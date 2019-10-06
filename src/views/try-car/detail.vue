@@ -4,7 +4,7 @@
 			.cell
 				van-cell-group
 					van-field(v-model="page.pcustomerName" label="客户名称" required)
-					van-field(v-model="page.mobileNo" label="客户电话" required)
+					van-field(v-model="page.mobileNo" placeholder="请输入" label="客户电话" required)
 					van-field(v-model="page.realSeries" readonly label="试驾车系" placeholder="请选择" required :right-icon="rightIcon" @click="() => { openSelect('realSeries') }")
 					van-field(v-model="page.realModel" readonly label="试驾车型" placeholder="请选择" required :right-icon="rightIcon" @click="() => { openSelect('realModel') }")
 					m-time-select(v-model="page.driveDate" label="试驾时间" date-type="datetime" required :right-icon="rightIcon")
@@ -37,18 +37,21 @@
 	export default {
 		name: 'detail',
 		created() {
+			this.initPageData()
+			console.log(111)
+			console.log(this.enums)
 		},
 		data() {
 			return {
 				noEdit: 'FINISH',
 				page: {
-					pcustomerName: '胡歌',
-					mobileNo: '123456',
+					pcustomerName: '',
+					mobileNo: '',
 					realSeries: '',
 					realModel: '',
 					driverCertificateNo: '',
-					sex: '男',
-					driverBirthday: '1988-12',
+					sex: '',
+					driverBirthday: '',
 					driverAddr: '',
 					protocol: '', // 试驾协议
 					driverName: '', // 试驾人员
@@ -87,6 +90,9 @@
 			}
 		},
 		computed: {
+			enums() {
+				return this.$store.state.enums
+			},
 			uploadOperation() {
 				return this.routeType === this.noEdit ? 'show' : 'edit'
 			},
@@ -99,20 +105,24 @@
 			},
 			actionItems() {
 				return this.select.items[this.select.currentSelectType];
+			},
+			api() {
+				return this.$api.testDrive
 			}
 		},
 		methods: {
 			afterUpload(type, data) {
 				console.log(type, data)
 			},
-			renderUploadParam(type) {
-				return {
-					uploadType: type,
-					operationType: this.routeType === this.noEdit ? 'show' : 'edit'
+			initPageData() {
+				if (this.detailId) {
+					this.api.get(this.detailId).then((data) => {
+						console.log('data', data)
+						this.page = Object.assign({}, this.page, data);
+					}).catch((error) => {
+
+					})
 				}
-			},
-			goToUpload(type) {
-				this.$router.push(`/upload/${type}/operateType/${this.routeType === this.noEdit ? 'show' : 'edit'}/fromRoute/tryCar`);
 			},
 			toBeContinued() {
 				Dialog.alert({

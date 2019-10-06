@@ -45,7 +45,6 @@
 </template>
 
 <script>
-	import { Dialog } from 'vant';
     export default {
         name: 'upload-basic',
 		data() {
@@ -185,11 +184,6 @@
 					this.$dialog.alert({
 						message: '图片上传失败，请重试！'
 					})
-				})
-			},
-			upload(side) {
-        		Dialog.alert({
-					message: '→ To be continued'
 				})
 			},
 			clickLeft() {

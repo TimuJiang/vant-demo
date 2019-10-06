@@ -32,9 +32,10 @@
 			login() {
 				this.$api.sso.login(this.loginName, this.password)
 					.then(response => {
-						this.$router.push('/')
+						this.$router.push('/init')
 					})
-			}
+			},
+
 		}
 	}
 </script>
