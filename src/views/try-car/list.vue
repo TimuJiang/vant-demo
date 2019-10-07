@@ -40,7 +40,7 @@
 											div
 												span.name {{item.pcustomerName}}
 												span.time {{item[mapInfo.driveStatusTime[item.driveStatus.name]]}}
-											.car 试驾车型：{{`${item.purposeSeriesName}-${item.purposeModelName}`}}
+											.car 试驾车型：{{`${item.driveStatus.name === 'TEST_DRIVER' ? item.purposeSeriesName : item.realSeriesName}-${item.driveStatus.name === 'TEST_DRIVER' ? item.purposeModelName : item.realModelName}`}}
 										.operation(v-if="!isManager")
 											div
 												// van-icon(name="phone-o" :color="companyBlue")
@@ -154,7 +154,6 @@
 				}
         		this.loadData('do-clear')
 			},
-
 			loadData(doClear) {
 				this.api.query(this.param).then((data) => {
 					if (doClear === 'do-clear') {

@@ -41,6 +41,9 @@
 			},
 			required: {
         		default: false
+			},
+			disabled: {
+        		default: false
 			}
 		},
 		data() {
@@ -80,6 +83,9 @@
 				this.$emit('changeParentValue', value)
 			},
 			showPopUp() {
+        		if (this.disabled) {
+        			return false
+				}
         		this.popupTimeSelect = this.timeFormat(this.value, this.rule);
         		this.show = true;
 			},

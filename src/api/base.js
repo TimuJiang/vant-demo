@@ -41,3 +41,22 @@ export function get(url, params) {
 			})
 	})
 }
+
+export function getFile(url, params) {
+	return new Promise((resolve, reject) => {
+		axios
+			.get(url, {
+				params: {
+					...params
+				},
+				responseType: 'blob',
+				emulateJSON: true
+			})
+			.then(res => {
+				resolve(res.data)
+			})
+			.catch(error => {
+				reject(error)
+			})
+	})
+}

@@ -16,8 +16,8 @@
 					.upload-btn(v-if="operation !== 'show'")
 						input(type="file" accept="image/*" :multiple="false" @change="(e) => { getImgBase(e, 0) }")
 						|{{btn1Text}}上传
-				.cell(v-if="type === 'id' || type === 'dl'" @click="() => { showPic(1) }")
-					.pic-container
+				.cell(v-if="type === 'id' || type === 'dl'")
+					.pic-container(@click="() => { showPic(1) }")
 						div
 							img(:src="base[1]" ref="file")
 							|示例
@@ -36,7 +36,7 @@
 				.upload-btn(v-if="operation !== 'show'")
 					input(type="file" accept="image/*" multiple @change="addPic")
 					|{{btn1Text}}上传
-		m-loading(:show="show" text="照片上传中")
+		m-loading(:show="show" :text="text")
 		van-dialog.dialogShow(
 			v-model="dialogShow"
 			:showConfirmButton="false"
@@ -54,7 +54,8 @@
 				dialogSrc: '',
 				base: [],
 				param: [],
-				show: false
+				show: false,
+				text: ''
 			}
 		},
 		props: {
@@ -63,9 +64,19 @@
 			},
 			type: String,
 			operation: String,
-			ids: String,
 			isMultiple: {
         		default: false
+			},
+			ids: String // 已上传图片的ID
+		},
+		watch: {
+			ids: {
+				handler: function(newVal, oldVal) {
+					if (newVal && !oldVal) {
+						this.getPicFromServer(newVal.split(','))
+					}
+				},
+				immediate: true
 			}
 		},
 		computed: {
@@ -168,7 +179,6 @@
 
 			},
         	save() {
-
 				let that = this;
 				async function queue(paramObj, api) {
 					let res = []
@@ -180,7 +190,7 @@
 					}
 					return res
 				}
-				this.show = true
+				this.showLoading('照片上传中')
 				queue(this.param, this.api).then((data) => {
 					// console.log('imginfo', data.toString())
 					that.$emit('do-upload', data)
@@ -189,11 +199,54 @@
 						message: '图片上传失败，请重试！'
 					})
 				}).finally(() => {
-					this.show = false
+					this.hideLoading()
 				})
+			},
+			getPicFromServer(ids) {
+				async function queue(ids, api, base, param, blobToBase64) {
+					for (let id of ids) {
+						let data = await api.getImg(id)
+						let base64 = await blobToBase64(data)
+						base.push(base64)
+						param.push(new File([data], `file-${id}`))
+					}
+				}
+				this.showLoading('加载中')
+
+				queue(ids, this.api, this.base, this.param, this.blobToBase64).catch(() => {
+					this.$dialog.alert({
+						message: '暂不支持文件预览'
+					})
+				}).finally(() => {
+					this.hideLoading()
+				})
+
+			},
+			blobToBase64(blob) {
+				return new Promise((resolve, reject) => {
+					const fileReader = new FileReader();
+					if (!window.FileReader) {
+						reject(new Error('不支持文件预览'));
+					} // 看支持不支持FileReader
+					fileReader.onload = (e) => {
+						resolve(e.target.result);
+					};
+					// readAsDataURL
+					fileReader.readAsDataURL(blob);
+					fileReader.onerror = () => {
+						reject(new Error('文件流异常'));
+					};
+				});
 			},
 			clickLeft() {
 				this.$emit('click-left')
+			},
+			showLoading(text) {
+				this.text = text
+				this.show = true
+			},
+			hideLoading() {
+        		this.show = false
 			}
 		}
     }
