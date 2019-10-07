@@ -36,12 +36,12 @@
 										v-for="(item, index) in list"
 										:key="index"
 									)
-										.info
+										.info(@click="() => { if (isManager || item.driveStatus.name === 'FINISH') goToDetail(item.id) }")
 											div
 												span.name {{item.pcustomerName}}
 												span.time {{item[mapInfo.driveStatusTime[item.driveStatus.name]]}}
 											.car 试驾车型：{{`${item.purposeSeriesName}-${item.purposeModelName}`}}
-										.operation
+										.operation(v-if="!isManager")
 											div
 												// van-icon(name="phone-o" :color="companyBlue")
 												m-icon(icon-class="icon-telephone")
@@ -54,7 +54,7 @@
 												// van-icon(name="close" color="red")
 												m-icon(icon-class="icon-cancel2")
 												span 取消
-											div(@click="() => { goToDetail(item.id, item.driveStatus.name) }" v-if="(item.driveStatus.name === 'TEST_DRIVER') || (item.driveStatus.name === 'DRIVERING')")
+											div(@click="() => { goToDetail(item.id) }" v-if="(item.driveStatus.name === 'TEST_DRIVER') || (item.driveStatus.name === 'DRIVERING')")
 												// van-icon(name="logistics" :color="companyBlue" )
 												m-icon(icon-class="icon-testdrive")
 												span {{item.driveStatus.name === 'TEST_DRIVER' ? '试驾' : '结束'}}
@@ -64,7 +64,6 @@
 <script>
 	import Vue from 'vue'
 	import moment from 'moment'
-	import { mapGetters } from 'vuex'
 	import { Tab, Tabs, Dialog, DatetimePicker } from 'vant'
 	Vue.use(Tab).use(Tabs).use(DatetimePicker)
 
@@ -104,11 +103,8 @@
 			}
 		},
 		computed: {
-			...mapGetters([
-				'user'
-			]),
 			isManager() {
-				return this.user.role === '数字营销经理';
+				return this.$store.getters.isManager
 			},
         	currentDateFormat() {
 				let year = this.confirmDate.getFullYear();
@@ -120,8 +116,8 @@
 			}
 		},
 		methods: {
-        	goToDetail(id, driveStatus) {
-        		this.$router.push(`try-car/detail/${driveStatus}/detailId/${id}`)
+        	goToDetail(id) {
+        		this.$router.push(`try-car/detail/${id}`)
 			},
         	toggleTimePicker() {
 				this.$refs.timePicker.toggle()
@@ -129,7 +125,6 @@
         	dateConfirm(value) {
 				this.confirmDate = value
 				this.changeData('time', moment(value).format('YYYY-MM'))
-				console.log('param', this.param);
 				this.toggleTimePicker()
 			},
 			dateCancel() {
@@ -154,9 +149,12 @@
 			changeData(type, value) {
 				this.loading = true;
         		this.param.pageNum = 1
-        		this.param[type] = value == 0 ? '' : value;
+				if (type && value) {
+					this.param[type] = value == 0 ? '' : value;
+				}
         		this.loadData('do-clear')
 			},
+
 			loadData(doClear) {
 				this.api.query(this.param).then((data) => {
 					if (doClear === 'do-clear') {
@@ -204,7 +202,13 @@
 				Dialog.confirm({
 					message: '确定取消试驾单吗？'
 				}).then(() => {
-					// on confirm
+					this.api.updateStatus(id).then(() => {
+						this.changeData();
+					}).catch((error) => {
+						this.$dialog.alert({
+							message: error.message
+						})
+					})
 				}).catch(() => {
 					// on cancel
 				});

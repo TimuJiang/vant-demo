@@ -4,7 +4,7 @@
 			.left(@click="clickLeft")
 				m-icon(icon-class="icon-back")
 			.title {{title}}上传
-			.right(@click="save") 保存
+			.right(@click="save" v-if="operation !== 'show'") 保存
 		.container
 			div(v-if="!isMultiple")
 				.cell
@@ -36,6 +36,7 @@
 				.upload-btn(v-if="operation !== 'show'")
 					input(type="file" accept="image/*" multiple @change="addPic")
 					|{{btn1Text}}上传
+		m-loading(:show="show" text="照片上传中")
 		van-dialog.dialogShow(
 			v-model="dialogShow"
 			:showConfirmButton="false"
@@ -52,7 +53,8 @@
         		dialogShow: false,
 				dialogSrc: '',
 				base: [],
-				param: []
+				param: [],
+				show: false
 			}
 		},
 		props: {
@@ -166,6 +168,7 @@
 
 			},
         	save() {
+
 				let that = this;
 				async function queue(paramObj, api) {
 					let res = []
@@ -177,13 +180,16 @@
 					}
 					return res
 				}
+				this.show = true
 				queue(this.param, this.api).then((data) => {
 					// console.log('imginfo', data.toString())
-					that.$emit('do-upload', data.toString())
+					that.$emit('do-upload', data)
 				}).catch((data) => {
 					this.$dialog.alert({
 						message: '图片上传失败，请重试！'
 					})
+				}).finally(() => {
+					this.show = false
 				})
 			},
 			clickLeft() {

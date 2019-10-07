@@ -1,35 +1,36 @@
 <template lang="pug">
 	m-page(:head-title="title").try-car-detail
-		.container(:class="{ noButton: routeType === noEdit }")
+		.container(:class="{ noButton: currentDriveStatus === noEdit || isManager }")
 			.cell
 				van-cell-group
 					van-field(v-model="page.pcustomerName" label="客户名称" required)
 					van-field(v-model="page.mobileNo" placeholder="请输入" label="客户电话" required)
-					van-field(v-model="page.realSeries" readonly label="试驾车系" placeholder="请选择" required :right-icon="rightIcon" @click="() => { openSelect('realSeries') }")
-					van-field(v-model="page.realModel" readonly label="试驾车型" placeholder="请选择" required :right-icon="rightIcon" @click="() => { openSelect('realModel') }")
-					m-time-select(v-model="page.driveDate" label="试驾时间" date-type="datetime" required :right-icon="rightIcon")
+					van-field(v-model="page.realSeriesName" readonly label="试驾车系" placeholder="请选择" required :right-icon="rightIcon" @click="() => { openSelect('realSeriesName') }")
+					van-field(v-model="page.realModelName" readonly label="试驾车型" placeholder="请选择" required :right-icon="rightIcon" @click="() => { openSelect('realModelName') }")
+					m-time-select(v-model="page.driveDate" label="试驾时间" :is-current-date="true" date-type="datetime" required :right-icon="rightIcon")
 			.cell
 				van-cell-group
-					m-img-upload(type="id" :operation="uploadOperation" ids="" title="身份证" label="身份证照片" @do-upload="(data) => { afterUpload('id', data) }")
+					m-img-upload(:value="uploadCertificateNoName" type="id" :operation="uploadOperation" ids="" title="身份证" label="身份证照片" @do-upload="(data) => { afterUpload('id', data) }")
 					van-field(v-model="page.driverCertificateNo" label="身份证号" placeholder="请输入" required)
 					van-field(v-model="page.sex" readonly label="性别")
 					van-field(v-model="page.driverBirthday" readonly label="出生日期")
 					van-field(v-model="page.driverAddr" label="住址" placeholder="请输入" required)
 			.cell
 				van-cell-group
-					m-img-upload(type="dl" :operation="uploadOperation" ids="" title="驾照" label="驾照照片" @do-upload="(data) => { afterUpload('dl', data) }")
+					m-img-upload(:value="uploadDriverLicenseName" type="dl" :operation="uploadOperation" ids="" title="驾照" label="驾照照片" @do-upload="(data) => { afterUpload('dl', data) }")
 					m-time-select(v-model="page.driverLicenseEffective" label="生效日期" placeholder="请选择" required :right-icon="rightIcon")
-					m-time-select(v-model="page.driverLicenseInvalid" label="截止日期" placeholder="请选择" required :right-icon="rightIcon")
+					m-time-select(v-model="page.driverLicenseInvalid"  label="截止日期" placeholder="请选择" required :right-icon="rightIcon")
 			.cell
 				van-cell-group
-					m-img-upload(type="dp" :is-multiple="true" :operation="uploadOperation" ids="" title="驾驶协议" label="驾驶协议" @do-upload="(data) => { afterUpload('dp', data) }")
+					m-img-upload(:value="uploadAgreementName" type="dp" :is-multiple="true" :operation="uploadOperation" ids="" title="驾驶协议" label="驾驶协议" @do-upload="(data) => { afterUpload('dp', data) }")
 					van-field(v-model="page.driverName" readonly label="试驾人员" placeholder="请选择" required :right-icon="rightIcon"  @click="() => { openSelect('driverName') }")
-		.bottom-button(v-if="routeType !== noEdit" @click="doTryCar") {{routeType === 'TEST_DRIVE' ? '立即试驾' : '结束试驾'}}
+		.bottom-button(v-if="currentDriveStatus !== noEdit" @click="doTryCar") {{currentDriveStatus === 'TEST_DRIVER' ? '立即试驾' : '结束试驾'}}
 		van-action-sheet(
 			v-model="select.selectShow"
 			:actions="actionItems"
 			@select="selectItem"
 		)
+		m-loading(:show="loading")
 </template>
 
 <script>
@@ -38,36 +39,41 @@
 		name: 'detail',
 		created() {
 			this.initPageData()
-			console.log(111)
-			console.log(this.enums)
 		},
 		data() {
 			return {
 				noEdit: 'FINISH',
+				loading: false,
+				currentDriveStatus: '',
 				page: {
 					pcustomerName: '',
 					mobileNo: '',
 					realSeries: '',
 					realModel: '',
+					realSeriesName: '',
+					realModelName: '',
 					driverCertificateNo: '',
-					sex: '',
+					sex: '男',
 					driverBirthday: '',
 					driverAddr: '',
 					protocol: '', // 试驾协议
 					driverName: '', // 试驾人员
 					driveDate: '',
 					driverLicenseEffective: '',
-					driverLicenseInvalid: ''
+					driverLicenseInvalid: '',
+					uploadAgreement: '0',
+					uploadCertificateNo: '0',
+					uploadDriverLicense: '0'
 				},
 				select: {
 					selectShow: false,
 					currentSelectType: '',
 					items: {
-						realSeries: [
+						realSeriesName: [
 							{ name: 'g' },
 							{ name: 'l' }
 						],
-						realModel: [
+						realModelName: [
 							{ name: '博越' },
 							{ name: '星越' },
 							{ name: '缤越' }
@@ -82,26 +88,53 @@
 			}
 		},
 		props: {
-			routeType: {
-				default: ''
-			},
 			detailId: {
 				default: ''
 			}
 		},
 		computed: {
+			isManager() {
+				return this.$store.getters.isManager
+			},
+			uploadAgreementName() {
+				if (this.page.uploadAgreement === '1') {
+					return '已上传'
+				}
+				return ''
+			},
+			uploadCertificateNoName() {
+				if (this.page.uploadCertificateNo === '1') {
+					return '已上传'
+				}
+				return ''
+			},
+			uploadDriverLicenseName() {
+				if (this.page.uploadDriverLicense === '1') {
+					return '已上传'
+				}
+				return ''
+			},
 			enums() {
 				return this.$store.state.enums
 			},
 			uploadOperation() {
-				return this.routeType === this.noEdit ? 'show' : 'edit'
+				return this.currentDriveStatus === this.noEdit || this.isManager ? 'show' : 'edit'
 			},
 			title() {
 				// console.log(this.detailId)
-				return this.routeType === this.noEdit ? '试乘试驾详情' : '确认试乘试驾';
+				switch (this.currentDriveStatus) {
+					case 'TEST_DRIVER':
+						return '确认试乘试驾'
+					case 'DRIVERING':
+						return '结束试乘试驾'
+					case 'FINISH':
+						return '试乘试驾详情'
+					default:
+						return ''
+				}
 			},
 			rightIcon() {
-				return this.routeType !== this.noEdit ? 'arrow' : ''
+				return (this.currentDriveStatus === this.noEdit || this.isManager) ? '' : 'arrow'
 			},
 			actionItems() {
 				return this.select.items[this.select.currentSelectType];
@@ -113,12 +146,33 @@
 		methods: {
 			afterUpload(type, data) {
 				console.log(type, data)
+				switch (type) {
+					case 'id':
+						this.page.certificateNoPaths = data
+						this.page.uploadCertificateNo = '1'
+						break
+					case 'dl':
+						this.page.driverLicensePaths = data
+						this.page.uploadDriverLicense = '1'
+						break
+					case 'dp':
+						this.page.agreementPaths = data
+						this.page.uploadAgreement = '1'
+						break
+					default:
+						break
+				}
 			},
 			initPageData() {
 				if (this.detailId) {
 					this.api.get(this.detailId).then((data) => {
 						console.log('data', data)
+						this.currentDriveStatus = data.driveStatus.name
 						this.page = Object.assign({}, this.page, data);
+						this.page.realSeries = this.page.purposeSeries || ''
+						this.page.realModel = this.page.purposeModel || ''
+						this.page.realSeriesName = this.page.purposeSeriesName || ''
+						this.page.realModelName = this.page.purposeModelName || ''
 					}).catch((error) => {
 
 					})
@@ -146,7 +200,23 @@
 			},
 			/* 类型选择-end */
 			doTryCar() { // 立即试驾
-				this.toBeContinued();
+				if (this.currentDriveStatus === 'TEST_DRIVER') {
+					this.page.driveStatus = 'DRIVERING'
+				} else if (this.currentDriveStatus === 'DRIVERING') {
+					this.page.driveStatus = 'FINISH'
+				}
+				this.loading = true
+				this.api.update(this.page).then((data) => {
+					this.$dialog.alert({
+						message: '成功'
+					})
+				}).catch((error) => {
+					this.$dialog.alert({
+						message: error.message
+					})
+				}).finally(() => {
+					this.loading = false
+				})
 			}
 		}
 	}

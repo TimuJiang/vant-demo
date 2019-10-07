@@ -17,7 +17,7 @@ export function update(params) {
 	return post(`${basePath}/testDrive/update`, params)
 }
 
-// 修改试乘试驾状态（完成试驾和取消试驾）
-export function updateStatus({ id, status }) {
-	return post(`${basePath}/testDrive/updateStatus`, { id, status })
+// 修改试乘试驾状态（取消试驾）
+export function updateStatus(id) {
+	return post(`${basePath}/testDrive/updateStatus`, { id })
 }

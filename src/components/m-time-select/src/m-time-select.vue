@@ -18,7 +18,7 @@
     export default {
         name: 'm-time-select',
 		created() {
-        	this.initDateValue();
+        	this.initDateValue()
 		},
 		model: {
 			prop: 'valueFromParent',
@@ -54,6 +54,13 @@
 				popupTimeSelect: null
 			}
 		},
+		watch: {
+			valueFromParent(newVal, oldVal) {
+				if (newVal !== oldVal) {
+					this.value = newVal
+				}
+			}
+		},
 		computed: {
 			rule() {
 				return this.timeFormatRule[this.dateType];
@@ -62,7 +69,7 @@
 		methods: {
         	initDateValue() { // 初始化默认时间
 				let initDateValue = '';
-				if (this.isCurrentDate) {
+				if (this.isCurrentDate && !this.valueFromParent) {
 					initDateValue = this.getCurrentDateStr(this.rule)
 				} else {
 					initDateValue = this.valueFromParent;
