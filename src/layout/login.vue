@@ -35,7 +35,7 @@
 				this.show = true
 				this.$api.sso.login(this.loginName, this.password)
 					.then(response => {
-						this.$router.push('/init')
+						this.$router.push('/preload')
 					}).finally(() => {
 						this.show = false
 				})

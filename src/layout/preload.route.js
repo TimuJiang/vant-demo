@@ -1,6 +1,6 @@
 export default {
-	path: '/init',
-	component: () => import('./init.vue'),
+	path: '/preload',
+	component: () => import('./preload.vue'),
 	meta: {
 		name: '登录'
 	},
