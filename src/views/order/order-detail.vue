@@ -1,10 +1,10 @@
 <template lang="pug">
-	m-page(:class="containerClass" @click-right="submit" :head-title="title" :right-text="(orderId !== '-1' && t === 'show') ? '' : '提交'")
+	m-page(:class="containerClass" @click-right="submit" :head-title="title" :right-text="t === 'show' ? '' : '提交'")
 		.container
 			.cell
 				van-cell-group
-					van-field(v-model="page.pcustomerName" readonly label="客户名称" )
-					van-field(v-model="page.mobileNo" readonly label="客户电话" required)
+					van-field(v-model="page.pcustomerName" label="客户名称" )
+					van-field(v-model="page.mobileNo" label="客户电话" required)
 					van-field(v-model="page.purposeType" readonly label="意向类型" required :right-icon="rightIcon" @click="() => { openSelect('purposeType') }")
 					van-field(v-model="page.certificatesType" readonly placeholder="请选择"  label="证件类型" required :right-icon="rightIcon" @click="() => { openSelect('certificatesType') }")
 					van-field(v-model="page.certificateNo" placeholder="请输入" label="证件号码" required)
@@ -15,11 +15,11 @@
 				van-cell-group
 					van-field(v-model="page.linkmanName" placeholder="请输入" label="联系人" required)
 					van-field(v-model="page.linkmanMobile" placeholder="请输入" label="联系电话" required)
-					van-field(v-model="page.area" readonly placeholder="请选择" label="所在地区" required :right-icon="rightIcon" @click="() => { openSelect('area') }")
+					van-field(v-model="page.areaName" readonly placeholder="请选择" label="所在地区" required :right-icon="rightIcon" @click="() => { openSelect('area') }")
 					van-field(v-model="page.address" placeholder="请输入" label="详细地址" required)
 			.cell
 				van-cell-group
-					m-time-select(v-model="page.contractDate" placeholder="请选择" label="签约日期" :right-icon="rightIcon" required :is-current-date="orderId === '-1'")
+					m-time-select(v-model="page.contractDate" placeholder="请选择" label="签约日期" :right-icon="rightIcon" required :is-current-date="true")
 					m-time-select(v-model="page.commitmentDate" placeholder="请选择" label="承诺交车日期" :right-icon="rightIcon" required)
 					van-field(v-model="page.distribution" readonly placeholder="请选择" label="是否分网销" required :right-icon="rightIcon" @click="() => { openSelect('distribution') }")
 			.cell
@@ -58,23 +58,18 @@
 	Vue.use(Area)
     export default {
         name: 'order-detail',
-		props: ['orderId', 't', 'someId'], // orderId: 订单ID 转订单时为-1 t: 编辑或者查看（经理只能查看） someId: 备用参数
+		props: ['orderId', 't', 'customerId'], // orderId: 订单ID 转订单时为-1 t: 编辑或者查看（经理只能查看） someId: 备用参数
 		created() {
-        	this._areaList = areaList;
+        	this._areaList = areaList
+			console.log('enums', this.$store.state.enums)
 
-        	// 初始化数据
-        	if (this.orderId === '-1') { // 转订单
-
-			} else { // 订单查看编辑
-        		// 根据orderId查询对应的数据，更新page的信息
-			}
-
+			this.initPageData()
 		},
 		data() {
         	return {
 				page: {
-					pcustomerName: '胡歌',
-					mobileNo: '123456',
+					pcustomerName: '',
+					mobileNo: '',
 					linkmanName: '',
 					linkmanMobile: '',
 					purposeType: '个人',
@@ -85,8 +80,9 @@
 					address: '', // 详细地址
 					buyType: '', // 购车类型
 					paymentMethod: '', // 付款方式
-					area: '', // 省市区名称
-					areaId: '', // 省市区code
+					county: '',
+					city: '',
+					province: '',
 					effective: '', // 证件有效期
 					coupon: '', // 优惠券
 					contractDate: '',
@@ -118,9 +114,7 @@
 						paymentMethod: [
 							{ name: '全款' },
 							{ name: '按揭' }
-						],
-						area: [],
-						coupon: [],
+						]
 					}
 				}
 			}
@@ -133,7 +127,10 @@
 				}
 			},
 			rightIcon() {
-				return (this.orderId !== '-1' && this.t === 'show') ? '' : 'arrow'
+				return this.t === 'show' ? '' : 'arrow'
+			},
+			disabled() {
+        		return this.t === 'show'
 			},
         	title() {
         		if (this.orderId === '-1') {
@@ -147,10 +144,33 @@
         		}
         	},
 			actionItems() {
-				return this.select.items[this.select.currentSelectType];
+				return this.select.items[this.select.currentSelectType]
+			},
+			customerApi() {
+				return this.$api.clueCustomer
+			},
+			orderApi() {
+        		return this.$api.order
 			}
 		},
 		methods: {
+        	initPageData() {
+        		let api = null
+				let id
+				// 初始化数据
+				if (this.orderId === '-1') { // 转订单
+					api = this.customerApi
+					id = this.customerId
+				} else { // 订单查看编辑
+					// 根据orderId查询对应的数据，更新page的信息
+					api = this.orderApi
+					id = this.orderId
+				}
+				api.get(id).then((data) => {
+					console.log('data', data)
+					this.page = Object.assign({}, this.page, data)
+				})
+			},
 			/* 类型选择-start */
 			openSelect(type) {
 				this.select.currentSelectType = type
@@ -162,22 +182,31 @@
 			},
 			/* 类型选择-end */
 			areaConfirm(data) { // 地区选择确认
-				let areaName = '';
+				let areaName = ''
 				for (let item of data) {
 					areaName += `${item.name} `
 				}
-				this.page.area = areaName;
-				this.page.areaId = data[data.length - 1].code;
-				this.select.selectShow = false;
+				this.page.areaName = areaName;
+				this.page.county = data[data.length - 1].code
+				this.page.city = data[1].code
+				this.page.province = data[0].code
+				this.select.selectShow = false
 			},
 			verifyCoupon() { // 验证优惠券
 				this.select.selectShow = false;
 			},
 			submit() {
-				console.log('page.availableTime', this.page.availableTime);
-				this.$dialog.alert({
-					message: '提交成功'
-				})
+				if (this.orderId === '-1') {
+					this.orderApi.save(this.page).then((data) => {
+						console.log('data', data)
+					}).catch((error) => {
+						this.$dialog.alert({
+							message: error.message || '操作失败'
+						})
+					})
+				} else {
+
+				}
 			}
 		}
     }

@@ -1,5 +1,5 @@
 export default {
-	path: 'order-detail/:orderId/t/:t/someId/:someId',
+	path: 'order-detail/:orderId/t/:t/customerId/:customerId',
 	props: true,
 	component: () => import('./order-detail'),
 	meta: {

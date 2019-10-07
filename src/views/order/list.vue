@@ -1,12 +1,12 @@
 <template lang="pug">
 	m-page.order-list
 		.head
-			van-tabs(v-model="active" title-active-color="#1B40D6" title-inactive-color="#333")
-				van-tab(title="全部")
-				van-tab(title="未审核")
-				van-tab(title="已审核")
-				van-tab(title="已开票")
-				van-tab(title="已交车")
+			van-tabs(v-model="active" title-active-color="#1B40D6" title-inactive-color="#333" @click="clickTab")
+				van-tab(title="全部" name="")
+				van-tab(title="未审核" name="UNAUDITED")
+				van-tab(title="已审核" name="AUDITED")
+				van-tab(title="已开票" name="INVOICED")
+				van-tab(title="已交车" name="DELIVERED")
 		.container
 			.time-choose
 				van-dropdown-menu(v-if="true")
@@ -38,21 +38,22 @@
 								)
 									.order-info
 										span.order-id 销售单号：1234567
-										span(:style="{color: getStatusColor(item.status)}").order-status {{getStatusText(item.status)}}
+										span(:style="{color: mapInfo.color[item.status]}").order-status {{mapInfo.text[item.status]}}
 									.info
 										div
 											span.name 霍元甲
 										.car 试驾车型：2018款博越运动款运动款...
 									.operation
 										span.price 成交价：20万 定金：5万
-										.operation-button(v-if="item.status === 1" @click="commonCancel") 作废
-										.operation-button(v-if="item.status === 1" @click="goToEdit") 修改
-										.operation-button(v-if="item.status === 2" @click="goToInvoice") 开票
-										.operation-button(v-if="item.status === 3" @click="goToDelivery") 交车
+										.operation-button(v-if="item.status === 'UNAUDITED'" @click="commonCancel") 作废
+										.operation-button(v-if="item.status === 'UNAUDITED'" @click="goToEdit") 修改
+										.operation-button(v-if="item.status === 'AUDITED'" @click="goToInvoice") 开票
+										.operation-button(v-if="item.status === 'INVOICED'" @click="goToDelivery") 交车
 </template>
 
 <script>
 	import Vue from 'vue'
+	import moment from 'moment'
 	import { Tab, Tabs, Dialog, DatetimePicker } from 'vant'
 	Vue.use(Tab).use(Tabs).use(DatetimePicker)
 
@@ -69,18 +70,38 @@
 				finished: false,
 				list: [
 					{
-						status: 1
+						status: 'UNAUDITED'
 					},
 					{
-						status: 2
+						status: 'AUDITED'
 					},
 					{
-						status: 3
+						status: 'INVOICED'
 					},
 					{
-						status: 4
+						status: 'DELIVERED'
 					}
 				],
+				param: {
+					pageNum: 1,
+					pageSize: 10,
+					status: '',
+					time: ''
+				},
+				mapInfo: {
+					text: {
+						'UNAUDITED': '未审核',
+						'AUDITED': '已审核',
+						'INVOICED': '已开票',
+						'DELIVERED': '已交车'
+					},
+					color: {
+						'UNAUDITED': '#FF3B30',
+						'AUDITED': '#F29D00',
+						'INVOICED': '#07B836',
+						'DELIVERED': '#07B836'
+					}
+				},
 				currentDate: new Date(),
 				confirmDate: new Date(), // 只有点击确认才会改变这个值 取消选择日期的时候返回到该值
 				companyBlue: '#1B40D6'
@@ -91,6 +112,9 @@
 				let year = this.confirmDate.getFullYear();
 				let month = this.confirmDate.getMonth() + 1;
 				return `${year}年${month}月`;
+			},
+			api() {
+				return this.$api.order
 			}
 		},
 		methods: {
@@ -108,6 +132,7 @@
 			},
 			dateConfirm(value) {
 				this.confirmDate = value;
+				this.changeData('time', moment(value).format('YYYY-MM'))
 				this.toggleTimePicker();
 			},
 			dateCancel() {
@@ -122,9 +147,42 @@
 				}
 				return value;
 			},
+			clickTab(name) {
+				this.changeData('status', name)
+			},
 			triggerLoad() {
 				this.loading = true;
-				this.onLoad()
+				this.loadData()
+			},
+			changeData(type, value) {
+				this.loading = true
+				this.param.pageNum = 1
+				if (type && value) {
+					this.param[type] = value == 0 ? '' : value;
+				}
+				// this.loadData('do-clear')
+			},
+			loadData(doClear) {
+				this.api.query(this.param).then((data) => {
+					if (doClear === 'do-clear') {
+						this.list = []// 切换时间或者类型时清空列表
+					}
+					if (data.length > 0) {
+						// console.log('data', data)
+						for (let item of data) {
+							this.list.push(item)
+						}
+						this.param.pageNum++
+					} else {
+						this.finished = true;
+					}
+				}).catch((error) => {
+					this.$dialog.alert({
+						message: error.message
+					})
+				}).finally(() => {
+					this.loading = false;
+				})
 			},
 			onLoad() {
 				// 异步更新数据
@@ -140,35 +198,7 @@
 				setTimeout(() => {
 					this.$toast('刷新成功');
 					this.isLoading = false;
-				}, 500);
-			},
-			getStatusText(status) {
-				switch (status) {
-					case 1:
-						return '未审核';
-					case 2:
-						return '已审核';
-					case 3:
-						return '已开票';
-					case 4:
-						return '已交车';
-					default:
-						return ''
-				}
-			},
-			getStatusColor(status) {
-				switch (status) {
-					case 1:
-						return '#FF3B30';
-					case 2:
-						return '#F29D00';
-					case 3:
-						return '#07B836';
-					case 4:
-						return '#07B836';
-					default:
-						return ''
-				}
+				}, 500)
 			},
 			commonCancel() {
 				// 1.销售经理取消审核 2.销售顾问作废
