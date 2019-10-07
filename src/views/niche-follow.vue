@@ -1,6 +1,6 @@
 <template lang="pug">
 	m-page.niche-follow
-		.head
+		.head(:class="{ 'isOvertime': active === 3}")
 			van-tabs(v-model="active" title-active-color="#1B40D6" title-inactive-color="#333")
 				van-tab(title="今日(332)")
 				van-tab(title="明日(34)")
@@ -154,7 +154,10 @@
 	.niche-follow .head .van-tabs__line {
 		background-color: #1B40D6;
 	}
-	.niche-follow .head .van-tabs .van-tab:nth-child(4):not(.van-tab--active) {
+	.niche-follow .head.isOvertime .van-tabs__line {
+		background-color: red;
+	}
+	.niche-follow .head .van-tabs .van-tab:nth-child(4) {
 		color: red!important;
 	}
 	.niche-follow .van-pull-refresh {

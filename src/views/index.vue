@@ -8,7 +8,6 @@
 </template>
 
 <script>
-	import { mapGetters } from 'vuex'
 	import TrackPart from './index/track-part'
 	import FollowPart from './index/follow-part'
 	import AppCenter from './index/app-center'
@@ -22,11 +21,8 @@
 			AppCenter
 		},
 		computed: {
-			...mapGetters([
-				'user'
-			]),
 			isManager() {
-				return this.user.roles[0].name === '数字营销经理'
+				return this.$store.getters.isManager
 			}
 		},
 		methods: {

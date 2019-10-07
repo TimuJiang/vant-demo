@@ -3,13 +3,13 @@
 		.manager-summary-part__title 商机管理系统
 		van-row(:class="{ 'is-manager': isManager }").manager-summary-part__content
 			.content-title(v-if="isManager") 今日业绩
-			van-col(span="8")
+			van-col(span="8" @click="() => { this.$router.push(isManager ? '/order' : '/niche-follow/1') }")
 				.number-cell 67
 				.name-cell {{isManager ? '终端数' : '未跟进'}}
-			van-col.van-hairline--left(span="8")
+			van-col.van-hairline--left(span="8" @click="() => { this.$router.push(isManager ? '/order' : '/niche-follow/4') }")
 				.number-cell 23
 				.name-cell {{isManager ? '订单数' : '过期未跟进'}}
-			van-col.van-hairline--left(span="8")
+			van-col.van-hairline--left(span="8" @click="() => { this.$router.push(isManager ? '/potential-customer/H' : '/clue-assign') }")
 				.number-cell(:class="{ 'red': isManager }") 99
 				.name-cell {{isManager ? '商机数' : '未分配'}}
 </template>

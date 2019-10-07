@@ -1,10 +1,11 @@
+import Index from './message/index.route'
+import MessageSetting from './message/message-setting.route'
+
 export default {
 	path: '/message',
-	component: () => import('./message'),
-	meta: {
-		name: 'message',
-		showTabbar: true
-		// auth: ['user']
-	},
-	children: []
+	component: { template: '<router-view></router-view>' },
+	children: [
+		Index,
+		MessageSetting
+	]
 }

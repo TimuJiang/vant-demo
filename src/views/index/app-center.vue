@@ -3,7 +3,7 @@
 		.group-title 应用中心
 		.app-container
 			van-grid(:column-num="3")
-				van-grid-item.app-item(v-for="item in _apps" :key="item.name" :to="(item.name === '客户查询' && isManager) ? item.path2 : item.path" :icon="item.icon" :text="item.name")
+				van-grid-item.app-item(v-for="item in _apps" v-if="!((item.name === '线索分配' || item.name === '战败审核') && !isManager)" :key="item.name" :to="(item.name === '客户查询' && isManager) ? item.path2 : item.path" :icon="item.icon" :text="item.name")
 </template>
 
 <script>

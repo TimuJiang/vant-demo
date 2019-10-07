@@ -40,6 +40,9 @@ export default new Vuex.Store({
 		},
 		'Gender'(state) {
 			return state.enums.Gender
+		},
+		'isManager'(state) {
+			return state.user.roles[0].name === '数字营销经理'
 		}
 	}
 })

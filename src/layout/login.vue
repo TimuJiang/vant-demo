@@ -17,6 +17,7 @@
 					input(v-model="password")
 			.button(@click="login") 登录
 
+			m-loading(:show="show" text="登录中...")
 </template>
 
 <script>
@@ -25,16 +26,20 @@
 		data() {
 			return {
 				loginName: '',
-				password: ''
+				password: '',
+				show: false
 			}
 		},
 		methods: {
 			login() {
+				this.show = true
 				this.$api.sso.login(this.loginName, this.password)
 					.then(response => {
 						this.$router.push('/init')
-					})
-			},
+					}).finally(() => {
+						this.show = false
+				})
+			}
 
 		}
 	}
