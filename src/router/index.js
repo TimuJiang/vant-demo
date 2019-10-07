@@ -39,13 +39,7 @@ async function isUser () {
 
 const router = new Router({
 	mode: 'history',
-	routes: [
-		...routes,
-		{
-			path: '*',
-			redirect: '/404'
-		}
-	]
+	routes: routes
 })
 
 router.beforeEach((to, from, next) => {
