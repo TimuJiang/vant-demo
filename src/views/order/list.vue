@@ -2,7 +2,7 @@
 	m-page.order-list
 		.head
 			van-tabs(v-model="active" title-active-color="#1B40D6" title-inactive-color="#333" @click="clickTab")
-				van-tab(title="全部" name="")
+				van-tab(title="全部" name="all")
 				van-tab(title="未审核" name="UNAUDITED")
 				van-tab(title="已审核" name="AUDITED")
 				van-tab(title="已开票" name="INVOICED")
@@ -27,7 +27,7 @@
 						van-list(
 							v-model="loading"
 							:finished="finished"
-							finished-text="我是有底线的"
+							:finished-text="list.length === 0 ? '-暂无数据-' : '我是有底线的'"
 							:immediate-check="false"
 							@load="onLoad"
 						)
@@ -35,20 +35,26 @@
 								.cell(
 									v-for="(item, index) in list"
 									:key="index"
+									@click="() => { clickCell(item) }"
 								)
 									.order-info
-										span.order-id 销售单号：1234567
-										span(:style="{color: mapInfo.color[item.status]}").order-status {{mapInfo.text[item.status]}}
+										span.order-id 销售单号：{{item.orderNum}}
+										span(:style="{color: mapInfo.color[item.status.name]}").order-status {{mapInfo.text[item.status.name]}}
 									.info
 										div
-											span.name 霍元甲
+											span.name {{item.pCustomerName}}
 										.car 试驾车型：2018款博越运动款运动款...
 									.operation
-										span.price 成交价：20万 定金：5万
-										.operation-button(v-if="item.status === 'UNAUDITED'" @click="commonCancel") 作废
-										.operation-button(v-if="item.status === 'UNAUDITED'" @click="goToEdit") 修改
-										.operation-button(v-if="item.status === 'AUDITED'" @click="goToInvoice") 开票
-										.operation-button(v-if="item.status === 'INVOICED'" @click="goToDelivery") 交车
+										span.price 成交价：{{item.payment}}万 定金：5万
+										span(v-if="!isManager")
+											.operation-button(v-if="item.status.name === 'UNAUDITED'" @click="commonCancel('INVALIDATED', item.id, '作废', item.orderNum)") 作废
+											.operation-button(v-if="item.status.name === 'UNAUDITED'" @click="() => { goToEdit(item.id) }") 修改
+											.operation-button(v-if="item.status.name === 'AUDITED'" @click="(e) => { goToInvoice(item.id, e) }") 开票
+											.operation-button(v-if="item.status.name === 'INVOICED'" @click="(e) => { goToDelivery(item.id, e) }") 交车
+										span(v-if="isManager")
+											.operation-button(v-if="item.status.name === 'UNAUDITED'" @click="commonCancel('AUDITED', item.id, '审核', item.orderNum)") 审核
+											.operation-button(v-if="item.status.name === 'AUDITED'" @click="commonCancel('UNAUDITED', item.id, '取消审核', item.orderNum)") 取消审核
+				m-loading(:show="show" text="操作进行中")
 </template>
 
 <script>
@@ -68,19 +74,26 @@
 				loading: false,
 				isLoading: false,
 				finished: false,
+				show: false,
 				list: [
-					{
-						status: 'UNAUDITED'
+					/*{
+						pCustomerName: '陈近南',
+						orderNum: '123456',
+						status: { name: 'AUDITED' },
+						payment: '12'
 					},
 					{
-						status: 'AUDITED'
+						pCustomerName: '康熙',
+						orderNum: '546721',
+						status: { name: 'INVOICED' },
+						payment: '3'
 					},
 					{
-						status: 'INVOICED'
-					},
-					{
-						status: 'DELIVERED'
-					}
+						pCustomerName: '建宁公主',
+						orderNum: '897383',
+						status: { name: 'DELIVERED' },
+						payment: '6'
+					}*/
 				],
 				param: {
 					pageNum: 1,
@@ -108,6 +121,9 @@
 			}
 		},
 		computed: {
+			isManager() {
+				return this.$store.getters.isManager
+			},
 			currentDateFormat() {
 				let year = this.confirmDate.getFullYear();
 				let month = this.confirmDate.getMonth() + 1;
@@ -118,14 +134,41 @@
 			}
 		},
 		methods: {
-			goToInvoice() {
-				this.$router.push('order/invoice/2')
+			clickCell(item) {
+				if (this.isManager || (!this.isManager && item.status.name !== 'UNAUDITED')) {
+					this.$router.push(`order/order-detail/${item.id}/t/show/customerId/-1`)
+				}
 			},
-			goToDelivery() {
-				this.$router.push('order/delivery/2')
+			updateStatus(status, id) {
+				let action = null
+				if (status === 'UNAUDITED') { // 取消审核调cancelOrderAuidt接口，审核和作废调用updateStatus接口
+					action = this.api.cancelOrderAuidt
+				} else {
+					action = this.api.updateStatus
+				}
+				this.show = true
+				action({
+					id, status
+				}).then(() => {
+					this.changeData()
+				}).catch((error) => {
+					this.$dialog.alert({
+						message: error.message || '操作失败'
+					})
+				}).finally(() => {
+					this.show = false
+				})
 			},
-			goToEdit() {
-				this.$router.push('order/order-detail/1/t/edit/someId/1');
+			goToInvoice(id, e) {
+				e.stopPropagation()
+				this.$router.push(`order/invoice/${id}`)
+			},
+			goToDelivery(id ,e) {
+				e.stopPropagation()
+				this.$router.push(`order/delivery/${id}`)
+			},
+			goToEdit(id) {
+				this.$router.push(`order/order-detail/${id}/t/edit/customerId/-1`);
 			},
 			toggleTimePicker() {
 				this.$refs.timePicker.toggle();
@@ -158,9 +201,10 @@
 				this.loading = true
 				this.param.pageNum = 1
 				if (type && value) {
-					this.param[type] = value == 0 ? '' : value;
+					this.param[type] = (value === 'all' ? '' : value)
 				}
-				// this.loadData('do-clear')
+				console.log('this.param', this.param)
+				this.loadData('do-clear')
 			},
 			loadData(doClear) {
 				this.api.query(this.param).then((data) => {
@@ -200,12 +244,12 @@
 					this.isLoading = false;
 				}, 500)
 			},
-			commonCancel() {
+			commonCancel(status, id, text, orderNum) {
 				// 1.销售经理取消审核 2.销售顾问作废
 				Dialog.confirm({
-					message: '确认要作废销售订单DS1909000020吗?'
+					message: `是否确认${text}销售订单\n${orderNum}`
 				}).then(() => {
-					// on confirm
+					this.updateStatus(status, id)
 				}).catch(() => {
 					// on cancel
 				})
@@ -286,15 +330,17 @@
 						max-width: 45%;
 					}
 					.operation-button {
-						width: 65px;
-						height: 26px;
-						color: $company-blue;
-						line-height: 26px;
+						box-sizing: border-box;
+						min-width: 65px;
+						height: 28px;
+						color: #1B40D6;
+						line-height: 28px;
 						text-align: center;
 						float: right;
-						border: 1px solid $company-blue;
+						border: 1px solid #1B40D6;
 						border-radius: 5px;
 						margin-left: 10px;
+						padding: 0 10px;
 					}
 				}
 				&:last-child {

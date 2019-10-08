@@ -28,8 +28,8 @@ export function updateStatus(params) {
 }
 
  // 取消订单审核
-export function cancelOrderAuidt({ id, remark }) {
-	return post(`${basePath}/order/cancelOrderAuidt`, { id, remark })
+export function cancelOrderAuidt({ id }) {
+	return post(`${basePath}/order/cancelOrderAuidt`, { id })
 }
 
 // 开票

@@ -3,53 +3,104 @@
 		.container
 			.cell
 				van-cell-group
-					van-field(v-model="name" readonly label="客户名称")
-					van-field(v-model="phone" readonly label="客户电话")
-					van-field(v-model="carNum" readonly label="底盘号")
+					van-field(v-model="order.pCustomerName" readonly label="客户名称")
+					van-field(v-model="order.mobileNo" readonly label="客户电话")
+					van-field(v-model="order.chassisNumber" readonly label="底盘号")
 			.cell
 				van-cell-group
-					van-field(v-model="invoiceType" readonly label="发票类型" placeholder="请选择" right-icon="arrow" @click-right-icon="() => { this.actionSheetShow = true }")
-					van-field(label="发票号码" placeholder="请输入")
-					van-field(v-model="invoiceName" label="开票金额(元)" readonly)
-					van-field(v-model="invoicePrice" label="开票人员" readonly)
-					m-time-select(v-model="invoiceTime" label="开票日期" placeholder="请选择")
+					van-field(v-model="pageShow.invoiceType" readonly label="发票类型" placeholder="请选择" right-icon="arrow" @click="() => { this.actionSheetShow = true }")
+					van-field(v-model="page.invoiceNum" label="发票号码" placeholder="请输入")
+					van-field(v-model="page.money" label="开票金额(元)" placeholder="请输入")
+					van-field(v-model="page.invoiceUser" label="开票人员" placeholder="请输入")
+					m-time-select(v-model="page.invoiceDate" :is-current-date="true" label="开票日期" placeholder="请选择")
 		van-action-sheet(
 			v-model="actionSheetShow"
-			:actions="items"
+			:actions="selectItems.invoiceType"
 			@select="selectItem"
 		)
+
+		m-loading(:show="show" text="提交中")
 
 </template>
 <script>
     export default {
         name: 'invoice',
+		props: ['orderId'],
+		created() {
+        	this.initPageData()
+		},
 		data() {
         	return {
-				name: '吴彦祖',
-				phone: '13777887777',
-				carNum: 'DCSFEJ900990',
-				invoiceName: '张三',
-				invoicePrice: '200000',
-				invoiceType: '',
-				invoiceTime: '',
-				actionSheetShow: false,
-				items: [
-					{ name: '机动车发票' },
-					{ name: '增值税专用发票' },
-					{ name: '增值税普通发票' }
-				]
+        		show: false,
+        		order: {
+
+				},
+				page: {
+        			orderId: this.orderId,
+					invoiceType: '',
+					invoiceNum: '',
+					money: '',
+					invoiceUser: '',
+					invoiceDate: ''
+				},
+				pageShow: {
+					invoiceType: ''
+				},
+				actionSheetShow: false
         	}
 		},
 		computed: {
+        	disabled() {
+        		return this.operation === 'show'
+			},
+			api() {
+        		return this.$api.order
+			},
+			selectItems() {
+				let { InvoiceTypeEnum } = this.$store.state.enums
+				console.log(this.$store.state.enums)
+				return this.renderSelectItems({
+					invoiceType: InvoiceTypeEnum
+				})
+			}
 		},
 		methods: {
+			renderSelectItems(items) {
+				for (let key in items) {
+					items[key] = items[key].map((item) => {
+						let newItem = {
+							name: item.disName,
+							value: item.name
+						}
+						return newItem
+					})
+				}
+				// console.log('selectItems' ,items)
+				return items
+			},
         	selectItem(item) {
-        		this.invoiceType = item.name;
+        		this.page.invoiceType = item.value;
+				this.pageShow.invoiceType = item.name;
         		this.actionSheetShow = false;
 			},
 			submit() {
-        		this.$dialog.alert({
-					message: '提交成功'
+				this.show = true
+        		this.api.saveInvoice(this.page).then(() => {
+					this.$dialog.alert({
+						message: '提交成功'
+					})
+				}).catch((error) => {
+					this.$dialog.alert({
+						message: error.message || '提交'
+					})
+				}).finally(() => {
+					this.show = false
+				})
+			},
+			initPageData() {
+        		this.api.get(this.orderId).then((data) => {
+        			this.order = data
+					this.page.chassisNumber = data.chassisNumber
 				})
 			}
 		}

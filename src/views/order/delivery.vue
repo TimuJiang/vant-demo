@@ -21,11 +21,23 @@
 <script>
     export default {
         name: 'delivery',
+		props: ['orderId'],
+		created() {
+			this.initPageData()
+		},
 		data() {
         	return {
-        		orderId: 'DS190900013',
-				name: '吴彦祖',
-				carType: '博越1.8TD-6AT四驱'
+				show: false,
+				name: '',
+				carType: ''
+			}
+		},
+		computed: {
+			disabled() {
+				return this.operation === 'show'
+			},
+			api() {
+				return this.$api.order
 			}
 		},
 		methods: {
@@ -35,6 +47,11 @@
 			submit() {
 				this.$dialog.alert({
 					message: '提交成功'
+				})
+			},
+			initPageData() {
+				this.api.get(this.orderId).then((data) => {
+					this.name = data.pCustomerName
 				})
 			}
 		}

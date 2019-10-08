@@ -9,18 +9,33 @@
 	Vue.use(Loading)
     export default {
         name: 'init',
-		mounted() {
-        	Promise.all([this.getEnums()]).then(([enums]) => {
-        		console.log('enums', enums)
-				this.$store.commit('enums', enums)
-				this.$router.push('/')
-			}).catch(() => {
+		data() {
+        	return {
+        		preload: [
+					{
+						name: 'enums',
+						method: this.$api.general.queryEnums
+					}
+				]
 
-			})
+			}
+		},
+		mounted() {
+        	this.init()
 		},
 		methods: {
-        	getEnums() {
-				return this.$api.general.queryEnums()
+        	init() {
+        		async function quene(preload, store) {
+					for (let obj of preload) {
+						let res = await obj.method()
+						store.commit(obj.name, res)
+					}
+				}
+				quene(this.preload, this.$store).catch((error) => {
+					console.log(error)
+				}).finally(() => {
+					this.$router.push('/')
+				})
 			}
 		}
     }

@@ -7,12 +7,16 @@ export default new Vuex.Store({
 	state: {
 		user: null,
 		enums: {},
+		dicts: [],
 		menu: [],
 		collapse: false
 	},
 
 	mutations: {
 		'user'(state, value) {
+			if (!state.user) {
+				value.roleName = value.roles[0].name
+			}
 			state.user = value
 		},
 		'menu'(state, value) {
@@ -23,6 +27,9 @@ export default new Vuex.Store({
 		},
 		'enums'(state, value) {
 			state.enums = value
+		},
+		'dicts'(state, value) {
+			state.dicts = value
 		}
 	},
 	getters: {
@@ -42,7 +49,7 @@ export default new Vuex.Store({
 			return state.enums.Gender
 		},
 		'isManager'(state) {
-			return state.user.roles[0].name === '数字营销经理'
+			return state.user.roleName === '数字营销经理'
 		}
 	}
 })

@@ -33,6 +33,10 @@ async function isUser () {
 	if (!store.state.user) {
 		let user = await Vue.prototype.$api.sso.getUser()
 		store.commit('user', user || null)
+		let enums = await Vue.prototype.$api.general.queryEnums()
+		store.commit('enums', enums || {})
+		/* let dicts = await Vue.prototype.$api.dictConfig.queryAll()
+		store.commit('dicts', dicts || []) */
 	}
 	return store.state.user
 }
