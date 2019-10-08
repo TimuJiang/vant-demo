@@ -3,26 +3,26 @@
 		.container(:class="{ noButton: currentDriveStatus === noEdit || isManager }")
 			.cell
 				van-cell-group
-					van-field(v-model="page.pcustomerName" label="客户名称" required :readonly="disabled")
+					van-field(v-model="page.pCustomerName" label="客户名称" required :readonly="disabled")
 					van-field(v-model="page.mobileNo" placeholder="请输入" label="客户电话" required :readonly="disabled")
 					van-field(v-model="page.realSeriesName" readonly label="试驾车系" placeholder="请选择" required :right-icon="rightIcon" @click="disabled ? null : () => { openSelect('realSeriesName') }")
 					van-field(v-model="page.realModelName" readonly label="试驾车型" placeholder="请选择" required :right-icon="rightIcon" @click="disabled ? null : () => { openSelect('realModelName') }")
 					m-time-select(v-model="page.driveDate" :disabled="disabled" label="试驾时间" :is-current-date="true" date-type="datetime" required :right-icon="rightIcon")
 			.cell
 				van-cell-group
-					m-img-upload(:value="uploadCertificateNoName"  type="id" :operation="uploadOperation" :ids="page.certificateNoIds" title="身份证" label="身份证照片" @do-upload="(data) => { afterUpload('id', data) }")
+					m-img-upload(:value="uploadCertificateNoName"  type="id" :operation="uploadOperation" :ids="page.certificateNoIds" :paths="page.certificateNoPaths" title="身份证" label="身份证照片" @do-upload="(data) => { afterUpload('id', data) }")
 					van-field(v-model="page.driverCertificateNo" label="身份证号" placeholder="请输入" required :readonly="disabled")
 					van-field(v-model="page.sex" readonly label="性别")
 					van-field(v-model="page.driverBirthday" readonly label="出生日期")
 					van-field(v-model="page.driverAddr" label="住址" placeholder="请输入" required :readonly="disabled")
 			.cell
 				van-cell-group
-					m-img-upload(:value="uploadDriverLicenseName" type="dl" :operation="uploadOperation" :ids="page.driverLicenseIds" title="驾照" label="驾照照片" @do-upload="(data) => { afterUpload('dl', data) }")
+					m-img-upload(:value="uploadDriverLicenseName" type="dl" :operation="uploadOperation" :ids="page.driverLicenseIds" :paths="page.driverLicensePaths" title="驾照" label="驾照照片" @do-upload="(data) => { afterUpload('dl', data) }")
 					m-time-select(v-model="page.driverLicenseEffective" :disabled="disabled"  label="生效日期" placeholder="请选择" required :right-icon="rightIcon")
 					m-time-select(v-model="page.driverLicenseInvalid" :disabled="disabled"   label="截止日期" placeholder="请选择" required :right-icon="rightIcon")
 			.cell
 				van-cell-group
-					m-img-upload(:value="uploadAgreementName" type="dp" :is-multiple="true" :operation="uploadOperation" :ids="page.agreementIds" title="驾驶协议" label="驾驶协议" @do-upload="(data) => { afterUpload('dp', data) }")
+					m-img-upload(:value="uploadAgreementName" type="dp" :is-multiple="true" :operation="uploadOperation" :ids="page.agreementIds" :paths="page.agreementPaths" title="驾驶协议" label="驾驶协议" @do-upload="(data) => { afterUpload('dp', data) }")
 					van-field(v-model="page.driverName" readonly label="试驾人员" placeholder="请选择" required :right-icon="rightIcon"  @click="disabled ? null : () => { openSelect('driverName') }")
 		.bottom-button(v-if="!(currentDriveStatus === noEdit  || isManager)" @click="doTryCar") {{currentDriveStatus === 'TEST_DRIVER' ? '立即试驾' : '结束试驾'}}
 		van-action-sheet(
@@ -46,7 +46,7 @@
 				loading: false,
 				currentDriveStatus: '',
 				page: {
-					pcustomerName: '',
+					pCustomerName: '',
 					mobileNo: '',
 					realSeries: '',
 					realModel: '',

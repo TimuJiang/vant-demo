@@ -4,7 +4,7 @@
 		van-action-sheet.imgShow(
 			v-model="show"
 		)
-			upload-basic(:type="type" :operation="operation" :ids="uploadedPicIds" :is-multiple="isMultiple" :title="title" @do-upload="(data) => { $emit('do-upload', data); popupShow(false) }" @click-left="() => { popupShow(false) }")
+			upload-basic(:type="type" :operation="operation" :ids="uploadedPicIds" :paths="uploadedPicPaths" :is-multiple="isMultiple" :title="title" @do-upload="(data) => { $emit('do-upload', data); popupShow(false) }" @click-left="() => { popupShow(false) }")
 </template>
 
 <script>
@@ -25,12 +25,21 @@
         	type: String,
 			operation: String,
 			ids: String,
+			paths: {
+        		type: Array,
+        		default: function () {
+					return []
+				}
+			},
 			label: String,
 			isMultiple: Boolean
 		},
 		computed: {
 			uploadedPicIds() {
 				return this.ids
+			},
+			uploadedPicPaths() {
+				return this.paths
 			}
 		},
 		methods: {

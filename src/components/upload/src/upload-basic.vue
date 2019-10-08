@@ -67,7 +67,8 @@
 			isMultiple: {
         		default: false
 			},
-			ids: String // 已上传图片的ID
+			ids: String, // 已上传图片的ID
+			paths: Array
 		},
 		watch: {
 			ids: {
@@ -80,6 +81,9 @@
 			}
 		},
 		computed: {
+        	uploadedPicPaths() {
+        		return this.paths
+			},
 			btn1Text() {
 				let text = ''
 				switch (this.type) {
@@ -179,22 +183,34 @@
 
 			},
         	save() {
+        		if (this.base.length === 0) {
+        			this.$dialog.alert({
+						message: '请先选择图片！'
+					})
+					return false
+				}
 				let that = this;
 				async function queue(paramObj, api) {
 					let res = []
 					for (let item of paramObj) {
-						let formData = new FormData()
-						formData.append('file', item)
-						let data = await api.upload(formData)
-						res.push(data.message)
+						if (item) {
+							let formData = new FormData()
+							formData.append('file', item)
+							let data = await api.upload(formData)
+							res.push(data.message)
+						} else {
+							res.push(null)
+						}
+
 					}
 					return res
 				}
 				this.showLoading('照片上传中')
 				queue(this.param, this.api).then((data) => {
 					// console.log('imginfo', data.toString())
-					that.$emit('do-upload', data)
+					that.$emit('do-upload', this.mergePaths(data))
 				}).catch((data) => {
+					console.log('data', data)
 					this.$dialog.alert({
 						message: '图片上传失败，请重试！'
 					})
@@ -208,19 +224,34 @@
 						let data = await api.getImg(id)
 						let base64 = await blobToBase64(data)
 						base.push(base64)
-						param.push(new File([data], `file-${id}`))
+						param.push(null)
 					}
 				}
 				this.showLoading('加载中')
 
 				queue(ids, this.api, this.base, this.param, this.blobToBase64).catch(() => {
 					this.$dialog.alert({
-						message: '暂不支持文件预览'
+						message: '文件预览失败'
 					})
 				}).finally(() => {
 					this.hideLoading()
 				})
 
+			},
+			mergePaths(newPaths) {
+				if (this.uploadedPicPaths.length === 0) {
+					return newPaths
+				} else {
+					let mergedPaths = [];
+					for (let i = 0; i < newPaths.length; i++) {
+						if (newPaths[i]) {
+							mergedPaths.push(newPaths[i])
+						} else {
+							mergedPaths.push(this.uploadedPicPaths[i])
+						}
+					}
+					return mergedPaths
+				}
 			},
 			blobToBase64(blob) {
 				return new Promise((resolve, reject) => {

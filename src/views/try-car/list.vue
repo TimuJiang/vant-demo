@@ -2,7 +2,7 @@
 	m-page.list.try-car
 			.head
 				van-tabs(v-model="active" title-active-color="#1B40D6" title-inactive-color="#333" @click="clickTab")
-					van-tab(title="全部" name="")
+					van-tab(title="全部" name="all")
 					van-tab(title="待试驾" name="TEST_DRIVER")
 					van-tab(title="试驾中" name="DRIVERING")
 					van-tab(title="已完成" name="FINISH")
@@ -150,7 +150,7 @@
 				this.loading = true;
         		this.param.pageNum = 1
 				if (type && value) {
-					this.param[type] = value == 0 ? '' : value;
+					this.param[type] = value === 'all' ? '' : value;
 				}
         		this.loadData('do-clear')
 			},
