@@ -19,12 +19,12 @@
 						| 杭州xxxx吉利4s店
 		van-cell(title="姓名" :value="user.loginName")
 		van-cell(title="岗位" :value="user.name")
-		van-cell(title="角色" :value="user.roles[0].name" :is-link="true" @click="showRoleAction")
+		van-cell(title="角色" :value="user.roleName" :is-link="true" @click="showRoleAction")
 		van-cell(title="状态" :value="user.status.disName" :is-link="true"  @click="showStatusAction")
 		van-cell(title="关于我们" :is-link="true")
 		.logout-button-warp
 			van-button.logout-button(type="primary" size="large") 退出登录
-		van-action-sheet(key="role" v-model="show" :actions="_roleTypes" @select="onRoleSelect")
+		van-action-sheet(key="role" v-model="show" :actions="user.roles" @select="onRoleSelect")
 		van-action-sheet(key="status" v-model="showStatus" :actions="_roleStatus" @select="onStatusSelect")
 
 </template>
@@ -67,8 +67,7 @@
 				this.showStatus = true
 			},
 			onRoleSelect (value) {
-				console.log(value)
-				this.$store.state.user.roles[0].name = value.name
+				this.$store.state.user.roleName = value.name
 				this.show = false
 			},
 			onStatusSelect () {
