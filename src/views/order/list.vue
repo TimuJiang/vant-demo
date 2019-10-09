@@ -47,13 +47,13 @@
 									.operation
 										span.price 成交价：{{item.payment}}万 定金：5万
 										span(v-if="!isManager")
-											.operation-button(v-if="item.status.name === 'UNAUDITED'" @click="commonCancel('INVALIDATED', item.id, '作废', item.orderNum)") 作废
+											.operation-button(v-if="item.status.name === 'UNAUDITED'" @click="(e) => { commonCancel('INVALIDATED', item.id, '作废', item.orderNum, e) }") 作废
 											.operation-button(v-if="item.status.name === 'UNAUDITED'" @click="() => { goToEdit(item.id) }") 修改
 											.operation-button(v-if="item.status.name === 'AUDITED'" @click="(e) => { goToInvoice(item.id, e) }") 开票
 											.operation-button(v-if="item.status.name === 'INVOICED'" @click="(e) => { goToDelivery(item.id, e) }") 交车
 										span(v-if="isManager")
-											.operation-button(v-if="item.status.name === 'UNAUDITED'" @click="commonCancel('AUDITED', item.id, '审核', item.orderNum)") 审核
-											.operation-button(v-if="item.status.name === 'AUDITED'" @click="commonCancel('UNAUDITED', item.id, '取消审核', item.orderNum)") 取消审核
+											.operation-button(v-if="item.status.name === 'UNAUDITED'" @click="(e) => { commonCancel('AUDITED', item.id, '审核', item.orderNum, e) }") 审核
+											.operation-button(v-if="item.status.name === 'AUDITED'" @click="(e) => { commonCancel('UNAUDITED', item.id, '取消审核', item.orderNum, e) }") 取消审核
 				m-loading(:show="show" text="操作进行中")
 </template>
 
@@ -66,7 +66,7 @@
 	export default {
 		name: 'list',
 		mounted() {
-			this.triggerLoad();
+			this.triggerLoad()
 		},
 		data() {
 			return {
@@ -125,9 +125,9 @@
 				return this.$store.getters.isManager
 			},
 			currentDateFormat() {
-				let year = this.confirmDate.getFullYear();
-				let month = this.confirmDate.getMonth() + 1;
-				return `${year}年${month}月`;
+				let year = this.confirmDate.getFullYear()
+				let month = this.confirmDate.getMonth() + 1
+				return `${year}年${month}月`
 			},
 			api() {
 				return this.$api.order
@@ -171,20 +171,20 @@
 				this.$router.push(`order/order-detail/${id}/t/edit/customerId/-1`);
 			},
 			toggleTimePicker() {
-				this.$refs.timePicker.toggle();
+				this.$refs.timePicker.toggle()
 			},
 			dateConfirm(value) {
-				this.confirmDate = value;
+				this.confirmDate = value
 				this.changeData('time', moment(value).format('YYYY-MM'))
-				this.toggleTimePicker();
+				this.toggleTimePicker()
 			},
 			dateCancel() {
 				this.currentDate = this.confirmDate
-				this.toggleTimePicker();
+				this.toggleTimePicker()
 			},
 			formatter(type, value) {
 				if (type === 'year') {
-					return `${value}年`;
+					return `${value}年`
 				} else if (type === 'month') {
 					return `${value}月`
 				}
@@ -199,18 +199,16 @@
 			},
 			changeData(type, value) {
 				this.loading = true
+				this.finished = false
+				this.list = []// 切换时间或者类型时清空列表
 				this.param.pageNum = 1
 				if (type && value) {
 					this.param[type] = (value === 'all' ? '' : value)
 				}
-				console.log('this.param', this.param)
-				this.loadData('do-clear')
+				this.loadData()
 			},
-			loadData(doClear) {
+			loadData() {
 				this.api.query(this.param).then((data) => {
-					if (doClear === 'do-clear') {
-						this.list = []// 切换时间或者类型时清空列表
-					}
 					if (data.length > 0) {
 						// console.log('data', data)
 						for (let item of data) {
@@ -218,7 +216,7 @@
 						}
 						this.param.pageNum++
 					} else {
-						this.finished = true;
+						this.finished = true
 					}
 				}).catch((error) => {
 					this.$dialog.alert({
@@ -244,7 +242,8 @@
 					this.isLoading = false;
 				}, 500)
 			},
-			commonCancel(status, id, text, orderNum) {
+			commonCancel(status, id, text, orderNum, e) {
+				e.stopPropagation()
 				// 1.销售经理取消审核 2.销售顾问作废
 				Dialog.confirm({
 					message: `是否确认${text}销售订单\n${orderNum}`

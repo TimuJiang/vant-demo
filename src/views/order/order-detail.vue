@@ -5,8 +5,8 @@
 				van-cell-group
 					van-field(v-model="page.pCustomerName" label="客户名称" placeholder="请输入" required :readonly="disabled")
 					van-field(v-model="page.mobileNo" label="客户电话" required placeholder="请输入" :readonly="disabled")
-					van-field(v-model="pageShow.purposeType" placeholder="请选择" readonly label="意向类型" required :right-icon="rightIcon" @click="disabled ? null : () => { openSelect('purposeType') }")
-					van-field(v-model="pageShow.certificatesType" readonly placeholder="请选择"  label="证件类型" required :right-icon="rightIcon" @click="disabled ? null : () => { openSelect('certificatesType') }")
+					van-field(v-model="pageShow.purposeType" placeholder="请选择" readonly label="意向类型" required :right-icon="rightIcon" @click="openSelect('purposeType')")
+					van-field(v-model="pageShow.certificatesType" readonly placeholder="请选择"  label="证件类型" required :right-icon="rightIcon" @click="openSelect('certificatesType')")
 					van-field(v-model="page.certificateNo" placeholder="请输入" label="证件号码" required :readonly="disabled")
 					van-field(v-model="page.issuingOrg" placeholder="请输入" label="证件签发机关" required :readonly="disabled")
 					m-time-select(v-model="page.effective" :disabled="disabled" placeholder="请选择" label="证件有效期" date-type="date" required :is-current-date="false" :right-icon="rightIcon" @date-confirm="")
@@ -15,20 +15,20 @@
 				van-cell-group
 					van-field(v-model="page.linkmanName" placeholder="请输入" label="联系人" required :readonly="disabled")
 					van-field(v-model="page.linkmanMobile" placeholder="请输入" label="联系电话" required :readonly="disabled")
-					van-field(v-model="pageShow.areaName" readonly placeholder="请选择" label="所在地区" required :right-icon="rightIcon" @click="disabled ? null : () => { openSelect('area') }")
+					van-field(v-model="pageShow.areaName" readonly placeholder="请选择" label="所在地区" required :right-icon="rightIcon" @click="openSelect('area')")
 					van-field(v-model="page.address" placeholder="请输入" label="详细地址" required)
 			.cell
 				van-cell-group
 					m-time-select(v-model="page.contractDate" :disabled="disabled" placeholder="请选择" label="签约日期" :right-icon="rightIcon" required :is-current-date="true")
 					m-time-select(v-model="page.commitmentDate" :disabled="disabled" placeholder="请选择" label="承诺交车日期" :right-icon="rightIcon" required)
-					van-field(v-model="pageShow.distribution" readonly placeholder="请选择" label="是否分网销" required :right-icon="rightIcon" @click="disabled ? null : () => { openSelect('distribution') }")
+					van-field(v-model="pageShow.distribution" readonly placeholder="请选择" label="是否分网销" required :right-icon="rightIcon" @click="openSelect('distribution')")
 			.cell
 				van-cell-group
-					van-field(v-model="pageShow.buyType" readonly placeholder="请选择" label="购车类型" required :right-icon="rightIcon" @click="disabled ? null : () => { openSelect('buyType') }")
+					van-field(v-model="pageShow.buyType" readonly placeholder="请选择" label="购车类型" required :right-icon="rightIcon" @click="openSelect('buyType')")
 					van-field(v-model="page.chassisNumber" placeholder="请输入" label="底盘号" required :readonly="disabled")
-					van-field(v-model="pageShow.paymentMethod" readonly placeholder="请选择" label="付款方式" required :right-icon="rightIcon" @click="disabled ? null : () => { openSelect('paymentMethod') }")
+					van-field(v-model="pageShow.paymentMethod" readonly placeholder="请选择" label="付款方式" required :right-icon="rightIcon" @click="openSelect('paymentMethod')")
 					van-field(v-model="page.payment" placeholder="请输入" label="车款(元)" required :readonly="disabled")
-					van-field(v-model="page.coupon" readonly placeholder="请添加" label="电子优惠券" :right-icon="rightIcon" @click="disabled ? null : () => { openSelect('coupon') }")
+					van-field(v-model="page.coupon" readonly placeholder="请添加" label="电子优惠券" :right-icon="rightIcon" @click="openSelect('coupon')")
 		van-action-sheet.order-select(
 			v-model="select.selectShow"
 			:actions="actionItems"
@@ -237,6 +237,9 @@
 			},
 			/* 类型选择-start */
 			openSelect(type) {
+				if (this.disabled) {
+					return false
+				}
 				this.select.currentSelectType = type
 				this.select.selectShow = true;
 			},

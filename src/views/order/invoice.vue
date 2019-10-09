@@ -91,7 +91,7 @@
 					})
 				}).catch((error) => {
 					this.$dialog.alert({
-						message: error.message || '提交'
+						message: error.message || '提交失败'
 					})
 				}).finally(() => {
 					this.show = false
