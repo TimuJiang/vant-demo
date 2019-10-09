@@ -12,14 +12,14 @@
 			.cell-container(v-if="type === 'all'")
 				van-cell(
 					v-for="(item,index) in customerTypes"
-					:title="`${customerTypesMap[item.type]}（${item.number}）`"
+					:title="`${customerTypesMap[item.type]}（${customerCount[`${item.type}Count`] === undefined ? '--' : customerCount[`${item.type}Count`]}）`"
 					:key="index"
 					:is-link="true"
 					icon="like-o"
-					@click="() => { jump(item.type) }"
+					@click="() => { jump(item.type, item.pCustomerStatus) }"
 				)
 			div(:class="listClass")
-				index-bar-list(@click-cell="clickCell" :list="list")
+				index-bar-list(@click-cell="clickCell" :outer-param="param")
 
 </template>
 
@@ -36,43 +36,56 @@
 			// 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
 			// 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
 			// 可以访问组件实例 `this`
-			this.searchValue = '';
-			this.searchList(to.params.type);
-			next();
+			this.changeCustomerStatus(to.params.type)
+			next()
 		},
-		mounted() {
-			this.searchList();
+		created() {
+			this.changeCustomerStatus(this.type)
+			this.initCount()
 		},
 		data() {
         	return {
         		searchValue: '',
-				customerTypesMap: {
-        			'bo': '商机客户',
-					'order': '订单客户',
-					'freehold': '保有客户',
-					'currentYearFail': '本年战败客户',
-					'failPending': '战败待审客户'
+				refresh: true,
+				param: {
+					mobileNo: '',
+					pCustomerName: '',
+					pageNum: 1,
+					pageSize: 10
 				},
+				customerTypesMap: {
+        			'bussCustomer': '商机客户',
+					'orderCustomer': '订单客户',
+					'tenureCustomer': '保有客户',
+					'defeatThisYearCustomer': '本年战败客户',
+					'defeatNotAuditCustomer': '战败待审客户'
+				},
+				customerCount: {},
 				customerTypes: [
 					{
 						number: 821,
-						type: 'bo'
+						type: 'bussCustomer',
+						pCustomerStatus: [51080003, 52080005]
 					},
 					{
 						number: 351,
-						type: 'order'
+						type: 'orderCustomer',
+						pCustomerStatus: [51080010]
 					},
 					{
 						number: 49,
-						type: 'freehold'
+						type: 'tenureCustomer',
+						pCustomerStatus: [51080025]
 					},
 					{
 						number: 49,
-						type: 'currentYearFail'
+						type: 'defeatThisYearCustomer',
+						pCustomerStatus: [51080015]
 					},
 					{
 						number: 5,
-						type: 'failPending'
+						type: 'defeatNotAuditCustomer',
+						pCustomerStatus: [51080007]
 					}
 				],
 				list: {}
@@ -83,7 +96,7 @@
         		switch (this.type) {
 					case 'all':
 						return '客户查询'
-					case 'currentYearFail':
+					case 'defeatThisYearCustomer':
 						return '战败客户'
 					default:
 						return this.customerTypesMap[this.type]
@@ -94,48 +107,54 @@
         			'list': true,
 					'closer-to-top': this.type !== 'all'
 				}
+			},
+			api() {
+				return this.$api.clueCustomer
 			}
 		},
 		methods: {
+        	initCount() {
+        		let param = {}
+        		if (this.isManager) {
+        			// 当前登录的是客户经理，查询时需要传对应的销售顾问ID到后台
+				}
+        		this.api.getCustomerCount(param).then((data) => {
+        			this.customerCount = data
+				})
+			},
         	jump(type) {
-        		if (type === 'bo') {
+        		if (type === 'bussCustomer') {
 					this.$router.push(`/potential-customer/A`)
 				} else {
         			this.$router.push(`/customer-search/${this.id}/type/${type}`)
 				}
 			},
-			searchList(type) {
-        		const searchParam = {
-        			id: this.id,
-					type: type || this.type,
-					search: this.searchValue
-				};
-				this.fakeData(this.customerTypesMap[type] || '默认客户');
-        		console.log('param', searchParam);
-			},
-			fakeData(name) {
-        		this.list = {
-        			A: [],
-					B: [],
-					C: []
-				};
-				for (let i = 0; i < 15; i++) {
-					this.list.A.push({
-						title: `${name}A`,
-						label: '意向车型：博瑞1.8T',
-						id: i
-					})
-					this.list.B.push({
-						title: `${name}B`,
-						label: '意向车型：缤越',
-						id: i + 10
-					})
-					this.list.C.push({
-						title: `${name}C`,
-						label: '意向车型：领克',
-						id: i + 100
-					})
+			changeCustomerStatus(type) {
+        		if (type === 'all') {
+					this.changeParam('pCustomerStatus', null)
+				} else {
+					for (let i = 0; i < this.customerTypes.length; i++) {
+						if (type === this.customerTypes[i].type) {
+							this.changeParam('pCustomerStatus', this.customerTypes[i].pCustomerStatus)
+							break
+						}
+					}
 				}
+			},
+			changeParam(key, value) {
+        		let newParam = {}
+        		if (key === 'pCustomerStatus') { // 如果是切换用户类型，那么清空顶部搜索输入框的值
+        			this.searchValue = ''
+        			newParam = {
+						mobileNo: '',
+						pCustomerName: ''
+					}
+					delete this.param.pCustomerStatus
+				}
+        		if (value) {
+					newParam[key] = value
+				}
+				this.param = Object.assign({}, this.param, newParam)
 			},
 			clickCell(param) {
         		this.$dialog.alert({
