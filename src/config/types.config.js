@@ -20,6 +20,11 @@ export const POTENTIAL_CUSTOMER = [
 	}, {
 		icon: 'other-pay',
 		type: 'O'
+	},
+	{
+		icon: 'other-pay',
+		type: 'cancelled',
+		name: '已作废'
 	}
 ]
 
@@ -52,18 +57,22 @@ export const FOLLOW_TYPE = [
 	{
 		icon: 'other-pay',
 		type: 1,
-		name: '今日'
+		name: '今日',
+		key: 'todayCount'
 	}, {
 		icon: 'other-pay',
 		type: 2,
-		name: '明日'
+		name: '明日',
+		key: 'tomorrowCount'
 	}, {
 		icon: 'other-pay',
 		type: 3,
-		name: '更多'
+		name: '更多',
+		key: 'moreCount'
 	}, {
 		icon: 'other-pay',
 		type: 4,
-		name: '超时'
+		name: '超时',
+		key: 'timeOutCount'
 	}
 ]

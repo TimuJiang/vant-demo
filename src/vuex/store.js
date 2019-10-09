@@ -9,13 +9,17 @@ export default new Vuex.Store({
 		enums: {},
 		dicts: [],
 		menu: [],
+		homePageData: {},
 		collapse: false
 	},
 
 	mutations: {
 		'user'(state, value) {
 			if (!state.user) {
-				value.roleName = value.roles[0].name
+				let roleNames = value.roles.map((item) => {
+					return item.name
+				})
+				value.roleName = roleNames.toString()
 			}
 			state.user = value
 		},
@@ -30,6 +34,9 @@ export default new Vuex.Store({
 		},
 		'dicts'(state, value) {
 			state.dicts = value
+		},
+		'homePageData'(state, value) {
+			state.homePageData = value
 		}
 	},
 	getters: {

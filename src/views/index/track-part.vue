@@ -3,9 +3,9 @@
 		.group-title 商机中心
 		.center-line
 			van-grid
-				van-grid-item(v-for="item in _types" :key="item.type" :to="`/potential-customer/${item.type}`")
-					.grid__number 99
-					.grid__text(:class="item.type") {{item.type}}类
+				van-grid-item(v-for="item in _types" :key="item.type" :to="`/potential-customer/${item.type}`" v-if="!(!isManager && item.type === 'cancelled')")
+					.grid__number {{homePageData[`${item.type.toLowerCase()}Count`]}}
+					.grid__text(:class="item.type") {{item.type === 'cancelled' ? item.name : `${item.type}类`}}
 
 </template>
 
@@ -16,8 +16,18 @@
 		props: {
 			isManager: Boolean
 		},
+		computed: {
+			homePageData() {
+				return this.$store.state.homePageData
+			}
+		},
 		created() {
 			this._types = POTENTIAL_CUSTOMER
+		},
+		methods: {
+			getCount(type) {
+				return this.homePageData[`${type.toLowerCase()}Count`]
+			}
 		}
 	}
 </script>
@@ -41,7 +51,7 @@
 		.grid__text {
 			font-size: 12px;
 			color: #FFFFFF;
-			width: 35px;
+			min-width: 35px;
 			height: 14px;
 			line-height: 16px;
 			background: #FCB27C;
@@ -54,8 +64,11 @@
 		.N,.F {
 			background: #FF3B30;
 		}
-		.O {
+		.O, .cancelled {
 			background: #979797;
+		}
+		.cancelled {
+			padding: 0 3px
 		}
 		.center-line {
 			position: relative;

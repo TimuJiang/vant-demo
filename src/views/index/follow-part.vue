@@ -4,7 +4,7 @@
 			van-icon(name="arrow" style="float: right" color="#c4c4cc")
 			| 商机跟进
 		.follow-part__content
-			.cell__type( v-for="item in _customer" :key="item.type"  @click="goToNicheFollow(item)" :class="`type-${item.type}`") {{item.name}} (99+)
+			.cell__type( v-for="item in _customer" :key="item.type"  @click="goToNicheFollow(item)" :class="`type-${item.type}`") {{item.name}} ({{homePageData[item.key]}})
 </template>
 
 <script>
@@ -13,6 +13,11 @@
 		name: 'follow-part',
 		created() {
 			this._customer = FOLLOW_TYPE
+		},
+		computed: {
+			homePageData() {
+				return this.$store.state.homePageData
+			}
 		},
 		methods: {
 			onClick (item) {

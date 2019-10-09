@@ -5,6 +5,7 @@
 			track-part(:is-manager="isManager")
 			follow-part(v-if="!isManager")
 			app-center(:is-manager="isManager")
+		m-loading(:show="show" text="初始化用户配置")
 </template>
 
 <script>
@@ -14,6 +15,14 @@
 	import ManagerSummaryPart from './index/manager-summary-part'
 	export default {
 		name: 'index',
+		created() {
+			this.initPageData()
+		},
+		data() {
+			return {
+				show: true
+			}
+		},
 		components: {
 			ManagerSummaryPart,
 			TrackPart,
@@ -28,6 +37,16 @@
 		methods: {
 			onClickLeft() {
 				this.$router.back()
+			},
+			initPageData() {
+				this.$api.homePage.getHomePageData().then((data) => {
+						// console.log('homePage', data)
+					this.$store.commit('homePageData', data)
+				}).catch((error) => {
+					this.$toast('服务异常')
+				}).finally(() => {
+					this.show = false
+				})
 			}
 		}
 	}
