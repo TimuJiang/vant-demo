@@ -147,18 +147,17 @@
 				this.loadData()
 			},
 			changeData(type, value) {
-				this.loading = true;
+				this.loading = true
+				this.finished = false
+				this.list = []// 切换时间或者类型时清空列表
         		this.param.pageNum = 1
 				if (type && value) {
 					this.param[type] = value === 'all' ? '' : value;
 				}
-        		this.loadData('do-clear')
+        		this.loadData()
 			},
-			loadData(doClear) {
+			loadData() {
 				this.api.query(this.param).then((data) => {
-					if (doClear === 'do-clear') {
-						this.list = []// 切换时间或者类型时清空列表
-					}
 					if (data.length > 0) {
 						// console.log('data', data)
 						for (let item of data) {

@@ -22,7 +22,7 @@
 
 <style lang="scss" scoped>
 	.my-overlay {
-		z-index: 999;
+		z-index: 9999;
 		position: fixed;
 		top: 0;
 		left: 0;

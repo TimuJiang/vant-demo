@@ -115,10 +115,10 @@
 				return text
 			},
 			tip1Text() {
-				return this.operation === 'show' ? `${this.btn1Text}预览` : '支持png、jpeg、jpg格式'
+				return this.operation === 'show' ? `${this.btn1Text.replace('照片', '')}照片` : '支持png、jpeg、jpg格式'
 			},
 			tip2Text() {
-				return this.operation === 'show' ? `${this.btn2Text}预览` : '支持png、jpeg、jpg格式'
+				return this.operation === 'show' ? `${this.btn2Text.replace('照片', '')}照片` : '支持png、jpeg、jpg格式'
 			},
 			api() {
 				return this.$api.fileMeta;
@@ -188,6 +188,17 @@
 						message: '请先选择图片！'
 					})
 					return false
+				} else {
+        			if (this.base.length === 1) {
+        				let text = ''
+        				if (this.type === 'id' || this.type === 'dl') {
+        					text = (this.type === 'id') ? '身份证正反面必须都上传' : '驾照正本副本必须都上传'
+							this.$dialog.alert({
+								message: text
+							})
+							return false
+						}
+					}
 				}
 				let that = this;
 				async function queue(paramObj, api) {

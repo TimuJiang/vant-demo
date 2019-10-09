@@ -5,8 +5,8 @@
 				van-cell-group
 					van-field(v-model="page.pCustomerName" label="客户名称" required :readonly="disabled")
 					van-field(v-model="page.mobileNo" placeholder="请输入" label="客户电话" required :readonly="disabled")
-					van-field(v-model="page.realSeriesName" readonly label="试驾车系" placeholder="请选择" required :right-icon="rightIcon" @click="disabled ? null : () => { openSelect('realSeriesName') }")
-					van-field(v-model="page.realModelName" readonly label="试驾车型" placeholder="请选择" required :right-icon="rightIcon" @click="disabled ? null : () => { openSelect('realModelName') }")
+					van-field(v-model="page.realSeriesName" readonly label="试驾车系" placeholder="请选择" required :right-icon="rightIcon" @click="openSelect('realSeriesName')")
+					van-field(v-model="page.realModelName" readonly label="试驾车型" placeholder="请选择" required :right-icon="rightIcon" @click="openSelect('realModelName')")
 					m-time-select(v-model="page.driveDate" :disabled="disabled" label="试驾时间" :is-current-date="true" date-type="datetime" required :right-icon="rightIcon")
 			.cell
 				van-cell-group
@@ -189,6 +189,9 @@
 			},
 			/* 类型选择-start */
 			openSelect(type) {
+				if (this.disabled) {
+					return false
+				}
 				if (type === 'realModel' && this.page.realSeries === '') {
 					this.$dialog.alert({
 						message: '请先选择车系'

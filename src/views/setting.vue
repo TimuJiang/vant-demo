@@ -19,7 +19,7 @@
 						| 杭州xxxx吉利4s店
 		van-cell(title="姓名" :value="user.loginName")
 		van-cell(title="岗位" :value="user.name")
-		van-cell(title="角色" :value="user.roleName" :is-link="true" @click="showRoleAction")
+		van-cell(title="角色" :value="user.roleName")
 		van-cell(title="状态" :value="user.status.disName" :is-link="true"  @click="showStatusAction")
 		van-cell(title="关于我们" :is-link="true")
 		.logout-button-warp
