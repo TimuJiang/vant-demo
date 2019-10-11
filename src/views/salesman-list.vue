@@ -1,7 +1,7 @@
 <template lang="pug">
 	m-page.salesman-list
 		.container
-			.title 共有五位销售顾问
+			.title 共有{{salesman.length}}位销售顾问
 			.list
 				van-cell(
 					v-for="(item, index) in salesman"
@@ -9,42 +9,33 @@
 					:title="item.name"
 					title-class="a"
 					:is-link="true"
-					@click="() => { goToCustomerSearch(item.id) }"
+					@click="() => { goToCustomerSearch(item.loginName) }"
 				)
 </template>
 
 <script>
     export default {
         name: 'salesman-list',
+		created() {
+        	this.initSaleManList()
+		},
 		data() {
         	return {
-        		salesman: [
-					{
-						name: '小A',
-						id: 1
-					},
-					{
-						name: '小B',
-						id: 2
-					},
-					{
-						name: '小C',
-						id: 3
-					},
-					{
-						name: '小D',
-						id: 4
-					},
-					{
-						name: '小E',
-						id: 5
-					}
-				]
+        		salesman: []
 			}
 		},
 		methods: {
         	goToCustomerSearch(id) {
         		this.$router.push(`customer-search/${id}/type/all`)
+			},
+			initSaleManList() {
+        		this.$api.clueCustomer.queryUserList().then((data) => {
+        			this.salesman = data
+				}).catch((error) => {
+					this.$dialog.alert({
+						message: error.message
+					})
+				})
 			}
 		}
     }
