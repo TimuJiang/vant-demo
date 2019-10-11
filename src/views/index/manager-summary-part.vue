@@ -9,7 +9,7 @@
 			van-col.van-hairline--left(span="8" @click="() => { this.$router.push(isManager ? '/order' : '/niche-follow/4') }")
 				.number-cell {{isManager ? homePageData.orderCount : homePageData.timeOutNotFollowUpCount}}
 				.name-cell {{isManager ? '订单数' : '过期未跟进'}}
-			van-col.van-hairline--left(span="8" @click="() => { this.$router.push(isManager ? '/potential-customer/H' : '/clue-assign') }")
+			van-col.van-hairline--left(span="8" @click="() => { this.$router.push(isManager ? '/potential-customer/H/saleLoginName/-1' : '/clue-assign') }")
 				.number-cell(:class="{ 'red': isManager }") {{isManager ? homePageData.businessOppotunityCount : homePageData.unallocated}}
 				.name-cell {{isManager ? '商机数' : '未分配'}}
 </template>

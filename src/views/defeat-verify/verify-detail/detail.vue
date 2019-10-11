@@ -6,9 +6,9 @@
 					van-list(
 						v-model="loading"
 						:finished="finished"
-						finished-text="没有更多了"
+						:finished-text="list.length === 0 ? '-暂无数据-' : '-我是有底线的-'"
 						:immediate-check="false"
-						@load="onLoad"
+						@load="loadData"
 					)
 						div
 							.cell(
@@ -16,65 +16,80 @@
 								:key="index"
 							)
 								.customer
-									span {{item.customer}}
-									span A
-									span {{item.time}}
-								.car {{item.car}}
-								.reseon {{item.reason}}
+									span {{item.pCustomerName}}
+									span {{dicMap[item.pCustomerLevel].dictValue.split('（')[0]}}
+									span
+								.car 意向车型：{{`${item.purposeSeriesName ? `${item.purposeSeriesName} ` : ''}${item.purposeModelName || '暂无信息'}`}}
+								.reseon 战败原因：{{item.defeatReason || ''}}
 								.operation
-									.operation-button(@click="() => { goToOperation('reject') }") 驳回
-									.operation-button(@click="() => { goToOperation('pass') }") 通过
-									.operation-button(@click="() => { goToOperation('assign') }") 分配
+									.operation-button(@click="() => { goToOperation('reject', item.id) }") 驳回
+									.operation-button(@click="() => { goToOperation('pass', item.id) }") 通过
+									.operation-button(@click="() => { goToOperation('assign', item.id) }") 分配
 </template>
 
 <script>
     export default {
         name: 'detail',
+		created() {
+        	this.param.salesConsultant = this.$route.params.id
+		},
 		mounted() {
-        	this.triggerLoad();
+        	this.triggerLoad()
 		},
 		data() {
 			return {
 				loading: false,
 				finished: false,
 				list: [],
-				tempData: {
-					customer: '吴彦祖（H）',
-					car: '意向车型：博瑞1.8T+6AT(国五)豪华型（博瑞）',
-					reason: '吴彦祖对价格不太满意。。。',
-					time: '一小时前'
+				param: {
+					pageNum: 1,
+					pageSize: 10,
+					salesConsultant: ''
 				},
 				isLoading: false
 			}
 		},
+		computed: {
+			api() {
+				return this.$api.clueCustomer
+			},
+			dicMap() {
+				return this.$store.state.dicMap
+			}
+		},
 		methods: {
-        	goToOperation(type) {
-        		this.$router.push(`${this.$route.params.id}/verify-operation/${type}`);
+        	goToOperation(type, id) {
+        		this.$router.push(`${this.$route.params.id}/verify-operation/${type}/id/${id}`);
 			},
 			triggerLoad() {
-				this.loading = true;
-				this.onLoad()
+				this.loading = true
+				this.loadData()
 			},
-			onLoad() {
-				// 异步更新数据
-				setTimeout(() => {
-					for (let i = 0; i < 5; i++) {
-						this.list.push(this.tempData);
+			loadData() {
+				this.api.queryForDefeatNotAudit(this.param).then((data) => {
+					if (data.length > 0) {
+						// console.log('data', data)
+						for (let item of data) {
+							this.list.push(item)
+						}
+						this.param.pageNum++
+					} else {
+						this.finished = true
 					}
-					// 加载状态结束
-					this.loading = false;
-
-					// 数据全部加载完成
-					if (this.list.length >= 20) {
-						this.finished = true;
-					}
-				}, 500);
+				}).catch((error) => {
+					this.finished = true
+					this.$dialog.alert({
+						message: error.message
+					})
+				}).finally(() => {
+					this.loading = false
+				})
 			},
 			onRefresh() {
 				setTimeout(() => {
 					this.$toast('刷新成功');
 					this.isLoading = false;
-				}, 500);
+				}, 500)
 			}
 		}
     }

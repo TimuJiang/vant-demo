@@ -128,7 +128,7 @@
 			},
         	jump(type) {
         		if (type === 'bussCustomer') {
-					this.$router.push(`/potential-customer/all`)
+					this.$router.push(`/potential-customer/all/saleLoginName/${this.loginName}`)
 				} else {
         			this.$router.push(`/customer-search/${this.loginName}/type/${type}`)
 				}

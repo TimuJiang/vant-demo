@@ -35,6 +35,9 @@
 			}
 		},
 		created() {
+			if (this.$route.params.saleLoginName !== '-1') {
+				this.defaultParam.salesConsultant = this.$route.params.saleLoginName
+			}
 			this.active = this.$route.params.type
 			this.initLevelList()
 		},

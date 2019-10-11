@@ -1,7 +1,11 @@
 <template>
     <m-page class="clue-assign" :left-text="leftText" :has-click-left="isBatch" :back="!isBatch" @click-left="clickLeft">
 		<div class="top">
-			<van-dropdown-menu>
+			<!--新线索待分配(999+)-->
+			<span>
+				<div>新线索待分配(999+)</div>
+			</span>
+			<!--<van-dropdown-menu>
 				<van-dropdown-item title="新线索待分配(999+)" ref="item">
 					<div class="search-container">
 						<div>
@@ -14,7 +18,7 @@
 					</div>
 					<van-button block type="info" @click="search" color="#1B40D6">确认</van-button>
 				</van-dropdown-item>
-			</van-dropdown-menu>
+			</van-dropdown-menu>-->
 		</div>
 		<!---->
 		<div :class="listContainerClass">
@@ -129,6 +133,10 @@
 					{ text: '销售2', value: 2 }
 				],
 				list: [],
+				param: {
+					pageNum: 1,
+					pageSize: 10
+				},
 				checkAll: false,
 				loading: false,
 				finished: false,
@@ -147,9 +155,13 @@
 			}
 		},
 		mounted() {
-			this.triggerLoad();
+			this.triggerLoad()
+			this.loadData()
 		},
 		computed: {
+			api() {
+				return this.$api.clueCustomer
+			},
 			bottomOperationClass() {
 				return {
 					'bottom-operation': true,
@@ -192,10 +204,11 @@
 				this.salesmanSelectShow = true;
 			},
 			doAssign() {
+        		console.log('选中的id', this.result)
 				this.$toast({
 					message: '操作成功',
 					icon: 'passed',
-					mask: true,
+					mask: true
 					// className: 'clue-assign-fail' 用该class可以显示红色的提示语
 				});
 
@@ -224,6 +237,28 @@
 					}
 				}, 500);
 			},
+			loadData() {
+				this.api.queryForDistribution(this.param).then((data) => {
+					console.log('clue-data', data)
+					return false
+					if (data.length > 0) {
+						// console.log('data', data)
+						for (let item of data) {
+							this.list.push(item)
+						}
+						this.param.pageNum++
+					} else {
+						this.finished = true
+					}
+				}).catch((error) => {
+					this.finished = true
+					this.$dialog.alert({
+						message: error.message
+					})
+				}).finally(() => {
+					this.loading = false
+				})
+			},
 			onRefresh() {
 				setTimeout(() => {
 					this.$toast('刷新成功');
@@ -242,10 +277,10 @@
 			},
 			checkAllFuc(value) {
         		if (value) {
-					this.isBatch = true;
-        			this.result = this.list;
+					this.isBatch = true
+        			this.result = this.list
 				} else {
-        			this.result = [];
+        			this.result = []
 				}
 			},
 		}
@@ -256,6 +291,30 @@
 <style lang="scss" scoped>
 	$company-blue: #1B40D6;
 	$common-grey: #efeff4;
+	.clue-assign {
+		.top {
+			height: 50px;
+			line-height: 50px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #1B40D6;
+			> span {
+				display: inline-block;
+				position: relative;
+				box-sizing: border-box;
+				max-width: 100%;
+				padding: 0 8px;
+				font-size: 15px;
+				line-height: 18px;
+				> div {
+					overflow: hidden;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+				}
+			}
+		}
+	}
 	.search-container {
 		background-color: $common-grey;
 		padding: 10px 30px;

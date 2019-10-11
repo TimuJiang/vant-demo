@@ -3,7 +3,7 @@
 		.group-title 商机中心
 		.center-line
 			van-grid
-				van-grid-item(v-for="item in _types" :key="item.type" :to="`/potential-customer/${item.type}`" v-if="!(!isManager && item.type === 'cancelled')")
+				van-grid-item(v-for="item in _types" :key="item.type" :to="`/potential-customer/${item.type}/saleLoginName/-1`" v-if="!(!isManager && item.type === 'cancelled')")
 					.grid__number {{homePageData[`${item.type.toLowerCase()}Count`]}}
 					.grid__text(:class="item.type") {{item.type === 'cancelled' ? item.name : `${item.type}类`}}
 

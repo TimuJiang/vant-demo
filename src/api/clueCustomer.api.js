@@ -31,3 +31,28 @@ export function query(param) {
 export function getDefeatCount() {
 	return post(`${basePath}/clueCustomer/getDefeatCount`, {})
 }
+
+// 查询战败待审核列表
+export function queryForDefeatNotAudit(param) {
+	return post(`${basePath}/clueCustomer/queryForDefeatNotAudit`, param)
+}
+
+// 重新分配线索客户
+export function redistributionCustomer(param) {
+	return post(`${basePath}/clueCustomer/redistributionCustomer`, param)
+}
+
+// 通过战败审核
+export function passDefeatAudit(param) {
+	return post(`${basePath}/clueCustomer/passDefeatAudit`, param)
+}
+
+// 驳回战败审核
+export function notPassDefeatAudit(param) {
+	return post(`${basePath}/clueCustomer/notPassDefeatAudit`, param)
+}
+
+// 查询线索分配的列表
+export function queryForDistribution(param) {
+	return post(`${basePath}/clueCustomer/queryForDistribution`, param)
+}

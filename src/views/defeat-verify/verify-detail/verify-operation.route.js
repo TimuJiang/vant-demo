@@ -1,5 +1,5 @@
 export default {
-	path: 'verify-operation/:type',
+	path: 'verify-operation/:type/id/:id',
 	component: () => import('./verify-operation'),
 	meta: {
 
