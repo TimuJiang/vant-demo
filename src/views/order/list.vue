@@ -219,6 +219,7 @@
 						this.finished = true
 					}
 				}).catch((error) => {
+					this.finished = true
 					this.$dialog.alert({
 						message: error.message
 					})

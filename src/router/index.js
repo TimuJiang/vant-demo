@@ -35,6 +35,8 @@ async function isUser () {
 		store.commit('user', user || null)
 		let enums = await Vue.prototype.$api.general.queryEnums()
 		store.commit('enums', enums || {})
+		let dicMap = await Vue.prototype.$api.dictConfig.queryMap()
+		store.commit('dicMap', dicMap || {})
 		/* let dicts = await Vue.prototype.$api.dictConfig.queryAll()
 		store.commit('dicts', dicts || []) */
 	}

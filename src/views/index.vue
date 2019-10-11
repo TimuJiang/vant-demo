@@ -5,7 +5,7 @@
 			track-part(:is-manager="isManager")
 			follow-part(v-if="!isManager")
 			app-center(:is-manager="isManager")
-		m-loading(:show="show" text="初始化用户配置")
+		m-loading(:show="show" text="")
 </template>
 
 <script>
@@ -17,6 +17,9 @@
 		name: 'index',
 		created() {
 			this.initPageData()
+		},
+		mounted() {
+			this.bottom = true
 		},
 		data() {
 			return {
@@ -56,13 +59,14 @@
 		position: absolute;
 		width: 100%;
 		top: 0;
-		bottom: 50px;
+		bottom: 0;
 		.scroll {
 			width: 100%;
 			position: absolute;
 			top: 100px;
-			bottom: 0;
+			bottom: 50px;
 			overflow: scroll;
+			background-color: #efeff4;
 		}
 	}
 </style>
