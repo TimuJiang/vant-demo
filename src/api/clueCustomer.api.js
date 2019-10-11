@@ -56,3 +56,8 @@ export function notPassDefeatAudit(param) {
 export function queryForDistribution(param) {
 	return post(`${basePath}/clueCustomer/queryForDistribution`, param)
 }
+
+// 填写跟进记录
+export function saveFollow(param) {
+	return post(`${basePath}/clueCustomer/saveFollow`, param)
+}

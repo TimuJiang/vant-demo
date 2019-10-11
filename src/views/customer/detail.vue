@@ -9,7 +9,7 @@
 			van-tab(title="跟进记录")
 			van-tab(title="客户详情")
 		follow-record(v-if="active==0")
-		customer-detail(v-else)
+		customer-detail(v-else :customer="customerInfo")
 </template>
 
 <script>
@@ -20,7 +20,19 @@
 		components: { FollowRecord, CustomerDetail },
 		data() {
 			return {
-				active: ''
+				active: '',
+				customerInfo: {}
+			}
+		},
+		created() {
+			console.log('id', this.$route.params.id)
+			this.getCustomerInfo()
+		},
+		methods: {
+			getCustomerInfo() {
+				this.$api.clueCustomer.get(this.$route.params.id).then((data) => {
+					this.customerInfo = data
+				})
 			}
 		}
 	}

@@ -94,3 +94,10 @@
 		}
 	}
 </style>
+
+<style>
+	.follow-record .van-step__circle {
+		width: 8px;
+		height: 8px;
+	}
+</style>

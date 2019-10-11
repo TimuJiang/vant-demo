@@ -16,3 +16,8 @@ export function query(param) {
 export function queryMap() {
 	return post(`${basePath}/dicConfig/queryMap`, {})
 }
+
+// 查询字典分组List
+export function queryGroupDicConfig() {
+	return post(`${basePath}/dicConfig/queryGroupDicConfig`, {})
+}

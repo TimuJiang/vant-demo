@@ -21,8 +21,8 @@
         	this.initDateValue()
 		},
 		model: {
-			prop: 'valueFromParent',
-			event: 'changeParentValue'
+			prop: 'value',
+			event: 'change'
 		},
 		props: {
         	placeholder: {
@@ -32,7 +32,7 @@
 			rightIcon: {
         		default: 'arrow'
 			},
-			valueFromParent: String,
+			value: String,
 			isCurrentDate: { // 是否默认展示当前日期
         		default: false
 			},
@@ -52,7 +52,6 @@
 					datetime: 'YYYY-MM-DD HH:mm',
 					date: 'YYYY-MM-DD'
 				},
-        		value: '',
 				show: false,
 				popupTimeSelect: null
 			}
@@ -77,10 +76,10 @@
 				} else {
 					initDateValue = this.valueFromParent;
 				}
-				this.value = initDateValue;
+				this.updateModel(initDateValue)
 			},
 			updateModel(value) {
-				this.$emit('changeParentValue', value)
+				this.$emit('change', value)
 			},
 			showPopUp() {
         		if (this.disabled) {
@@ -90,9 +89,8 @@
         		this.show = true;
 			},
 			dateConfirm(value) { // 确认时间选择
-				this.value = this.timeFormat(value, this.timeFormatRule[this.dateType]);
-				this.updateModel(this.value) // 每次确认选择时间之后就同步更新父组件v-model绑定的值
-				this.show = false;
+				this.updateModel(this.timeFormat(value, this.timeFormatRule[this.dateType])) // 每次确认选择时间之后就同步更新父组件v-model绑定的值
+				this.show = false
 
 				// 父组件可以绑定date-confirm事件，默认传入当前选择的时间字符串
 				this.$emit('date-confirm', this.value);

@@ -4,7 +4,7 @@
 			required
 			:label="label"
 			readonly
-			placeholder="选择省/市/区"
+			placeholder="请选择"
 			@click="onclick"
 			:border="false"
 			label-width="110"
@@ -12,7 +12,6 @@
 		van-action-sheet(
 			v-model="show"
 			:actions="actions"
-			cancel-text="取消"
 			@select="onSelect"
 		)
 </template>
@@ -29,16 +28,16 @@
 				default: '标题'
 			},
 			value: {
-				default: '内容'
+				default: ''
 			},
 			actions: {
 				type: Array,
 				default: function () {
 					return [
-						{name: '选项'}
 					]
 				}
 			}
+
 		},
 		data() {
 			return {
@@ -51,7 +50,7 @@
 			},
 			onSelect(item) {
 				this.show = false
-				this.$emit('change', item.value)
+				this.$emit('change', item.disName || item.dictValue)
 				this.$emit('select', item)
 			}
 		}

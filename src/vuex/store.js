@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import dictAndEnumKey from '../config/dictAndEnumKey.config.js'
 
 Vue.use(Vuex)
 
@@ -7,7 +8,7 @@ export default new Vuex.Store({
 	state: {
 		user: null,
 		enums: {},
-		dicts: [],
+		dictConfig: {},
 		dicMap: {},
 		menu: [],
 		homePageData: {},
@@ -33,8 +34,8 @@ export default new Vuex.Store({
 		'enums'(state, value) {
 			state.enums = value
 		},
-		'dicts'(state, value) {
-			state.dicts = value
+		'dictConfig'(state, value) {
+			state.dictConfig = value
 		},
 		'dicMap'(state, value) {
 			state.dicMap = value
@@ -59,8 +60,32 @@ export default new Vuex.Store({
 		'Gender'(state) {
 			return state.enums.Gender
 		},
+		'dicMap'(state) {
+			return state.dicMap
+		},
+		'DictGender'(state) {
+			return getDictList(state, 'gender')
+		},
+		'DictLevel'(state) {
+			return getDictList(state, 'level')
+		},
+		'DictFollowType'(state) {
+			return getDictList(state, 'followType')
+		},
 		'isManager'(state) {
 			return state.user.roleName === '数字营销经理'
 		}
 	}
 })
+
+function getDictList(state, type) {
+	let list = []
+	let dictList = state.dictConfig[dictAndEnumKey[type].dict]
+	if (dictList) {
+		list = dictList.map((item) => {
+			item.name = item.dictValue
+			return item
+		})
+	}
+	return list
+}

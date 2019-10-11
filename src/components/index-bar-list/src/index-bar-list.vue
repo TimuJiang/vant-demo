@@ -117,9 +117,7 @@
 			},
         	clickCell(id) {
         		// this.$emit('click-cell', id)
-				this.$dialog.alert({
-					message: `当前点击客户的ID是${id}`
-				})
+				this.$router.push(`/customer/${id}`)
 			}
 		}
     }

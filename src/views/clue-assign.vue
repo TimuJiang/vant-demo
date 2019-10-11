@@ -2,10 +2,10 @@
     <m-page class="clue-assign" :left-text="leftText" :has-click-left="isBatch" :back="!isBatch" @click-left="clickLeft">
 		<div class="top">
 			<!--新线索待分配(999+)-->
-			<span>
+			<!--<span>
 				<div>新线索待分配(999+)</div>
-			</span>
-			<!--<van-dropdown-menu>
+			</span>-->
+			<van-dropdown-menu>
 				<van-dropdown-item title="新线索待分配(999+)" ref="item">
 					<div class="search-container">
 						<div>
@@ -18,7 +18,7 @@
 					</div>
 					<van-button block type="info" @click="search" color="#1B40D6">确认</van-button>
 				</van-dropdown-item>
-			</van-dropdown-menu>-->
+			</van-dropdown-menu>
 		</div>
 		<!---->
 		<div :class="listContainerClass">
