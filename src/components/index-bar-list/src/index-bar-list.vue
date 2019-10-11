@@ -72,9 +72,7 @@
 				return this.$api.clueCustomer;
 			}
 		},
-		props: {
-			outerParam: Object
-		},
+		props: ['outerParam'],
 		watch: {
 			outerParam(newVal, oldVal) {
         		if (newVal !== oldVal) {
@@ -84,10 +82,12 @@
 		},
 		methods: {
         	init(outerParam) {
-        		this.innerParam = {
-        			...outerParam
+        		if (outerParam) {
+					this.innerParam = {
+						...outerParam
+					}
+					this.initData()
 				}
-				this.initData()
 			},
         	initData() {
 				this.loading = true
@@ -107,6 +107,7 @@
 						this.finished = true
 					}
 				}).catch((error) => {
+					this.finished = true
 					this.$dialog.alert({
 						message: error.message
 					})
@@ -115,7 +116,10 @@
 				})
 			},
         	clickCell(id) {
-        		this.$emit('click-cell', id)
+        		// this.$emit('click-cell', id)
+				this.$dialog.alert({
+					message: `当前点击客户的ID是${id}`
+				})
 			}
 		}
     }

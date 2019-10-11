@@ -16,3 +16,18 @@ export function queryForAddressBook(param) {
 export function getCustomerCount(param) {
 	return post(`${basePath}/clueCustomer/getCustomerCount`, param)
 }
+
+// 查询可分配的销售人员
+export function queryUserList() {
+	return post(`${basePath}/clueCustomer/queryUserList`, {})
+}
+
+// 查询商机跟进列表
+export function query(param) {
+	return post(`${basePath}/clueCustomer/query`, param)
+}
+
+// 经理端获取战败的整合数据
+export function getDefeatCount() {
+	return post(`${basePath}/clueCustomer/getDefeatCount`, {})
+}

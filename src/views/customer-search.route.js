@@ -1,5 +1,5 @@
 export default {
-	path: '/customer-search/:id/type/:type',
+	path: '/customer-search/:loginName/type/:type',
 	props: true,
 	component: () => import('./customer-search'),
 	meta: {

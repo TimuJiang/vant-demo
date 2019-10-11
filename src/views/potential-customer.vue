@@ -3,37 +3,77 @@
 		van-tabs(
 			v-model="active"
 			color="#1B40D6"
+			@change="clickTab"
 			)
-			van-tab(title="全部")
-			van-tab(v-for="item in _customer" :key="item.type" :title="item.type+'级'")
+			van-tab(title="全部" name="all")
+			van-tab(v-for="item in _customer" :key="item.type" :name="item.type"  :title="`${item.type}级`" v-if="item.type !== 'cancelled'")
+			van-tab(title="已作废" v-if="isManager" name="cancelled")
 		.potential-customer__content
-			van-index-bar(
-				highlight-color="#1B40D6"
-			)
-				van-index-anchor(index="A")
-				van-cell(title="路人甲" v-for="i in 3" :key="i+'a'" :to="`/customer/${i}`" label="意向车型：博瑞博瑞1.8T+6AT(国五)豪华型")
-				van-index-anchor(index="B")
-				van-cell(title="路人甲" v-for="i in 11" :key="i+'a'" :to="`/customer/${i}`" label="意向车型：博瑞博瑞1.8T+6AT(国五)豪华型")
-				van-index-anchor(index="C")
-				van-cell(title="路人甲" v-for="i in 8" :key="i+'a'" :to="`/customer/${i}`" label="意向车型：博瑞博瑞1.8T+6AT(国五)豪华型")
-				van-index-anchor(index="J")
-				van-cell(title="路人甲" v-for="i in 7" :key="i+'a'" :to="`/customer/${i}`" label="意向车型：博瑞博瑞1.8T+6AT(国五)豪华型")
-				van-index-anchor(index="Z")
-				van-cell(title="路人甲" v-for="i in 8" :key="i+'a'" :to="`/customer/${i}`" label="意向车型：博瑞博瑞1.8T+6AT(国五)豪华型")
+			index-bar-list(:outer-param="param")
 
 </template>
 
 <script>
 	import { POTENTIAL_CUSTOMER } from 'config/types.config'
-	import Vue from 'vue';
-	import { IndexBar, IndexAnchor, Cell } from 'vant';
+	import Vue from 'vue'
+	import { IndexBar, IndexAnchor, Cell } from 'vant'
 
 	Vue.use(IndexBar).use(IndexAnchor).use(Cell)
 	export default {
 		name: 'potential-customer',
 		data() {
 			return {
-				active: ''
+				active: 'all',
+				levelData: {},
+				param: null,
+				defaultParam: {
+					pCustomerStatus: [51080003, 52080005],
+					pageNum: 1,
+					pageSize: 20
+				},
+				cancelledStatus: 51080020
+			}
+		},
+		created() {
+			this.active = this.$route.params.type
+			this.initLevelList()
+		},
+		computed: {
+			isManager() {
+				return this.$store.getters.isManager
+			}
+		},
+		methods: {
+			initLevelList() {
+				this.$api.dictConfig.query({
+					dictNo: 5089
+				}).then((data) => {
+					let level = {}
+					data.forEach((item) => {
+						let name = item.dictValue.split('（')[0]
+						level[name] = item.dictKey
+					})
+					this.levelData = level
+					this._customer = [...this._customer]
+					this.changeParam(this.$route.params.type)
+				})
+			},
+			changeParam(type) {
+
+				let newParam = {
+					...this.defaultParam
+				}
+				if (type !== 'cancelled') {
+					if (type !== 'all') {
+						newParam.pCustomerLevel = Number(this.levelData[type])
+					}
+				} else {
+					newParam.pCustomerStatus = [this.cancelledStatus]
+				}
+				this.param = newParam
+			},
+			clickTab(name) {
+				this.changeParam(name)
 			}
 		},
 		beforeCreate() {

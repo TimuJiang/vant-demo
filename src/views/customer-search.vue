@@ -8,6 +8,7 @@
 					shape="round"
 					left-icon=""
 					right-icon="search"
+					@input="changeInputValue"
 				)
 			.cell-container(v-if="type === 'all'")
 				van-cell(
@@ -19,7 +20,7 @@
 					@click="() => { jump(item.type, item.pCustomerStatus) }"
 				)
 			div(:class="listClass")
-				index-bar-list(@click-cell="clickCell" :outer-param="param")
+				index-bar-list(:outer-param="param")
 
 </template>
 
@@ -30,7 +31,7 @@
 	Vue.use(Search);
     export default {
         name: 'customer-search',
-		props: ['id', 'type'],
+		props: ['loginName', 'type'],
 		beforeRouteUpdate (to, from, next) {
 			// 在当前路由改变，但是该组件被复用时调用
 			// 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
@@ -40,14 +41,17 @@
 			next()
 		},
 		created() {
+        	if (this.loginName !== '-1') {
+        		this.defaultParam.salesConsultant = this.loginName
+			}
 			this.changeCustomerStatus(this.type)
 			this.initCount()
 		},
 		data() {
         	return {
         		searchValue: '',
-				refresh: true,
-				param: {
+				param: null,
+				defaultParam: {
 					mobileNo: '',
 					pCustomerName: '',
 					pageNum: 1,
@@ -88,7 +92,6 @@
 						pCustomerStatus: [51080007]
 					}
 				],
-				list: {}
 			}
 		},
 		computed: {
@@ -115,8 +118,9 @@
 		methods: {
         	initCount() {
         		let param = {}
-        		if (this.isManager) {
+        		if (this.loginName !== '-1') {
         			// 当前登录的是客户经理，查询时需要传对应的销售顾问ID到后台
+					param.salesConsultant = this.loginName
 				}
         		this.api.getCustomerCount(param).then((data) => {
         			this.customerCount = data
@@ -124,9 +128,9 @@
 			},
         	jump(type) {
         		if (type === 'bussCustomer') {
-					this.$router.push(`/potential-customer/A`)
+					this.$router.push(`/potential-customer/all`)
 				} else {
-        			this.$router.push(`/customer-search/${this.id}/type/${type}`)
+        			this.$router.push(`/customer-search/${this.loginName}/type/${type}`)
 				}
 			},
 			changeCustomerStatus(type) {
@@ -141,25 +145,30 @@
 					}
 				}
 			},
-			changeParam(key, value) {
-        		let newParam = {}
-        		if (key === 'pCustomerStatus') { // 如果是切换用户类型，那么清空顶部搜索输入框的值
-        			this.searchValue = ''
-        			newParam = {
-						mobileNo: '',
-						pCustomerName: ''
+			changeInputValue(value) {
+				let trimValue = value.trim()
+				if (trimValue) {
+					if (!isNaN(trimValue) || trimValue === '0') {
+						this.changeParam('mobileNo', trimValue)
+					} else {
+						this.changeParam('pCustomerName', trimValue)
 					}
+				} else {
+					this.changeParam()
+				}
+			},
+			changeParam(key, value) {
+        		let newParam = {
+        			...this.defaultParam
+				}
+				if (key === 'pCustomerStatus' && this.param) {
+					this.searchValue = ''
 					delete this.param.pCustomerStatus
 				}
         		if (value) {
 					newParam[key] = value
 				}
-				this.param = Object.assign({}, this.param, newParam)
-			},
-			clickCell(param) {
-        		this.$dialog.alert({
-					message: `当前点击客户的ID是${param}`
-				})
+				this.param = Object.assign({}, this.param || {}, newParam)
 			}
 		}
     }
