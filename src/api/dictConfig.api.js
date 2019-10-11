@@ -11,3 +11,8 @@ export function queryAll() {
 export function query(param) {
 	return post(`${basePath}/dicConfig/query`, param)
 }
+
+// 查询字典MAP
+export function queryMap() {
+	return post(`${basePath}/dicConfig/queryMap`, {})
+}

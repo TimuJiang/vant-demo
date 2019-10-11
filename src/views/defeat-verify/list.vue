@@ -12,9 +12,9 @@
 						van-list(
 							v-model="loading"
 							:finished="finished"
-							finished-text="没有更多了"
+							:finished-text="list.length === 0 && !loading ? '-暂无数据' : ''"
 							:immediate-check="false"
-							@load="onLoad"
+							@load="loadData"
 						)
 							.cell(
 								v-for="(item, index) in list"
@@ -22,9 +22,9 @@
 								class="small"
 							)
 								span {{item.name}}
-								span {{item.fail}}
-								router-link(:to="`/defeat-verify/verify-detail/${item.id}`")
-									span(class="red") {{item.pending}}
+								span {{item.defeatCount}}
+								router-link(:to="`/defeat-verify/verify-detail/${item.loginName}`")
+									span(class="red") {{item.defeatNotAuditCount}}
 
 </template>
 
@@ -34,7 +34,7 @@
 		data() {
 			return {
 				loading: false,
-				finished: false,
+				finished: true, // 要分页时改为false
 				tempData: {
 					id: 1,
 					name: '顾问1',
@@ -50,8 +50,31 @@
         	this.triggerLoad();
 		},
 		computed: {
+			api() {
+				return this.$api.clueCustomer
+			}
 		},
 		methods: {
+			loadData() {
+				this.api.getDefeatCount().then((data) => {
+					if (data.length > 0) {
+						// console.log('data', data)
+						for (let item of data) {
+							this.list.push(item)
+						}
+						// this.param.pageNum++ // 要分页时取消该注释
+					} else {
+						this.finished = true;
+					}
+				}).catch((error) => {
+					this.finished = true
+					this.$dialog.alert({
+						message: error.message
+					})
+				}).finally(() => {
+					this.loading = false;
+				})
+			},
 			onLoad() {
 				// 异步更新数据
 				setTimeout(() => {
@@ -74,8 +97,8 @@
 				}, 500);
 			},
 			triggerLoad() {
-				this.loading = true;
-				this.onLoad()
+				this.loading = true; // 要分页时取消该注释
+				this.loadData()
 			},
 			onRefresh() {
 				setTimeout(() => {
@@ -95,6 +118,7 @@
 		top: 46px;
 		bottom: 0;
 		background-color: $common-grey;
+
 	}
 	.cell {
 		height: 50px;

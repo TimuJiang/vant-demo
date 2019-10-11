@@ -8,6 +8,7 @@ export default new Vuex.Store({
 		user: null,
 		enums: {},
 		dicts: [],
+		dicMap: {},
 		menu: [],
 		homePageData: {},
 		collapse: false
@@ -34,6 +35,9 @@ export default new Vuex.Store({
 		},
 		'dicts'(state, value) {
 			state.dicts = value
+		},
+		'dicMap'(state, value) {
+			state.dicMap = value
 		},
 		'homePageData'(state, value) {
 			state.homePageData = value
