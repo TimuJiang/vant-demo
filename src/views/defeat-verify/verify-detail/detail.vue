@@ -17,7 +17,7 @@
 							)
 								.customer
 									span {{item.pCustomerName}}
-									span {{dicMap[item.pCustomerLevel].dictValue.split('（')[0]}}
+									m-level-icon(:level="dicMap[item.pCustomerLevel].dictValue.split('（')[0]")
 									span
 								.car 意向车型：{{`${item.purposeSeriesName ? `${item.purposeSeriesName} ` : ''}${item.purposeModelName || '暂无信息'}`}}
 								.reseon 战败原因：{{item.defeatReason || ''}}
@@ -59,7 +59,7 @@
 		},
 		methods: {
         	goToOperation(type, id) {
-        		this.$router.push(`${this.$route.params.id}/verify-operation/${type}/id/${id}`);
+        		this.$router.push(`/defeat-verify/verify-operation/${type}/id/${id}`)
 			},
 			triggerLoad() {
 				this.loading = true
@@ -118,18 +118,6 @@
 			span:first-child {
 				font-weight: bold;
 				margin-right: 3px;
-			}
-			span:nth-child(2) {
-				display: inline-block;
-				height: 15px;
-				width: 15px;
-				background-color: #07B836;
-				border-radius: 2px;
-				font-size: 14px;
-				text-align: center;
-				line-height: 15px;
-				color: #FFF;
-				margin-left: 5px;
 			}
 			span:last-child {
 				position: absolute;

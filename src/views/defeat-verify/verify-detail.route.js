@@ -1,5 +1,4 @@
 import Detail from './verify-detail/detail.route'
-import VerifyOperation from './verify-detail/verify-operation.route'
 
 export default {
 	path: 'verify-detail/:id',
@@ -7,7 +6,6 @@ export default {
 	meta: {
 	},
 	children: [
-		Detail,
-		VerifyOperation
+		Detail
 	]
 }

@@ -1,13 +1,13 @@
 <template lang="pug">
 	m-page(right-text="提醒设置" @click-right="goToSet").message-index
 		.list-item(@click="() => { this.$router.push('/clue-assign') }")
-			van-icon(name="cluster-o" size="25px" color="#1B40D6")
+			img(:src="icon.deliver")
 			.text
 				|线索待分配信息
 				span
 					van-tag(round type="danger") 30
 		.list-item(@click="() => { this.$router.push('/niche-follow/4') }")
-			van-icon(name="clock-o" size="25px" color="#1B40D6")
+			img(:src="icon.unfollow")
 			.text
 				|商机超时未跟进
 				span
@@ -23,6 +23,14 @@
 	Vue.use(Tag);
     export default {
         name: 'index',
+		data() {
+        	return {
+        		icon: {
+        			deliver: `${require('../../assets/remind/remind_icon_deliver.png')}`,
+					unfollow: `${require('../../assets/remind/remind_icon_unfollow.png')}`
+				}
+			}
+		},
 		methods: {
         	goToSet() {
         		this.$router.push('/message/message-setting')
@@ -37,6 +45,10 @@
 		padding-left: 15px;
 		display: flex;
 		align-items: center;
+		img {
+			width: 40px;
+			height: 40px;
+		}
 		.text {
 			flex-grow: 1;
 			height: 100%;

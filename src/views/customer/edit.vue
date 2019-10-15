@@ -5,8 +5,8 @@
 				van-field(required label="客户姓名" v-model="page.pCustomerName" placeholder="请输入" label-width="110")
 				m-general-select(label="性别" :actions="DictGender" v-model="select.gender" @select="(item) => { changeDict('gender', item) }")
 				m-general-select(label="意向等级" :actions="DictLevel" v-model="select.pCustomerLevel" @select="(item) => { changeDict('pCustomerLevel', item) }")
-				m-general-select(label="意向车系" v-model="select.purposeSeries")
-				m-general-select(label="意向车型" v-model="select.purposeModel")
+				m-general-select(label="意向车系" v-model="select.purposeSeriesName")
+				m-general-select(label="意向车型" v-model="select.purposeModelName")
 				m-general-select(label="车辆颜色" v-model="select.purposeColor")
 				m-general-select(label="跟进方式"  :actions="DictFollowType" v-model="select.foType" @select="(item) => { changeDict('foType', item) }")
 				m-time-select(label="下次跟进日期" v-model="page.nextFoDate")
@@ -26,6 +26,7 @@
 					:autosize="{ maxHeight: 100, minHeight: 100}"
 					)
 		van-button.save-button(size="large" color="#FF3B30" @click="save") 保存
+		m-loading(:show="loadingShow" text="保存中")
 </template>
 
 <script>
@@ -47,11 +48,7 @@
 		},
 		data() {
 			return {
-				username: '路人甲',
-				gender: '',
-				address: '',
-				record: '',
-				time: '',
+				loadingShow: false,
 				page: {
 					pCustomerName: '',
 					gender: '',
@@ -111,7 +108,7 @@
 					this.page = Object.assign({}, this.page, data)
 					this.select.purposeModelName = data.purposeModelName
 					this.select.purposeSeriesName = data.purposeSeriesName
-					this.initDict(['gender', 'pCustomerLevel', 'foType'], data)
+					this.initDict(['gender', 'pCustomerLevel'], data)
 				})
 			},
 			clickIncident(value) {
@@ -135,9 +132,15 @@
 				this.page[key] = Number(item.dictKey)
 			},
 			save() {
-				console.log(this.page)
-				this.api.saveFollow(this.page).then((data) => {
-
+				this.loadingShow = true
+				this.api.saveFollow(this.page).then(() => {
+					this.$toast('保存成功');
+				}).catch(({ message }) => {
+					this.$dialog.alert({
+						message: message || '保存失败'
+					})
+				}).finally(() => {
+					this.loadingShow = false
 				})
 			}
 		},

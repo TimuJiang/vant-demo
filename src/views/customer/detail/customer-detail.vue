@@ -4,7 +4,7 @@
 			.base--card
 				.base--card__title
 					span {{c.pCustomerName || '-' }}
-					span.level {{c.pCustomerLevel ? dicMap[c.pCustomerLevel].dictValue.split('（')[0] : '-'}}
+					m-level-icon(:level="dicMap[c.pCustomerLevel].dictValue.split('（')[0]" size="20" font-size="13" :round="true" :extra-style="{ margin: '0 5px 0 10px' }")
 					m-icon(:icon-class="levelClass")
 				.base--card__sub
 					.mobile {{c.phoneNo || '-'}}
@@ -20,8 +20,8 @@
 			van-cell(title="是否试驾" value="是")
 			van-cell(title="是否按揭" value="是")
 			van-cell(title="所在地区" value="什么事业部/大区/城市")
-			van-cell(title="详细地址" value="什么事业部/大区/城市")
-		.button__warp
+			van-cell(title="详细地址" :value="c.address")
+		.button__warp(v-if="!isManager")
 			van-button(color="#1B40D6" type="primary" size="large" @click="onclick") 编辑
 </template>
 
@@ -43,6 +43,9 @@
 			MAreaSelect: () => import('components/m-area-select/m-area-select.vue')
 		},
 		computed: {
+			isManager() {
+				return this.$store.getters.isManager
+			},
 			c() {
 				return this.customer
 			},

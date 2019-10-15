@@ -18,12 +18,12 @@
 					.address
 						| 杭州xxxx吉利4s店
 		van-cell(title="姓名" :value="user.loginName")
-		van-cell(title="岗位" :value="user.name")
 		van-cell(title="角色" :value="user.roleName")
-		van-cell(title="状态" :value="user.status.disName" :is-link="true"  @click="showStatusAction")
+		van-cell(title="岗位" :value="user.name")
+		van-cell(v-if="user.roleName === '网销专员'" title="状态" :value="user.workStatus.disName" :is-link="true"  @click="showStatusAction")
 		van-cell(title="关于我们" :is-link="true")
 		.logout-button-warp
-			van-button.logout-button(type="primary" size="large") 退出登录
+			van-button.logout-button(type="primary" size="large" @click="logout") 退出登录
 		van-action-sheet(key="role" v-model="show" :actions="user.roles" @select="onRoleSelect")
 		van-action-sheet(key="status" v-model="showStatus" :actions="_roleStatus" @select="onStatusSelect")
 
@@ -40,13 +40,16 @@
 		data() {
 			return {
 				show: false,
-				showStatus: false
+				showStatus: false,
 			}
 		},
 		computed: {
 			...mapGetters([
 				'user'
 			])
+		},
+		created() {
+			// this.workStatus = this.user.workStatus.disName
 		},
 		beforeCreate() {
 			this._roleTypes = [
@@ -55,8 +58,8 @@
 				{ name: '网销专员', subname: '描述信息' }
 			]
 			this._roleStatus = [
-				{ name: '空闲' },
-				{ name: '忙碌', subname: '不在接受线索' }
+				{ name: '空闲', value: 'free', ordinal: 1 },
+				{ name: '忙碌', value: 'busy', ordinal: 0 }
 			]
 		},
 		methods: {
@@ -70,8 +73,37 @@
 				this.$store.state.user.roleName = value.name
 				this.show = false
 			},
-			onStatusSelect () {
+			onStatusSelect (value) {
 				this.showStatus = false
+				let param = {
+					uid: this.user.uid,
+					workStatus: value.value
+				}
+				this.$api.my.updateWorkStatus(param).then(() => {
+					let workStatus = {
+						ordinal: value.ordinal,
+						disName: value.name,
+						name: value.value
+					}
+					this.user.workStatus = workStatus
+					this.$toast({
+						message: '状态切换成功'
+					})
+				}).catch(({ message }) => {
+					this.$toast({
+						message: message || '状态切换失败'
+					})
+				})
+			},
+			logout() {
+				this.$api.sso.logout().then(() => {
+					localStorage.removeItem('bomt-ticket')
+					this.$router.push('/login')
+				}).catch(({ message }) => {
+				this.$toast({
+					message: message || '登出失败'
+				})
+			})
 			}
 		}
 	}

@@ -54,10 +54,20 @@ export function notPassDefeatAudit(param) {
 
 // 查询线索分配的列表
 export function queryForDistribution(param) {
-	return post(`${basePath}/clueCustomer/queryForDistribution`, param)
+	return post(`${basePath}/clueCustomer/queryForDistribution`, param, true)
 }
 
 // 填写跟进记录
 export function saveFollow(param) {
 	return post(`${basePath}/clueCustomer/saveFollow`, param)
+}
+
+// 提交战败申请
+export function saveDefeatAudit(param) {
+	return post(`${basePath}/clueCustomer/saveDefeatAudit`, param)
+}
+
+// 线索分配
+export function distributionCustomer(param) {
+	return post(`${basePath}/clueCustomer/distributionCustomer`, param)
 }

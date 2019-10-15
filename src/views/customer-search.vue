@@ -2,6 +2,8 @@
 	m-page(:head-title="title").customer-search
 		.container
 			.search
+				.search-point-container
+					.search-point(@click="clickSearchPoint")
 				van-search(
 					v-model="searchValue"
 					placeholder="输入手机号/客户姓名"
@@ -9,6 +11,7 @@
 					left-icon=""
 					right-icon="search"
 					@input="changeInputValue"
+					@clear="() => { changeParam() }"
 				)
 			.cell-container(v-if="type === 'all'")
 				van-cell(
@@ -16,9 +19,11 @@
 					:title="`${customerTypesMap[item.type]}（${customerCount[`${item.type}Count`] === undefined ? '--' : customerCount[`${item.type}Count`]}）`"
 					:key="index"
 					:is-link="true"
-					icon="like-o"
 					@click="() => { jump(item.type, item.pCustomerStatus) }"
 				)
+					template(slot="title")
+						img(:src="icon[index]")
+						span {{`${customerTypesMap[item.type]}（${customerCount[`${item.type}Count`] === undefined ? '--' : customerCount[`${item.type}Count`]}）`}}
 			div(:class="listClass")
 				index-bar-list(:outer-param="param")
 
@@ -49,6 +54,13 @@
 		},
 		data() {
         	return {
+        		icon: {
+        			0: `${require('../assets/customer/sjcustomer.png')}`,
+					1: `${require('../assets/customer/ddcustomer.png')}`,
+					2: `${require('../assets/customer/bycustomer.png')}`,
+					3: `${require('../assets/customer/zbcustomer.png')}`,
+					4: `${require('../assets/customer/shcustomer.png')}`
+				},
         		searchValue: '',
 				param: null,
 				defaultParam: {
@@ -56,6 +68,10 @@
 					pCustomerName: '',
 					pageNum: 1,
 					pageSize: 10
+				},
+				searchInfo: {
+        			type: '',
+					value: ''
 				},
 				customerTypesMap: {
         			'bussCustomer': '商机客户',
@@ -133,6 +149,14 @@
         			this.$router.push(`/customer-search/${this.loginName}/type/${type}`)
 				}
 			},
+			clickSearchPoint() {
+				let { type ,value } = this.searchInfo
+				if (type) {
+					this.changeParam(type, value)
+				} else {
+					this.changeParam()
+				}
+			},
 			changeCustomerStatus(type) {
         		if (type === 'all') {
 					this.changeParam('pCustomerStatus', null)
@@ -149,12 +173,24 @@
 				let trimValue = value.trim()
 				if (trimValue) {
 					if (!isNaN(trimValue) || trimValue === '0') {
-						this.changeParam('mobileNo', trimValue)
+						this.searchInfo = {
+							type: 'mobileNo',
+							value: trimValue
+						}
+						// this.changeParam('mobileNo', trimValue)
 					} else {
-						this.changeParam('pCustomerName', trimValue)
+						this.searchInfo = {
+							type: 'pCustomerName',
+							value: trimValue
+						}
+						// this.changeParam('pCustomerName', trimValue)
 					}
 				} else {
-					this.changeParam()
+					this.searchInfo = {
+						type: '',
+						value: 'trimValue'
+					}
+					// this.changeParam()
 				}
 			},
 			changeParam(key, value) {
@@ -183,16 +219,35 @@
 		bottom: 0;
 		width: 100%;
 		background-color: $common-grey;
+		.cell-container {
+			img {
+				width: 30px;
+				height: 30px;
+				margin-right: 10px;
+			}
+		}
 		.search {
 			height: 40px;
 			background-color: #fff;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			.search-point-container {
+				position: absolute;
+				width: 70%;
+				height: 30px;
+				.search-point {
+					position: absolute;
+					width: 24px;
+					height: 100%;
+					right: 0;
+					z-index: 1;
+				}
+			}
 		}
 		.list {
 			position: absolute;
-			top: 260px;
+			top: 290px;
 			bottom: 0;
 			width: 100%;
 			overflow: scroll;
@@ -218,5 +273,9 @@
 	}
 	.customer-search .van-search .van-search__content .van-field__control {
 		font-size: 12px;
+	}
+	.customer-search .cell-container .van-cell__title {
+		display: flex;
+		align-items: center;
 	}
 </style>

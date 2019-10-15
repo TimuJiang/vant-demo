@@ -6,15 +6,15 @@
 				<div>新线索待分配(999+)</div>
 			</span>-->
 			<van-dropdown-menu>
-				<van-dropdown-item title="新线索待分配(999+)" ref="item">
+				<van-dropdown-item :title="`新线索待分配(${total > 999 ? '999+' : total})`" ref="item">
 					<div class="search-container">
-						<div>
-							<van-field
-								placeholder="输入手机号/客户名称"
-								left-icon="search"
-								v-model="value"
-							/>
-						</div>
+						<van-search v-model="searchValue"
+									placeholder="输入手机号/客户姓名"
+									shape="round"
+									left-icon=""
+									right-icon="search"
+									@input="changeInputValue"
+						></van-search>
 					</div>
 					<van-button block type="info" @click="search" color="#1B40D6">确认</van-button>
 				</van-dropdown-item>
@@ -29,18 +29,18 @@
 						:finished="finished"
 						finished-text="我是有底线的"
 						:immediate-check="false"
-						@load="onLoad"
+						@load="loadData"
 					>
 						<van-checkbox-group v-model="result">
 							<div
-								v-for="(item, index) in list"
-								:key="index"
+								v-for="item in list"
+								:key="item.pCustomerId"
 								class="clue-cell"
 							>
 								<div :class="checkClass">
 									<van-checkbox
-										:key="item"
-										:name="item"
+										:key="item.pCustomerId"
+										:name="item.pCustomerId"
 										v-show="isBatch"
 									>
 										<m-icon slot="icon"
@@ -55,11 +55,11 @@
 										<span>1小时前</span>
 									</div>
 									<div class="customer">
-										<span>吴彦祖</span>
-										<span>H</span>
+										<span>{{item.pCustomerName}}</span>
+										<m-level-icon :level="dicMap[item.pCustomerLevel].dictValue.split('（')[0]"></m-level-icon>
 									</div>
 									<div class="clue-car">
-										意向车型：博瑞1.8T+6AT(国五)豪华型（博瑞）
+										意向车型：{{`${item.purposeSeriesName ? `${item.purposeSeriesName} ` : ''}${item.purposeModelName || '暂无信息'}`}}
 									</div>
 									<div class="create-time">
 										商机产生时间：2019/08/29 12:05
@@ -68,7 +68,7 @@
 										近一个月看车3次，最近一次2019/08/22
 									</div>
 									<div class="assign" v-show="noBatch">
-										<div class="assign-button" @click="showChoose">分配</div>
+										<div class="assign-button" @click="() => { showChoose('single', item.pCustomerId) }">分配</div>
 									</div>
 								</div>
 							</div>
@@ -77,7 +77,7 @@
 				</van-pull-refresh>
 			</div>
 		</div>
-		<div class="bottom-container">
+		<div class="bottom-container" v-if="list.length">
 			<div :class="bottomOperationClass" v-show="isBatch">
 				<van-checkbox v-model="checkAll" @change="checkAllFuc">
 					全选
@@ -89,11 +89,6 @@
 			</div>
 			<div class="assign-button" @click="clickAssign">{{buttonText}}</div>
 		</div>
-		<!--<div class="assign-list">
-			<van-dropdown-menu direction="up">
-				<van-dropdown-item v-model="value1" :options="option1" />
-			</van-dropdown-menu>
-		</div>-->
 		<van-action-sheet v-model="salesmanSelectShow" @closed="cancelChoose">
 			<div class="choose-title">
 				选择被分配人
@@ -101,7 +96,7 @@
 			<div class="choose-salesman">
 				<div class="salesman-list">
 					<van-radio-group v-model="salesmanSelectValue">
-						<van-radio :name="item.value" :key="item.value" v-for="item in salesmanList">
+						<van-radio :name="item.loginName" :key="item.loginName" v-for="item in salesmanList">
 							{{item.name}}
 							<m-icon slot="icon"
 									slot-scope="props"
@@ -116,27 +111,35 @@
 				</div>
 			</div>
 		</van-action-sheet>
+		<m-loading :show="loadingShow" text="分配中"></m-loading>
 	</m-page>
 </template>
 
 <script>
-	import { Dialog } from 'vant'
+	import Vue from 'vue'
+	import { Search } from 'vant'
+
+	Vue.use(Search)
     export default {
         name: 'clue-assign',
 		data() {
 			return {
-				value: '',
-				value1: 0,
+				loadingShow: false,
+				searchValue: '',
 				option1: [
 					{ text: '请选择被分配人', value: 0 },
 					{ text: '销售1', value: 1 },
 					{ text: '销售2', value: 2 }
 				],
 				list: [],
-				param: {
+				total: 0,
+				assignType: '',
+				defaultParam: {
 					pageNum: 1,
 					pageSize: 10
 				},
+				singleId: '',
+				param: null,
 				checkAll: false,
 				loading: false,
 				finished: false,
@@ -145,20 +148,17 @@
 				isLoading: false,
 				salesmanSelectShow: false,
 				salesmanSelectValue: '',
-				salesmanList: [
-					{ name: '小A', value: 1 },
-					{ name: '小B', value: 2 },
-					{ name: '小C', value: 3 },
-					{ name: '小D', value: 4 },
-					{ name: '小E', value: 5 }
-				]
+				salesmanList: []
 			}
 		},
 		mounted() {
 			this.triggerLoad()
-			this.loadData()
+			this.initSaleManList()
 		},
 		computed: {
+			dicMap() {
+				return this.$store.state.dicMap
+			},
 			api() {
 				return this.$api.clueCustomer
 			},
@@ -171,6 +171,7 @@
 			listContainerClass() {
 				return {
 					'list-container': true,
+					'empty-list': this.list.length === 0
 				}
 			},
 			checkClass() {
@@ -183,7 +184,7 @@
 				return this.isBatch ? '取消' : '返回'
 			},
 			noBatch() {
-				return !this.isBatch;
+				return !this.isBatch
 			},
 			clickLeft() {
 				return this.isBatch ? this.cancel : () => {}
@@ -193,54 +194,102 @@
 			}
 		},
 		methods: {
+			initSaleManList() {
+				this.api.queryUserList().then((data) => {
+					this.salesmanList = data
+				}).catch((error) => {
+					this.$dialog.alert({
+						message: error.message
+					})
+				})
+			},
         	clickAssign() {
-        		if (this.buttonText === '批量分配') {
-					this.isBatch = true;
+				if (this.buttonText === '批量分配') {
+					this.isBatch = true
 				} else {
-        			this.showChoose();
+        			this.showChoose('batch')
 				}
 			},
-			showChoose() {
-				this.salesmanSelectShow = true;
+			showChoose(type, id) {
+				this.salesmanSelectShow = true
+				if (type === 'single') {
+					this.singleId = Number(id)
+				}
+
+				this.assignType = type
 			},
 			doAssign() {
-        		console.log('选中的id', this.result)
-				this.$toast({
-					message: '操作成功',
-					icon: 'passed',
-					mask: true
-					// className: 'clue-assign-fail' 用该class可以显示红色的提示语
-				});
-
-				this.cancelChoose();
+				let param = {
+					salesConsultant: this.salesmanSelectValue
+				}
+				if (this.assignType === 'single') {
+					param.pCustomerIds = [this.singleId].toString()
+				} else {
+					param.pCustomerIds = this.result.map((item) => {
+						console.log('item', item)
+						return Number(item)
+					}).toString()
+				}
+				console.log('param', param)
+				this.loadingShow = true
+				this.api.distributionCustomer(param).then(() => {
+					this.triggerLoad()
+					this.result = []
+					this.checkAll = false;
+					this.$toast({
+						message: '分配成功',
+						icon: 'passed',
+						mask: true
+						// className: 'clue-assign-fail' 用该class可以显示红色的提示语
+					})
+				}).catch(({ message }) => {
+					this.$toast({
+						message: message || '分配失败',
+						icon: 'passed',
+						mask: true,
+						className: 'clue-assign-fail'
+					});
+				}).finally(() => {
+					this.loadingShow = false
+					this.cancelChoose()
+				})
+			},
+			changeInputValue(value) {
+				let trimValue = value.trim()
+				if (trimValue) {
+					if (!isNaN(trimValue) || trimValue === '0') {
+						this.changeParam('mobileNo', trimValue)
+					} else {
+						this.changeParam('pCustomerName', trimValue)
+					}
+				} else {
+					this.changeParam()
+				}
+			},
+			changeParam(key, value) {
+				let newParam = {
+					...this.defaultParam
+				}
+				delete newParam.mobileNo
+				delete newParam.pCustomerName
+				newParam[key] = value
+				this.defaultParam = newParam
 			},
 			cancelChoose() {
-				this.salesmanSelectShow = false;
-				this.salesmanSelectValue = '';
+				this.salesmanSelectShow = false
+				this.salesmanSelectValue = ''
 			},
 			triggerLoad() {
-				this.loading = true;
-				this.onLoad()
-			},
-			onLoad() {
-				// 异步更新数据
-				setTimeout(() => {
-					for (let i = 0; i < 5; i++) {
-						this.list.push(this.list.length + 1);
-					}
-					// 加载状态结束
-					this.loading = false;
-
-					// 数据全部加载完成
-					if (this.list.length >= 20) {
-						this.finished = true;
-					}
-				}, 500);
+				this.param = { ...this.defaultParam }
+				this.loading = true
+				this.finished = false
+				this.list = []
+				this.loadData()
 			},
 			loadData() {
-				this.api.queryForDistribution(this.param).then((data) => {
-					console.log('clue-data', data)
-					return false
+				this.api.queryForDistribution(this.param).then((res) => {
+					let { data, total } = res
+					this.total = total
 					if (data.length > 0) {
 						// console.log('data', data)
 						for (let item of data) {
@@ -266,9 +315,8 @@
 				}, 500);
 			},
 			search() {
-				Dialog.alert({
-					message: '开发中...'
-				})
+				this.triggerLoad()
+				this.$refs.item.toggle()
 			},
 			cancel() {
         		this.isBatch = false;
@@ -278,7 +326,9 @@
 			checkAllFuc(value) {
         		if (value) {
 					this.isBatch = true
-        			this.result = this.list
+        			this.result = this.list.map(item => {
+        				return item.pCustomerId
+					})
 				} else {
         			this.result = []
 				}
@@ -317,12 +367,7 @@
 	}
 	.search-container {
 		background-color: $common-grey;
-		padding: 10px 30px;
-		.van-cell {
-			border-radius: 5px;
-			padding-top: 5px;
-			padding-bottom: 5px;
-		}
+		padding: 10px 0;
 	}
 
 	.list-container {
@@ -332,6 +377,9 @@
 		top: 96px;
 		overflow: scroll;
 		background-color: $common-grey;
+		&.empty-list {
+			bottom: 0
+		}
 		.clue-cell {
 			display: flex;
 			align-items: center;
@@ -372,17 +420,6 @@
 				span:first-child {
 					font-weight: bold;
 					margin-right: 3px;
-				}
-				span:last-child {
-					display: inline-block;
-					height: 15px;
-					width: 15px;
-					background-color: #07B836;
-					border-radius: 2px;
-					font-size: 14px;
-					text-align: center;
-					line-height: 15px;
-					color: #FFF;
 				}
 			}
 			.create-time {
@@ -502,5 +539,23 @@
 	}
 	.clue-assign .salesman-list .van-radio__label {
 		margin-left: 12px;
+	}
+
+	.clue-assign .search-container .van-search {
+		padding: 0!important;
+		width: 70%;
+		margin: 0 auto;
+		background: transparent!important;
+	}
+
+	.clue-assign .search-container .van-search .van-cell {
+		padding: 3px 8px 3px 0!important;
+	}
+
+	.clue-assign .search-container .van-search .van-search__content {
+		padding-left: 20px;
+	}
+	.clue-assign .search-container .van-search .van-search__content .van-field__control {
+		font-size: 12px;
 	}
 </style>

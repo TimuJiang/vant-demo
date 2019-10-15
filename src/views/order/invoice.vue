@@ -58,7 +58,7 @@
 			},
 			selectItems() {
 				let { InvoiceTypeEnum } = this.$store.state.enums
-				console.log(this.$store.state.enums)
+				// console.log(this.$store.state.enums)
 				return this.renderSelectItems({
 					invoiceType: InvoiceTypeEnum
 				})

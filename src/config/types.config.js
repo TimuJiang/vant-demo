@@ -30,24 +30,24 @@ export const POTENTIAL_CUSTOMER = [
 
 export const APP_CENTER = [
 	{
-		icon: 'cluster-o',
+		icon: 'distribution',
 		path: '/clue-assign',
 		name: '线索分配'
 	}, {
-		icon: 'star-o',
+		icon: 'fail',
 		path: '/defeat-verify',
 		name: '战败审核'
 	}, {
-		icon: 'friends-o',
+		icon: 'customersearch',
 		path: '/customer-search/-1/type/all',
 		path2: '/salesman-list',
 		name: '客户查询'
 	}, {
-		icon: 'other-pay',
+		icon: 'testdrive',
 		path: '/try-car',
 		name: '试乘试驾'
 	}, {
-		icon: 'other-pay',
+		icon: 'ordermanage',
 		path: '/order',
 		name: '订单管理'
 	}

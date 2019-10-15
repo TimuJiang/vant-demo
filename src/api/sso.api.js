@@ -7,3 +7,7 @@ export function getUser() {
 export function login(loginName, password) {
 	return get('/sso/user/login', {loginName, password})
 }
+
+export function logout() {
+	return get('/sso/user/logout', {})
+}

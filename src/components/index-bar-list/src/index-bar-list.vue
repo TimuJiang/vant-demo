@@ -22,6 +22,7 @@
 						:title="item.pCustomerName"
 						:label="`意向车型：${item.purposeSeriesName ? `${item.purposeSeriesName} ` : ''}${item.purposeModelName || '暂无信息'}`"
 						@click="() => { clickCell(item.pCustomerId) }")
+		m-loading(:show="showLoading" text="" :mask="false")
 </template>
 
 <script>
@@ -36,6 +37,7 @@
 		},
 		data() {
         	return {
+        		showLoading: false,
 				anchorDom: null,
 				listArr: [],
 				innerParam: {},
@@ -96,6 +98,7 @@
 				this.loadData()
 			},
 			loadData() {
+        		this.showLoading = true
 				this.api.queryForAddressBook(this.innerParam).then((data) => {
 					if (data.length > 0) {
 						// console.log('data', data)
@@ -112,6 +115,7 @@
 						message: error.message
 					})
 				}).finally(() => {
+					this.showLoading = false
 					this.loading = false
 				})
 			},
@@ -139,5 +143,8 @@
 		color: #666;
 		font-size: 16px;
 		transform: scale(0.6);
+	}
+	.index-bar-list .van-list__loading {
+		display: none;
 	}
 </style>

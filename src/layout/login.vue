@@ -32,12 +32,33 @@
 		},
 		methods: {
 			login() {
-				this.show = true
-				this.$api.sso.login(this.loginName, this.password)
-					.then(response => {
-						this.$router.push('/preload')
-					}).finally(() => {
+				if (this.verify()) {
+					this.show = true
+					this.$api.sso.login(this.loginName, this.password)
+						.then(response => {
+							this.$router.push('/preload')
+						}).finally(() => {
 						this.show = false
+					})
+				}
+			},
+			verify() {
+				if (!this.loginName) {
+					this.message('账号不能为空')
+					return false
+				}
+
+				if (!this.password) {
+					this.message('密码不能为空')
+					return false
+				}
+
+				return true
+			},
+			message(message) {
+				this.$toast({
+					message: message,
+					duration: 2000
 				})
 			}
 

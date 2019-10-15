@@ -14,7 +14,6 @@
 </template>
 
 <script>
-	import { Dialog } from 'vant'
     export default {
         name: 'verify-operation',
 		created() {
@@ -59,6 +58,12 @@
 							rightText: '驳回',
 							rightClick: this.api.notPassDefeatAudit
 						};
+					case 'defeat':
+						return {
+							title: '战败申请',
+							rightText: '提交',
+							rightClick: this.api.saveDefeatAudit
+						};
 					default:
 						return {
 							title: '',
@@ -84,17 +89,17 @@
 			},
         	assign() {
         		console.log('param', this.param)
-				Dialog.alert({
+				this.$dialog.alert({
 					message: '分配成功'
 				})
 			},
 			pass() {
-				Dialog.alert({
+				this.$dialog.alert({
 					message: '已通过'
 				})
 			},
 			reject() {
-				Dialog.alert({
+				this.$dialog.alert({
 					message: '驳回成功'
 				})
 			},
@@ -103,7 +108,7 @@
         		action(this.param).then(() => {
 					this.$router.back()
 				}).catch(({ message }) => {
-					Dialog.alert({
+					this.$dialog.alert({
 						message: message || '操作失败'
 					})
 				}).finally(() => {

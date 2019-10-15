@@ -149,7 +149,7 @@
 					buyType: BuyCarType,
 					paymentMethod: PaymentType,
 					distribution: BoolStatus,
-					certificatesType: DocumentType,
+					certificatesType: DocumentType
 				})
 			}
 		},

@@ -1,5 +1,6 @@
 import List from './defeat-verify/list.route'
 import VerifyDetail from './defeat-verify/verify-detail.route'
+import VerifyOperation from './defeat-verify/verify-operation.route'
 
 export default {
 	path: '/defeat-verify',
@@ -9,6 +10,7 @@ export default {
 	},
 	children: [
 		List,
-		VerifyDetail
+		VerifyDetail,
+		VerifyOperation
 	]
 }

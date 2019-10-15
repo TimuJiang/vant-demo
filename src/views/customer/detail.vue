@@ -8,7 +8,7 @@
 		)
 			van-tab(title="跟进记录")
 			van-tab(title="客户详情")
-		follow-record(v-if="active==0")
+		follow-record(v-if="active==0" :customer="customerInfo")
 		customer-detail(v-else :customer="customerInfo")
 </template>
 

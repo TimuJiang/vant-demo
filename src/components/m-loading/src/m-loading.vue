@@ -1,5 +1,5 @@
 <template lang="pug">
-	.my-overlay(v-if="show")
+	.my-overlay(:class="{ 'no-mask': !mask }")(v-if="show")
 		van-loading(vertical) {{text}}
 </template>
 
@@ -15,6 +15,9 @@
 			},
 			text: {
 				default: '操作进行中'
+			},
+			mask: {
+        		default: true
 			}
 		}
     }
@@ -32,5 +35,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		&.no-mask {
+			background-color: transparent;
+		}
 	}
 </style>
