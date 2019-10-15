@@ -11,6 +11,7 @@ export default new Vuex.Store({
 		dictConfig: {},
 		dicMap: {},
 		menu: [],
+		carModel: [],
 		homePageData: {},
 		collapse: false
 	},
@@ -42,6 +43,9 @@ export default new Vuex.Store({
 		},
 		'homePageData'(state, value) {
 			state.homePageData = value
+		},
+		'carModel'(state, value) {
+			state.carModel = value
 		}
 	},
 	getters: {
@@ -74,6 +78,9 @@ export default new Vuex.Store({
 		},
 		'isManager'(state) {
 			return state.user.roleName === '数字营销经理'
+		},
+		'isPhoneSpecialist'(state) {
+			return state.user.roleName === '电话专员'
 		}
 	}
 })

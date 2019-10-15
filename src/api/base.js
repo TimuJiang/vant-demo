@@ -6,7 +6,11 @@ export function post(url, data, params) {
 			.post(url,data instanceof FormData ? data : Qs.stringify(data))
 			.then(res => {
 				if (res.data.status === 200) {
-					resolve(res.data.data || res.data)
+					if (params) {
+						resolve(res.data)
+					} else {
+						resolve(res.data.data || res.data)
+					}
 				} else if (res.data.code === 405) {
 					window.location.href = '/'
 				} else {

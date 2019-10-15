@@ -39,6 +39,8 @@ async function isUser () {
 		store.commit('dicMap', dicMap || {})
 		let dictConfig = await Vue.prototype.$api.dictConfig.queryGroupDicConfig()
 		store.commit('dictConfig', dictConfig || {})
+		let carModel = await Vue.prototype.$api.carModel.queryForTree()
+		store.commit('carModel', carModel || [])
 	}
 	return store.state.user
 }

@@ -5,8 +5,7 @@
 				van-cell-group
 					van-field(v-model="page.pCustomerName" label="客户名称" required :readonly="disabled")
 					van-field(v-model="page.mobileNo" placeholder="请输入" label="客户电话" required :readonly="disabled")
-					van-field(v-model="page.realSeriesName" readonly label="试驾车系" placeholder="请选择" required :right-icon="rightIcon" @click="openSelect('realSeriesName')")
-					van-field(v-model="page.realModelName" readonly label="试驾车型" placeholder="请选择" required :right-icon="rightIcon" @click="openSelect('realModelName')")
+					m-car-seriesmodel(v-model="page" :disabled="disabled" series-key="realSeries" model-key="realModel" :right-icon="rightIcon")
 					m-time-select(v-model="page.driveDate" :disabled="disabled" label="试驾时间" :is-current-date="true" date-type="datetime" required :right-icon="rightIcon")
 			.cell
 				van-cell-group
@@ -23,7 +22,7 @@
 			.cell
 				van-cell-group
 					m-img-upload(:value="uploadAgreementName" type="dp" :is-multiple="true" :operation="uploadOperation" :ids="page.agreementIds" :paths="page.agreementPaths" title="驾驶协议" label="驾驶协议" @do-upload="(data) => { afterUpload('dp', data) }")
-					van-field(v-model="page.driverName" readonly label="试驾人员" placeholder="请选择" required :right-icon="rightIcon"  @click="disabled ? null : () => { openSelect('driverName') }")
+					van-field(v-model="page.driverName" readonly label="试驾人员" placeholder="请选择" required :right-icon="rightIcon"  @click="openSelect('driverName')")
 		.bottom-button(v-if="!(currentDriveStatus === noEdit  || isManager)" @click="doTryCar") {{currentDriveStatus === 'TEST_DRIVER' ? '立即试驾' : '结束试驾'}}
 		van-action-sheet(
 			v-model="select.selectShow"
