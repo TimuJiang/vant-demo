@@ -3,14 +3,14 @@
 		.manager-summary-part__title 商机管理系统
 		van-row(:class="{ 'is-manager': isManager }").manager-summary-part__content
 			.content-title(v-if="isManager") 今日业绩
-			van-col(span="8" @click="() => { this.$router.push(isManager ? '/order' : '/niche-follow/1') }")
-				.number-cell {{isManager ? homePageData.terminalCount : homePageData.notFollowUpCount}}
+			van-col(:span="colNum" @click="() => { this.$router.push(isManager ? '/order' : '/niche-follow/1') }")
+				.number-cell {{isManager ? homePageData.terminalCount || 0 : homePageData.notFollowUpCount || 0}}
 				.name-cell {{isManager ? '终端数' : '未跟进'}}
-			van-col.van-hairline--left(span="8" @click="() => { this.$router.push(isManager ? '/order' : '/niche-follow/4') }")
-				.number-cell {{isManager ? homePageData.orderCount : homePageData.timeOutNotFollowUpCount}}
+			van-col.van-hairline--left(:span="colNum" @click="() => { this.$router.push(isManager ? '/order' : '/niche-follow/4') }")
+				.number-cell {{isManager ? homePageData.orderCount || 0 : homePageData.timeOutNotFollowUpCount || 0}}
 				.name-cell {{isManager ? '订单数' : '过期未跟进'}}
-			van-col.van-hairline--left(span="8" @click="() => { this.$router.push(isManager ? '/potential-customer/H/saleLoginName/-1' : '/clue-assign') }")
-				.number-cell(:class="{ 'red': isManager }") {{isManager ? homePageData.businessOppotunityCount : homePageData.unallocated}}
+			van-col.van-hairline--left(:span="colNum" v-if="isManagerOrPhoneSpecialist" @click="() => { this.$router.push(isManager ? '/potential-customer/H/saleLoginName/-1' : '/clue-assign') }")
+				.number-cell(:class="{ 'red': isManager }") {{isManager ? homePageData.businessOppotunityCount || 0 : homePageData.unallocated || 0}}
 				.name-cell {{isManager ? '商机数' : '未分配'}}
 </template>
 
@@ -23,13 +23,19 @@
 		computed: {
 			homePageData() {
 				return this.$store.state.homePageData
+			},
+			isManagerOrPhoneSpecialist() {
+				return this.isManager || this.$store.getters.isPhoneSpecialist
+			},
+			colNum() {
+				return this.isManagerOrPhoneSpecialist ? '8' : '12'
 			}
 		}
 	}
 </script>
 <style lang="scss" scoped>
 	.manager-summary-part {
-		background-image: linear-gradient(130deg, rgb(24, 119, 255) 0%, #195dff 78%);
+		background: url("~assets/home/home_bg.png") no-repeat center;
 		height: 100px;
 		overflow: visible;
 		position: relative;

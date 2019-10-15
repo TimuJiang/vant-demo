@@ -4,7 +4,7 @@
 		.center-line
 			van-grid
 				van-grid-item(v-for="item in _types" :key="item.type" :to="`/potential-customer/${item.type}/saleLoginName/-1`" v-if="!(!isManager && item.type === 'cancelled')")
-					.grid__number {{homePageData[`${item.type.toLowerCase()}Count`]}}
+					.grid__number {{homePageData[`${item.type.toLowerCase()}Count`] || 0}}
 					.grid__text(:class="item.type") {{item.type === 'cancelled' ? item.name : `${item.type}类`}}
 
 </template>
@@ -54,14 +54,16 @@
 			min-width: 35px;
 			height: 14px;
 			line-height: 16px;
-			background: #FCB27C;
 			border-radius: 2px;
 			text-align: center;
 		}
 		.A,.B,.C {
-			background: #07B836;
+			background: #FCB27C;
 		}
 		.N,.F {
+			background: #07B836;
+		}
+		.H {
 			background: #FF3B30;
 		}
 		.O, .cancelled {

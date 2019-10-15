@@ -59,6 +59,7 @@
 			color: #1B40D6;
 			line-height: 26px;
 			margin: 16px 5px;
+			font-weight: 500;
 		}
 		.type-4 {
 			color: #FF3B30;
