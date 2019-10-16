@@ -14,7 +14,23 @@
         		preload: [
 					{
 						name: 'enums',
-						method: this.$api.general.queryEnums
+						method: this.$api.general.queryEnums,
+						defaultValue: {}
+					},
+					{
+        				name: 'dicMap',
+						method: this.$api.dictConfig.queryMap,
+						defaultValue: {}
+					},
+					{
+						name: 'dictConfig',
+						method: this.$api.dictConfig.queryGroupDicConfig,
+						defaultValue: {}
+					},
+					{
+						name: 'carModel',
+						method: this.$api.carModel.queryForTree,
+						defaultValue: []
 					}
 				]
 
@@ -28,7 +44,7 @@
         		async function quene(preload, store) {
 					for (let obj of preload) {
 						let res = await obj.method()
-						store.commit(obj.name, res)
+						store.commit(obj.name, res || obj.defaultValue)
 					}
 				}
 				quene(this.preload, this.$store).catch((error) => {

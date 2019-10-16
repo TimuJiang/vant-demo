@@ -5,12 +5,11 @@
 				van-field(required label="客户姓名" v-model="page.pCustomerName" placeholder="请输入" label-width="110")
 				m-general-select(label="性别" :actions="DictGender" v-model="select.gender" @select="(item) => { changeDict('gender', item) }")
 				m-general-select(label="意向等级" :actions="DictLevel" v-model="select.pCustomerLevel" @select="(item) => { changeDict('pCustomerLevel', item) }")
-				m-general-select(label="意向车系" v-model="select.purposeSeriesName")
-				m-general-select(label="意向车型" v-model="select.purposeModelName")
+				m-car-seriesmodel(v-model="page" label="意向" series-key="purposeSeries" model-key="purposeModel")
 				m-general-select(label="车辆颜色" v-model="select.purposeColor")
 				m-general-select(label="跟进方式"  :actions="DictFollowType" v-model="select.foType" @select="(item) => { changeDict('foType', item) }")
 				m-time-select(label="下次跟进日期" v-model="page.nextFoDate")
-				m-area-select(v-model="select.area")
+				m-area-select-new(v-model="page")
 				van-field(label="详细地址"  v-model="page.address" label-width="110" placeholder="请输入")
 			van-cell-group.event-row
 				.tag-list
@@ -106,8 +105,6 @@
 			getCustomerInfo() {
 				this.api.get(this.$route.params.id).then((data) => {
 					this.page = Object.assign({}, this.page, data)
-					this.select.purposeModelName = data.purposeModelName
-					this.select.purposeSeriesName = data.purposeSeriesName
 					this.initDict(['gender', 'pCustomerLevel'], data)
 				})
 			},
@@ -134,7 +131,8 @@
 			save() {
 				this.loadingShow = true
 				this.api.saveFollow(this.page).then(() => {
-					this.$toast('保存成功');
+					this.$toast('保存成功')
+					this.$router.back()
 				}).catch(({ message }) => {
 					this.$dialog.alert({
 						message: message || '保存失败'

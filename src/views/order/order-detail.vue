@@ -15,7 +15,7 @@
 				van-cell-group
 					van-field(v-model="page.linkmanName" placeholder="请输入" label="联系人" required :readonly="disabled")
 					van-field(v-model="page.linkmanMobile" placeholder="请输入" label="联系电话" required :readonly="disabled")
-					van-field(v-model="pageShow.areaName" readonly placeholder="请选择" label="所在地区" required :right-icon="rightIcon" @click="openSelect('area')")
+					m-area-select-new(v-model="page" :right-icon="rightIcon" :disabled="disabled" )
 					van-field(v-model="page.address" placeholder="请输入" label="详细地址" required)
 			.cell
 				van-cell-group
@@ -144,7 +144,7 @@
 			},
 			selectItems() {
         		let { BuyCarType, PaymentType, BoolStatus, DocumentType } = this.$store.state.enums
-				console.log(this.$store.state.enums)
+				// console.log(this.$store.state.enums)
 				return this.renderSelectItems({
 					buyType: BuyCarType,
 					paymentMethod: PaymentType,
@@ -275,9 +275,10 @@
 					action = this.orderApi.update
 				}
 				action(this.page).then((data) => {
-					this.$dialog.alert({
+					this.$toast({
 						message: '操作成功'
 					})
+					this.$router.back()
 				}).catch((error) => {
 					this.$dialog.alert({
 						message: error.message || '操作失败'

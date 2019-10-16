@@ -33,14 +33,6 @@ async function isUser () {
 	if (!store.state.user) {
 		let user = await Vue.prototype.$api.sso.getUser()
 		store.commit('user', user || null)
-		let enums = await Vue.prototype.$api.general.queryEnums()
-		store.commit('enums', enums || {})
-		let dicMap = await Vue.prototype.$api.dictConfig.queryMap()
-		store.commit('dicMap', dicMap || {})
-		let dictConfig = await Vue.prototype.$api.dictConfig.queryGroupDicConfig()
-		store.commit('dictConfig', dictConfig || {})
-		let carModel = await Vue.prototype.$api.carModel.queryForTree()
-		store.commit('carModel', carModel || [])
 	}
 	return store.state.user
 }
@@ -52,6 +44,12 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
 	// next()
+	// console.log('to', to)
+	if (to.path === '/' && to.query.type === '1' && to.query.ticket && !sessionStorage.getItem('bomt-ticket')) {
+		sessionStorage.setItem('bomt-ticket', to.query.ticket)
+		sessionStorage.setItem('from-android', to.query.type)
+		router.push('/preload')
+	}
 	auth(to, from, next)
 })
 

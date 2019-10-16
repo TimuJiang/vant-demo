@@ -5,7 +5,7 @@
 				van-cell-group
 					van-field(v-model="page.pCustomerName" label="客户名称" required :readonly="disabled")
 					van-field(v-model="page.mobileNo" placeholder="请输入" label="客户电话" required :readonly="disabled")
-					m-car-seriesmodel(v-model="page" :disabled="disabled" series-key="realSeries" model-key="realModel" :right-icon="rightIcon")
+					m-car-seriesmodel(v-model="page" :disabled="disabled" label="试驾" series-key="realSeries" model-key="realModel" :right-icon="rightIcon")
 					m-time-select(v-model="page.driveDate" :disabled="disabled" label="试驾时间" :is-current-date="true" date-type="datetime" required :right-icon="rightIcon")
 			.cell
 				van-cell-group
@@ -172,10 +172,12 @@
 						console.log('data', data)
 						this.currentDriveStatus = data.driveStatus.name
 						this.page = Object.assign({}, this.page, data);
-						this.page.realSeries = this.page.purposeSeries || ''
-						this.page.realModel = this.page.purposeModel || ''
-						this.page.realSeriesName = this.page.purposeSeriesName || ''
-						this.page.realModelName = this.page.purposeModelName || ''
+						if (!this.page.realSeries) {
+							this.page.realSeries = this.page.purposeSeries || ''
+							this.page.realModel = this.page.purposeModel || ''
+							this.page.realSeriesName = this.page.purposeSeriesName || ''
+							this.page.realModelName = this.page.purposeModelName || ''
+						}
 					}).catch((error) => {
 
 					})
@@ -206,16 +208,19 @@
 			},
 			/* 类型选择-end */
 			doTryCar() { // 立即试驾
+				console.log('this.page', this.page)
+				// return false
 				if (this.currentDriveStatus === 'TEST_DRIVER') {
 					this.page.driveStatus = 'DRIVERING'
 				} else if (this.currentDriveStatus === 'DRIVERING') {
 					this.page.driveStatus = 'FINISH'
 				}
 				this.loading = true
-				this.api.update(this.page).then((data) => {
-					this.$dialog.alert({
+				this.api.update(this.page).then(() => {
+					this.$toast({
 						message: '成功'
 					})
+					this.$router.back()
 				}).catch((error) => {
 					this.$dialog.alert({
 						message: error.message

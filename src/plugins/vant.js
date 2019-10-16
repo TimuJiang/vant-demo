@@ -27,7 +27,8 @@ import {
 	Toast,
 	Dialog,
 	RadioGroup,
-	Radio
+	Radio,
+	Picker
 } from 'vant'
 
 Vue
@@ -60,3 +61,4 @@ Vue
 	.use(RadioGroup)
 	.use(Radio)
 	.use(Image)
+	.use(Picker)

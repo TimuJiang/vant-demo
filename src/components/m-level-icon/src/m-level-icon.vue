@@ -30,7 +30,9 @@
                 default: 14
             },
             extraStyle: {
-                default: {}
+                default: function () {
+                    return {}
+                }
             }
         }
     }

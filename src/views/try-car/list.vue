@@ -23,7 +23,7 @@
 					// | 2019年9月
 				.list-container
 					div(style="height: 100%")
-						van-pull-refresh(v-model="isLoading" @refresh="onRefresh")
+						van-pull-refresh(v-model="isLoading" @refresh="onRefresh" loading-text=" ")
 							van-list(
 								v-model="loading"
 								:finished="finished"
@@ -38,9 +38,9 @@
 									)
 										.info(@click="() => { if (isManager || item.driveStatus.name === 'FINISH') goToDetail(item.id) }")
 											div
-												span.name {{item.pcustomerName}}
+												span.name {{item.pCustomerName}}
 												span.time {{item[mapInfo.driveStatusTime[item.driveStatus.name]]}}
-											.car 试驾车型：{{`${item.driveStatus.name === 'TEST_DRIVER' ? item.purposeSeriesName : item.realSeriesName}-${item.driveStatus.name === 'TEST_DRIVER' ? item.purposeModelName : item.realModelName}`}}
+											.car 试驾车型：{{`${item.purposeSeriesName || ''}-${item.purposeModelName || ''}`}}
 										.operation(v-if="!isManager")
 											div
 												// van-icon(name="phone-o" :color="companyBlue")
@@ -174,6 +174,7 @@
 					})
 				}).finally(() => {
 					this.loading = false;
+					this.isLoading = false;
 				})
 			},
 			onLoad() { // 模拟数据
@@ -196,6 +197,7 @@
 					this.$toast('刷新成功');
 					this.isLoading = false;
 				}, 500);
+				// this.changeData()
 			},
 			cancel(id) {
 				Dialog.confirm({

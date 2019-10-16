@@ -1,11 +1,11 @@
 <template lang='pug'>
-	.index
+	.index(:class="{'from-android': fromAndroid}")
 		manager-summary-part(:is-manager="isManager")
 		.scroll
 			track-part(:is-manager="isManager")
 			follow-part(v-if="!isManager")
 			app-center(:is-manager="isManager")
-		m-loading(:show="show" text="")
+		m-loading(:show="show" text="" :mask="false")
 </template>
 
 <script>
@@ -16,6 +16,9 @@
 	export default {
 		name: 'index',
 		created() {
+			if (sessionStorage.getItem('from-android') === '1') {
+				this.fromAndroid = true
+			}
 			this.initPageData()
 		},
 		mounted() {
@@ -23,7 +26,8 @@
 		},
 		data() {
 			return {
-				show: true
+				show: true,
+				fromAndroid: false
 			}
 		},
 		components: {
@@ -67,6 +71,12 @@
 			bottom: 50px;
 			overflow: scroll;
 			background-color: #efeff4;
+		}
+		&.from-android {
+			z-index: 9999;
+			.scroll {
+				bottom: 0;
+			}
 		}
 	}
 </style>

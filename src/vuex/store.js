@@ -7,11 +7,11 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 	state: {
 		user: null,
-		enums: {},
-		dictConfig: {},
-		dicMap: {},
+		enums: JSON.parse(sessionStorage.getItem('enums')) || {},
+		dictConfig: JSON.parse(sessionStorage.getItem('dictConfig')) || {},
+		dicMap: JSON.parse(sessionStorage.getItem('dicMap')) || {},
 		menu: [],
-		carModel: [],
+		carModel: JSON.parse(sessionStorage.getItem('carModel')) || [],
 		homePageData: {},
 		collapse: false
 	},
@@ -33,18 +33,22 @@ export default new Vuex.Store({
 			state.collapse = value
 		},
 		'enums'(state, value) {
+			sessionStorage.setItem('enums', JSON.stringify(value))
 			state.enums = value
 		},
 		'dictConfig'(state, value) {
+			sessionStorage.setItem('dictConfig', JSON.stringify(value))
 			state.dictConfig = value
 		},
 		'dicMap'(state, value) {
+			sessionStorage.setItem('dicMap', JSON.stringify(value))
 			state.dicMap = value
 		},
 		'homePageData'(state, value) {
 			state.homePageData = value
 		},
 		'carModel'(state, value) {
+			sessionStorage.setItem('carModel', JSON.stringify(value))
 			state.carModel = value
 		}
 	},

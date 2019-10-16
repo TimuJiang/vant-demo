@@ -1,15 +1,15 @@
 <template lang="pug">
 	.m-car-seriesmodel
-		van-field(v-model="page[`${seriesKey}Name`]" readonly label="试驾车系" placeholder="请选择" required :right-icon="rightIcon" @click="openSelect('model')")
-		van-field(v-model="page[`${modelKey}Name`]" readonly label="试驾车型" placeholder="请选择" required :right-icon="rightIcon" @click="openSelect('series')")
+		van-field(v-model="page[`${seriesKey}Name`]" readonly :label="`${label}车系`" placeholder="请选择" required :right-icon="rightIcon" @click="openSelect('series')")
+		van-field(v-model="page[`${modelKey}Name`]" readonly :label="`${label}车型`" placeholder="请选择" required :right-icon="rightIcon" @click="openSelect('model')")
 		van-action-sheet.car-select(
 			v-model="modelShow"
-			:actions="carModel"
+			:actions="models"
 			@select="selectModel"
 		)
 		van-action-sheet.car-select(
 			v-model="seriesShow"
-			:actions="series"
+			:actions="carSeries"
 			@select="selectSeries"
 		)
 </template>
@@ -18,7 +18,8 @@
     export default {
         name: 'm-car-seriesmodel',
 		created() {
-        	this.currentModel = this.page[this.modelKey]
+
+			// console.log('this.page', this.page)
 		},
 		model: {
 			prop: 'page',
@@ -28,32 +29,36 @@
         	return {
         		modelShow: false,
 				seriesShow: false,
-				currentModel: ''
+				currentSeries: ''
+			}
+		},
+		watch: {
+        	page(newVal, oldVal) {
+        		if (oldVal[this.seriesKey] !== newVal[this.seriesKey]) {
+        			// console.log('newVal', newVal)
+        			this.currentSeries = newVal[this.seriesKey]
+				}
 			}
 		},
 		computed: {
         	api() {
         		return this.$api.carModel
 			},
-			carModel() {
+			carSeries() {
         		return this.$store.state.carModel
 			},
-			series() {
-        		let series = []
-				if (this.currentModel) {
-					for (let i = 0; i < this.carModel.length; i++) {
-						if (this.carModel[i].carCode === this.currentModel) {
-							series = this.carModel[i].children
-						}
-					}
+			models() {
+        		let models = []
+				if (this.currentSeries) {
+					models = this.getModelsBySeries(this.currentSeries)
 				}
-        		return series
+        		return models
 			}
 		},
 		props: {
         	page: Object,
 			rightIcon: {
-        		default: true
+        		default: 'arrow'
 			},
 			seriesKey: {
         		default: ''
@@ -63,41 +68,59 @@
 			},
 			disabled: {
         		default: false
+			},
+			label: {
+        		default: ''
 			}
 		},
 		methods: {
-			selectModel(item) {
-				this.currentModel = item.carCode
-				console.log('series', this.series)
+        	getModelsBySeries(series) {
+				for (let i = 0; i < this.carSeries.length; i++) {
+					if (this.carSeries[i].carCode === series) {
+						return this.carSeries[i].children
+					}
+				}
+				return []
+			},
+			selectSeries(item) {
+        		let models = this.getModelsBySeries(item.carCode)
+				if (models.length === 0) {
+					this.$toast({
+						message: '当前车系下暂无车型，请重新选择'
+					})
+					return false
+				}
+				this.currentSeries = item.carCode
+				console.log('models', this.models)
 				let obj = {
 					[`${this.seriesKey}Name`]: item.name,
 					[`${this.seriesKey}`]: item.carCode,
-					[`${this.modelKey}Name`]: this.series[0] ? this.series[0].name : '',
-					[`${this.modelKey}`]: this.series[0] ? this.series[0].carCode : ''
+					[`${this.modelKey}Name`]: this.models[0] ? this.models[0].name : '',
+					[`${this.modelKey}`]: this.models[0] ? this.models[0].carCode : ''
 				}
 				this.updateModel(obj)
-				this.modelShow = false
+				this.seriesShow = false
 			},
-			selectSeries(item) {
+			selectModel(item) {
 				let obj = {
 					[`${this.modelKey}Name`]: item.name,
 					[`${this.modelKey}`]: item.carCode
 				}
 				this.updateModel(obj)
-				this.seriesShow = false
+				this.modelShow = false
 			},
 			openSelect(type) {
 				if (this.disabled) {
 					return false
 				}
-				if (type === 'series') {
-					if (!this.currentModel) {
+				if (type === 'model') {
+					if (!this.currentSeries) {
 						this.$toast({
 							message: '请先选择车系'
 						})
 						return false
 					}
-					if (this.series.length === 0) {
+					if (this.models.length === 0) {
 						this.$toast({
 							message: '暂无车型信息'
 						})
@@ -115,18 +138,26 @@
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 	.m-car-seriesmodel .van-cell {
 		font-size: 16px;
 		font-weight: 600;
 		color: #333;
 		line-height: 30px;
 		border-bottom: 1px solid rgba(0,0,0,0.1);
+		.van-cell__title {
+			width: 110px;
+		}
+		.van-field__control {
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
 	}
 	.m-car-seriesmodel:last-child .van-cell:last-child {
 		border-bottom-width: 0;
 	}
-	.car-select {
+	.m-car-seriesmodel .car-select {
 		max-height: 300px!important;
 	}
 </style>

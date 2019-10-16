@@ -97,7 +97,7 @@
 			},
 			logout() {
 				this.$api.sso.logout().then(() => {
-					localStorage.removeItem('bomt-ticket')
+					sessionStorage.removeItem('bomt-ticket')
 					this.$router.push('/login')
 				}).catch(({ message }) => {
 				this.$toast({
