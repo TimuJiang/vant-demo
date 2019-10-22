@@ -107,7 +107,7 @@
 						type: 'defeatNotAuditCustomer',
 						pCustomerStatus: [51080007]
 					}
-				],
+				]
 			}
 		},
 		computed: {

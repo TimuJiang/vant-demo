@@ -71,3 +71,8 @@ export function saveDefeatAudit(param) {
 export function distributionCustomer(param) {
 	return post(`${basePath}/clueCustomer/distributionCustomer`, param)
 }
+
+// 作废客户
+export function cancelCustomer(param) {
+	return post(`${basePath}/clueCustomer/cancelCustomer`, param)
+}

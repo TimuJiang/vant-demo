@@ -9,6 +9,7 @@ import MLoading from './m-loading'
 import MLevelIcon from './m-level-icon'
 import MCarSeriesModel from './m-car-seriesmodel'
 import MAreaSelectNew from './m-area-select-new'
+import MAudioPlay from './m-audio-play'
 Vue.component(MPage.name, MPage)
 Vue.component(IndexBarList.name, IndexBarList)
 Vue.component(MTimeSelect.name, MTimeSelect)
@@ -18,3 +19,4 @@ Vue.component(MLoading.name, MLoading)
 Vue.component(MLevelIcon.name, MLevelIcon)
 Vue.component(MCarSeriesModel.name, MCarSeriesModel)
 Vue.component(MAreaSelectNew.name, MAreaSelectNew)
+Vue.component(MAudioPlay.name, MAudioPlay)

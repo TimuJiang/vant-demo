@@ -12,7 +12,7 @@
 					van-list(
 						v-model="loading"
 						:finished="finished"
-						:finished-text="list.length === 0 && !loading ? '-暂无数据' : ''"
+						:finished-text="list.length === 0 && !loading ? '-暂无数据-' : ''"
 						:immediate-check="false"
 						@load="loadData"
 					)

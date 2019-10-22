@@ -14,7 +14,7 @@
 			van-cell-group.event-row
 				.tag-list
 					.container
-						.item(v-for="item in incident" :key="item.value")
+						.item(v-for="item in incident" :key="item.value" v-if="!(item.name === '转订单' && orderDisabled)")
 							span(:class="{'selected': !!item.selected}" @click="() => { clickIncident(item.value) }") {{item.name}}
 					van-field(required readonly label="发生事件")
 				van-field(
@@ -48,6 +48,7 @@
 		data() {
 			return {
 				loadingShow: false,
+				orderDisabledList: ['51080010', '51080025'], // 已转订单 已报终端的潜客转订单按钮置灰
 				page: {
 					pCustomerName: '',
 					gender: '',
@@ -84,7 +85,7 @@
 					},
 					{
 						name: '试乘试驾',
-						value: 'TEST_DRIVE'
+						value: 'RESERVE_TEST_DRIVE'
 					},
 					{
 						name: '转订单',
@@ -145,6 +146,9 @@
 		computed: {
 			api() {
 				return this.$api.clueCustomer
+			},
+			orderDisabled() {
+				return (this.orderDisabledList.indexOf(this.page.pCustomerStatus) !== -1)
 			},
 			...mapGetters([
 				'DictGender',
