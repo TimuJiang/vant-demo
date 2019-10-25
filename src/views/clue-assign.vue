@@ -311,7 +311,7 @@
 			onRefresh() {
 				setTimeout(() => {
 					this.$toast('刷新成功');
-					this.isLoading = false;
+					// this.isLoading = false;
 				}, 500);
 			},
 			search() {

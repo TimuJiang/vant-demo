@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '@/vuex/store'
+import { android } from '../config/android'
 Vue.use(Router)
 
 const routes = []
@@ -45,10 +46,15 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
 	// next()
 	// console.log('to', to)
+
 	if (to.path === '/' && to.query.type === '1' && to.query.ticket && !sessionStorage.getItem('bomt-ticket')) {
 		sessionStorage.setItem('bomt-ticket', to.query.ticket)
 		sessionStorage.setItem('from-android', to.query.type)
 		router.push('/preload')
+	} else {
+		if (android && to.path !== '/preload') {
+			android.returnNative(to.path === '/' ? 0 : 1)
+		}
 	}
 	auth(to, from, next)
 })

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import router from '../router'
-import { android } from "../config/android";
+import { android } from '../config/android';
 
 function getTicket() {
 	return sessionStorage.getItem('bomt-ticket')

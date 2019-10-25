@@ -10,6 +10,7 @@
 			:z-index="999"
 			@click-left="onClickLeft"
 			@click-right="onClickRight")
+			van-icon(:name="rightIconType" slot="right" v-if="rightIcon")
 		.m-page__content(:class="{hasTitle: showNavBar}")
 			slot
 </template>
@@ -28,6 +29,12 @@
 				default: ''
 			},
 			rightText: {
+				default: ''
+			},
+			rightIcon: {
+				default: false
+			},
+			rightIconType: {
 				default: ''
 			},
 			headTitle: {
@@ -75,6 +82,12 @@
 			}
 			.van-nav-bar__left {
 				font-size: 16px;
+			}
+			.van-nav-bar__right {
+				.van-icon {
+					font-size: 16px;
+					color: #1B40D6;
+				}
 			}
 			.van-nav-bar__arrow {
 				color: #1B40D6;

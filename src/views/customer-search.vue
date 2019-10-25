@@ -1,18 +1,7 @@
 <template lang="pug">
 	m-page(:head-title="title").customer-search
 		.container
-			.search
-				.search-point-container
-					.search-point(@click="clickSearchPoint")
-				van-search(
-					v-model="searchValue"
-					placeholder="输入手机号/客户姓名"
-					shape="round"
-					left-icon=""
-					right-icon="search"
-					@input="changeInputValue"
-					@clear="() => { changeParam() }"
-				)
+			common-search(@change-param="changeParam")
 			.cell-container(v-if="type === 'all'")
 				van-cell(
 					v-for="(item,index) in customerTypes"
@@ -30,11 +19,8 @@
 </template>
 
 <script>
-	import Vue from 'vue';
-	import { Search } from 'vant';
-
-	Vue.use(Search);
-    export default {
+	import CommonSearch from './customer/common-search'
+	export default {
         name: 'customer-search',
 		props: ['loginName', 'type'],
 		beforeRouteUpdate (to, from, next) {
@@ -44,6 +30,9 @@
 			// 可以访问组件实例 `this`
 			this.changeCustomerStatus(to.params.type)
 			next()
+		},
+		components: {
+        	'common-search': CommonSearch
 		},
 		created() {
         	if (this.loginName !== '-1') {
@@ -61,17 +50,12 @@
 					3: `${require('../assets/customer/zbcustomer.png')}`,
 					4: `${require('../assets/customer/shcustomer.png')}`
 				},
-        		searchValue: '',
 				param: null,
 				defaultParam: {
 					mobileNo: '',
 					pCustomerName: '',
 					pageNum: 1,
 					pageSize: 10
-				},
-				searchInfo: {
-        			type: '',
-					value: ''
 				},
 				customerTypesMap: {
         			'bussCustomer': '商机客户',
@@ -152,18 +136,18 @@
 			clickSearchPoint() {
 				let { type ,value } = this.searchInfo
 				if (type) {
-					this.changeParam(type, value)
+					this.changeParam({key: type, value})
 				} else {
-					this.changeParam()
+					this.changeParam({})
 				}
 			},
 			changeCustomerStatus(type) {
         		if (type === 'all') {
-					this.changeParam('pCustomerStatus', null)
+					this.changeParam({key: 'pCustomerStatus', value: null})
 				} else {
 					for (let i = 0; i < this.customerTypes.length; i++) {
 						if (type === this.customerTypes[i].type) {
-							this.changeParam('pCustomerStatus', this.customerTypes[i].pCustomerStatus)
+							this.changeParam({key: 'pCustomerStatus', value: this.customerTypes[i].pCustomerStatus})
 							break
 						}
 					}
@@ -193,7 +177,7 @@
 					// this.changeParam()
 				}
 			},
-			changeParam(key, value) {
+			changeParam({key, value}) {
         		let newParam = {
         			...this.defaultParam
 				}
@@ -226,25 +210,6 @@
 				margin-right: 10px;
 			}
 		}
-		.search {
-			height: 40px;
-			background-color: #fff;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			.search-point-container {
-				position: absolute;
-				width: 70%;
-				height: 30px;
-				.search-point {
-					position: absolute;
-					width: 24px;
-					height: 100%;
-					right: 0;
-					z-index: 1;
-				}
-			}
-		}
 		.list {
 			position: absolute;
 			top: 290px;
@@ -258,24 +223,11 @@
 	}
 </style>
 
-<style>
-	.customer-search .van-search {
-		padding: 0!important;
-		width: 70%;
-	}
-
-	.customer-search .van-search .van-cell {
-		padding: 3px 8px 3px 0!important;
-	}
-
-	.customer-search .van-search .van-search__content {
-		padding-left: 20px;
-	}
-	.customer-search .van-search .van-search__content .van-field__control {
-		font-size: 12px;
-	}
-	.customer-search .cell-container .van-cell__title {
-		display: flex;
-		align-items: center;
+<style lang="scss">
+	.customer-search  {
+		.cell-container .van-cell__title {
+			display: flex;
+			align-items: center;
+		}
 	}
 </style>

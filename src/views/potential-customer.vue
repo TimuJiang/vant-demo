@@ -1,5 +1,8 @@
 <template lang='pug'>
-	m-page.potential-customer
+	m-page(:right-icon="true" right-icon-type="search").potential-customer
+		van-dropdown-menu.search-drop
+			van-dropdown-item(ref="search")
+				common-search(@change-param="changeParam")
 		van-tabs(
 			v-model="active"
 			color="#1B40D6"
@@ -17,6 +20,7 @@
 	import { POTENTIAL_CUSTOMER } from 'config/types.config'
 	import Vue from 'vue'
 	import { IndexBar, IndexAnchor, Cell } from 'vant'
+	import CommonSearch from './customer/common-search'
 
 	Vue.use(IndexBar).use(IndexAnchor).use(Cell)
 	export default {
@@ -33,6 +37,9 @@
 				},
 				cancelledStatus: 51080020
 			}
+		},
+		components: {
+			'common-search': CommonSearch
 		},
 		created() {
 			if (this.$route.params.saleLoginName !== '-1') {
@@ -58,25 +65,31 @@
 					})
 					this.levelData = level
 					this._customer = [...this._customer]
-					this.changeParam(this.$route.params.type)
+					this.changeParam()
 				})
 			},
-			changeParam(type) {
+			changeParam(obj) {
 
 				let newParam = {
 					...this.defaultParam
 				}
-				if (type !== 'cancelled') {
-					if (type !== 'all') {
-						newParam.pCustomerLevel = Number(this.levelData[type])
+				if (obj && obj.key) {
+					newParam[obj.key] = obj.value
+				}
+				if (this.active !== 'cancelled') {
+					if (this.active !== 'all') {
+						newParam.pCustomerLevel = Number(this.levelData[this.active])
 					}
 				} else {
 					newParam.pCustomerStatus = [this.cancelledStatus]
 				}
+				if (obj) {
+					this.$refs.search.toggle()
+				}
 				this.param = newParam
 			},
-			clickTab(name) {
-				this.changeParam(name)
+			clickTab() {
+				this.changeParam()
 			}
 		},
 		beforeCreate() {
@@ -97,6 +110,24 @@
 		}
 		.van-cell {
 
+		}
+		.search-drop {
+			position: fixed;
+			top: 0;
+			right: 16px;
+			height: 46px;
+			background-color: transparent;
+			z-index: 999;
+		}
+	}
+</style>
+
+<style lang="scss">
+	.potential-customer {
+		.search-drop {
+			.van-dropdown-menu__item {
+				opacity: 0;
+			}
 		}
 	}
 </style>
